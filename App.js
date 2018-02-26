@@ -26,6 +26,7 @@ let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
 
 export default class App extends React.Component {
+  
 //---------------- CONSTRUCTOR --------------
   constructor(props){
     super(props);
@@ -54,7 +55,6 @@ export default class App extends React.Component {
     //When fonts are loaded, fontsAreLoaded state will be true
     this.setState({fontsAreLoaded: true});
   }
-
 
   render() {
     //If fonts aren't loaded, spinner will continue to spin

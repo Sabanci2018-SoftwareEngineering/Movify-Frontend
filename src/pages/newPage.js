@@ -48,6 +48,10 @@ class ComponentName extends React.Component {
       'rubicon-icon-font': require('../../node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
     });
 
+    
+  }
+
+  componentDidMount(){
     //When fonts are loaded, fontsAreLoaded state will be true
     this.setState({fontsAreLoaded: true});
   }
@@ -75,7 +79,6 @@ class ComponentName extends React.Component {
            <Button 
            styleName="secondary" style={{marginTop: 20}} 
            onPress={()=> {
-             debugger;
              Actions.NewPage2()}
             }
            >
