@@ -48,13 +48,8 @@ class ComponentName extends React.Component {
       'rubicon-icon-font': require('../../node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
     });
 
-  }
-
-  componentDidMount(){
-    //When fonts are loaded, fontsAreLoaded state will be true
     this.setState({fontsAreLoaded: true});
   }
-
 
   render() {
     //If fonts aren't loaded, spinner will continue to spin
