@@ -249,7 +249,7 @@ class SignupScreen extends Component {
           </KeyboardAvoidingView>
           <View style={styles.loginHereContainer}>
             <Text style={styles.alreadyAccountText}>
-              Already have an account.
+              Already have an account?
             </Text>
             <Button
               text="Login here"
