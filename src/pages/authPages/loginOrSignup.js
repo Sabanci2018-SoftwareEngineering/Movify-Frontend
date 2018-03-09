@@ -103,7 +103,6 @@ class LoginScreen extends Component {
             }}
             source={YourCatalog}
           />
-          
           <View style = {{flex:1, justifyContent: 'center'}}>
           <Button
                 text ='LOGIN'

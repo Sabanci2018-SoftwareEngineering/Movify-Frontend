@@ -347,7 +347,7 @@ class ResetPassword extends Component {
                 onPress={() => {
                   //4.0.0-beta.28 Actions.replace gives TypeError: undefined is not an object (evaluating 'resetAction.actions.map')
                   //.replace() only works with 4.0.0-beta.27 for now
-                  Actions.push('Login');
+                  Actions.pop();
                 }}
               />
             </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet,  ActivityIndicator, Dimensions} from 'react-native';
+import { StyleSheet,  ActivityIndicator, Dimensions, AsyncStorage} from 'react-native';
 
 //for shoutem UI
 import { Font, Components } from 'expo';
@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import reducers from './src/reducers';
 
 //navigation
-import {Scene, Router} from 'react-native-router-flux';
+import {Scene, Router, Modal} from 'react-native-router-flux';
 
 //pages
 import NewPage from './src/pages/newPage';
@@ -29,6 +29,13 @@ import ResetPassword from './src/pages/authPages/resetPassword';
 console.disableYellowBox = true;
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
+
+// Simple component to render something in place of icon
+const TabIcon = ({ selected, title }) => {
+  return (
+    <Text style={{color: selected ? 'red' :'black'}}>"{title}"</Text>
+  );
+}
 
 export default class App extends React.Component {
   
@@ -71,7 +78,38 @@ export default class App extends React.Component {
         );
     }
     //If fonts are loaded, font errors won't occur so, our app can be rendered
-    else{ 
+    //If user is authenticated, user will be able to use the app
+    else if(true){
+      const store = createStore(reducers, {}, applyMiddleware(ReduxThunk)); 
+        return(
+           <Provider store={store}>
+               <View style={{flex: 1}}>
+                    <Router hideNavBar={true}>
+                        {/* If you want to use modal animation, initial scene key should be modal */}
+                        <Scene key="modal" modal>
+                            {/* Tab Container */}
+                            <Scene key="tabbar" tabs={true} tabBarStyle={{borderTopColor:'black', borderTopWidth:1,backgroundColor:'white'}}>
+                              {/*Tabs */}
+                                <Scene key="NewPage" component={NewPage} title="NewPage" icon={TabIcon}  hideNavBar={true} />
+                                <Scene key="NewPage2" component={NewPage2} title="Newpage2" icon={TabIcon}  hideNavBar={true} />
+                            </Scene>
+
+                            {/* This is how we use modal navigation animation
+                            call this function onClick
+                            onPress={()=> {
+                              Actions.push("modalExample")}
+                             }
+                             This scene should be added to here
+                            <Scene key="modalExample" component={NewPage} title="Modal" hideNavBar /> */}
+                        </Scene>
+                    </Router>
+               </View>
+           </Provider>
+        );
+    }
+    //If fonts are loaded, font errors won't occur so, our app can be rendered
+    //If user isn't authenticated, auth pages will be shown
+    else if(false){ 
         const store = createStore(reducers, {}, applyMiddleware(ReduxThunk)); 
         return(
            <Provider store={store}>
@@ -83,8 +121,6 @@ export default class App extends React.Component {
                           <Scene key="Signup" component={Signup} title="Signup"  hideNavBar={true} />
                           <Scene key="SearchPage" component={SearchPage} title="Search"  hideNavBar={true} />
                           <Scene key="Login" component={Login} title="Login"  hideNavBar={true} />
-                          <Scene key="NewPage" component={NewPage} title="New Page"  hideNavBar={true} />
-                          <Scene key="NewPage2" component={NewPage2} title="New Page2"  hideNavBar={true} />
                         </Scene>
                     </Router>
                </View>

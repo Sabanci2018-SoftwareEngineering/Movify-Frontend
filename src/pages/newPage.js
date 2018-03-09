@@ -73,7 +73,7 @@ class ComponentName extends React.Component {
            <Button 
            styleName="secondary" style={{marginTop: 20}} 
            onPress={()=> {
-             Actions.NewPage2()}
+             Actions.push("modalExample")}
             }
            >
              <Text>Click here to navigate the other page</Text>

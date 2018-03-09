@@ -77,7 +77,7 @@ class ComponentName extends React.Component {
            <Button 
            styleName="secondary" style={{marginTop: 20}} 
            onPress={()=> {
-             Actions.popTo("NewPage")}
+             Actions.pop()}
             }
            >
              <Text>Click here to navigate home page</Text>
