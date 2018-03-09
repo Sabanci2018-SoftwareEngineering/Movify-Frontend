@@ -33,6 +33,17 @@ import YourCatalog from '../../../assets/yourCatalog.png';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
+//Simple math, just adjusts image sizes and positions
+const logoOriginalHeight = 162;
+const logoOriginalWidth = 435;
+const logoHeight = SCREEN_HEIGHT/10;
+const logoWidth = (SCREEN_HEIGHT/10)*(logoOriginalWidth/logoOriginalHeight);
+
+const sloganOriginalHeight = 114;
+const sloganOriginalWidth = 1020;
+const sloganHeight = SCREEN_HEIGHT/20;
+const sloganWidth = (SCREEN_HEIGHT/20)*(sloganOriginalWidth/sloganOriginalHeight);
+
 class LoginScreen extends Component {
   constructor(props) {
     super(props)
@@ -60,20 +71,8 @@ class LoginScreen extends Component {
 
     this.setState({fontsAreLoaded: true});
   }
-
+  
   render() {
-    let langauge = Util.getCurrentDeviceCountryAsync();
-
-    //Simple math, just adjusts image sizes and positions
-    const logoOriginalHeight = 162;
-    const logoOriginalWidth = 435;
-    const logoHeight = SCREEN_HEIGHT/10;
-    const logoWidth = (SCREEN_HEIGHT/10)*(logoOriginalWidth/logoOriginalHeight);
-
-    const sloganOriginalHeight = 114;
-    const sloganOriginalWidth = 1020;
-    const sloganHeight = SCREEN_HEIGHT/20;
-    const sloganWidth = (SCREEN_HEIGHT/20)*(sloganOriginalWidth/sloganOriginalHeight);
 
     if (!this.state.fontsAreLoaded) {
       return  (

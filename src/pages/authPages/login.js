@@ -37,6 +37,16 @@ UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationE
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
+//Simple math, just adjusts image sizes and positions
+const logoOriginalHeight = 162;
+const logoOriginalWidth = 435;
+const logoHeight = SCREEN_HEIGHT/10;
+const logoWidth = (SCREEN_HEIGHT/10)*(logoOriginalWidth/logoOriginalHeight);
+const sloganOriginalHeight = 114;
+const sloganOriginalWidth = 1020;
+const sloganHeight = SCREEN_HEIGHT/20;
+const sloganWidth = (SCREEN_HEIGHT/20)*(sloganOriginalWidth/sloganOriginalHeight);
+
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -107,16 +117,6 @@ class LoginScreen extends Component {
       usernameInput
     } = this.state;
 
-     //Simple math, just adjusts image sizes and positions
-     const logoOriginalHeight = 162;
-     const logoOriginalWidth = 435;
-     const logoHeight = SCREEN_HEIGHT/10;
-     const logoWidth = (SCREEN_HEIGHT/10)*(logoOriginalWidth/logoOriginalHeight);
- 
-     const sloganOriginalHeight = 114;
-     const sloganOriginalWidth = 1020;
-     const sloganHeight = SCREEN_HEIGHT/20;
-     const sloganWidth = (SCREEN_HEIGHT/20)*(sloganOriginalWidth/sloganOriginalHeight);
 
     return (
       <ImageBackground source={BackgroundImage} style={styles.container2}>
@@ -186,6 +186,7 @@ class LoginScreen extends Component {
               onPress={this.login}
               disabled={isLoading}
             />
+
             <View style={styles.loginHereContainer}>
             <Text style={styles.alreadyAccountText}>
               Don't have an account?
@@ -199,7 +200,25 @@ class LoginScreen extends Component {
               onPress={() => {
                 //4.0.0-beta.28 Actions.replace gives TypeError: undefined is not an object (evaluating 'resetAction.actions.map')
                 //it only works with 4.0.0-beta.27 for now
-                Actions.replace('Signup');
+                Actions.push('Signup');
+              }}
+            />
+          </View>
+
+          <View style={styles.loginHereContainer}>
+            <Text style={styles.alreadyAccountText}>
+              Forgot password?
+            </Text>
+            <Button
+              text="Reset password"
+              textStyle={styles.loginHereText}
+              containerStyle={{ flex: -1 }}
+              buttonStyle={{ backgroundColor: 'transparent' }}
+              underlayColor="transparent"
+              onPress={() => {
+                //4.0.0-beta.28 Actions.replace gives TypeError: undefined is not an object (evaluating 'resetAction.actions.map')
+                //it only works with 4.0.0-beta.27 for now
+                Actions.push('ResetPassword');
               }}
             />
           </View>
@@ -340,6 +359,7 @@ const styles = StyleSheet.create({
     marginRight: 5
   },
   loginHereContainer: {
+    marginTop: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'

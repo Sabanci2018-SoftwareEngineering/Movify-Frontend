@@ -21,6 +21,7 @@ import SearchPage from './src/pages/searchPage';
 import LoginOrSignup from './src/pages/authPages/loginOrSignup';
 import Signup from './src/pages/authPages/signup';
 import Login from './src/pages/authPages/login';
+import ResetPassword from './src/pages/authPages/resetPassword';
 
 //IMPORTANT REMINDER: View should be imported from @shoutem/ui
 //If view is imported from react-native, shoutem components may have styling bugs
@@ -77,12 +78,13 @@ export default class App extends React.Component {
                <View style={{flex: 1}}>
                     <Router hideNavBar={true}>
                         <Scene key="root">
-                            <Scene key="LoginOrSignup" component={LoginOrSignup} title="Login or Signup"  hideNavBar={true} />
-                            <Scene key="Login" component={Login} title="Login"  hideNavBar={true} />
-                            <Scene key="Signup" component={Signup} title="Signup"  hideNavBar={true} />
-                            <Scene key="SearchPage" component={SearchPage} title="Search Page"  hideNavBar={true} />
-                            <Scene key="NewPage" component={NewPage} title="New Page"  hideNavBar={true} />
-                            <Scene key="NewPage2" component={NewPage2} title="New Page2"  hideNavBar={true} />
+                          <Scene key="LoginOrSignup" component={LoginOrSignup} title="LoginOrSignup"  hideNavBar={true} />
+                          <Scene key="ResetPassword" component={ResetPassword} title="ResetPassword"  hideNavBar={true} />
+                          <Scene key="Signup" component={Signup} title="Signup"  hideNavBar={true} />
+                          <Scene key="SearchPage" component={SearchPage} title="Search"  hideNavBar={true} />
+                          <Scene key="Login" component={Login} title="Login"  hideNavBar={true} />
+                          <Scene key="NewPage" component={NewPage} title="New Page"  hideNavBar={true} />
+                          <Scene key="NewPage2" component={NewPage2} title="New Page2"  hideNavBar={true} />
                         </Scene>
                     </Router>
                </View>

@@ -29,8 +29,6 @@ import BackgroundImage from '../../../assets/authBackground.jpg';
 //If Icon line gives metro bundler error, simply run this command and restart the project
 // rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
-import FemaleImage from '../../../assets/female.png';
-import MaleImage from '../../../assets/male.png';
 
 import MovifyLogo from '../../../assets/movify.png';
 
@@ -51,60 +49,67 @@ const sloganOriginalWidth = 1020;
 const sloganHeight = SCREEN_HEIGHT/20;
 const sloganWidth = (SCREEN_HEIGHT/20)*(sloganOriginalWidth/sloganOriginalHeight);
 
-class SignupScreen extends Component {
+class ResetPassword extends Component {
   constructor(props) {
     super(props)
     this.state = {
       isLoading: false,
-      selectedType: null,
-      username: '',
       email: '',
+      emailValid: true,
+      resetCode: '',
+      showResetCodeBox: false,
+      showResetPassword: false,
       password: '',
       confirmationPassword: '',
-      emailValid: true,
       passwordValid: true,
-      usernameValid: true,
       confirmationPasswordValid: true,
-      userCreated: false,
-      verificationCode: '',
     }
 
-    this.setSelectedType = this.setSelectedType.bind(this);
     this.validateEmail = this.validateEmail.bind(this);
-    this.validatePassword = this.validatePassword.bind(this);
-    this.validateConfirmationPassword = this.validateConfirmationPassword.bind(this);
-    this.signup = this.signup.bind(this);
-    this.verifyCode = this.verifyCode.bind(this);
+    this.sendResetCode = this.sendResetCode.bind(this);
+    this.resetPassword = this.resetPassword.bind(this);
   }
  
-  signup() {
-
+  sendResetCode() {
     LayoutAnimation.easeInEaseOut();
-    const usernameValid = this.validateUsername();
     const emailValid = this.validateEmail();
-    const passwordValid = this.validatePassword();
-    const confirmationPasswordValid = this.validateConfirmationPassword();
-    if (
-      emailValid &&
-      passwordValid &&
-      confirmationPasswordValid &&
-      usernameValid
-    ) {
-      this.setState({ isLoading: true })
+    if (emailValid){
+      this.setState({ isLoading: true});
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        this.setState({ isLoading: false, userCreated: true });
+        this.setState({ isLoading: false, showResetCodeBox: true});
       }, 1500)
     }
   }
 
-  validateUsername() {
-    const { username } = this.state;
-    const usernameValid = username.length > 0;
+  verifyResetCode(){
+    //send reset code to the server
+    //wait for response
+    //when you have recieved the response, setState
+
     LayoutAnimation.easeInEaseOut();
-    this.setState({ usernameValid });
-    usernameValid || this.usernameInput.shake();
-    return usernameValid;
+    //if backend says that it is the correct reset code
+    if (true){
+      this.setState({ isLoading: true});
+      setTimeout(() => {
+        LayoutAnimation.easeInEaseOut();
+        this.setState({ isLoading: false, showResetPassword: true});
+      }, 1500);
+    }
+  }
+
+  resetPassword(){
+    LayoutAnimation.easeInEaseOut();
+
+    if (this.validatePassword() && this.validateConfirmationPassword()){
+      //send new password to the server
+      //redirect user to login page
+      this.setState({ isLoading: true});
+      setTimeout(() => {
+        LayoutAnimation.easeInEaseOut();
+        this.setState({ isLoading: false});
+      }, 1500);
+    }
   }
 
   validateEmail() {
@@ -128,40 +133,97 @@ class SignupScreen extends Component {
 
   validateConfirmationPassword() {
     const { password, confirmationPassword } = this.state;
-    const confirmationPasswordValid = password === confirmationPassword;
+    const confirmationPasswordValid = password === confirmationPassword && password.length > 0;
     LayoutAnimation.easeInEaseOut();
     this.setState({ confirmationPasswordValid });
     confirmationPasswordValid || this.confirmationPasswordInput.shake();
     return confirmationPasswordValid;
   }
 
-  setSelectedType = selectedType =>{
-    LayoutAnimation.easeInEaseOut() || this.setState({ selectedType });
-  }
-
-  verifyCode(){
-
-  }
-  
   render() {
     const {
       isLoading,
-      selectedType,
-      fontLoaded,
-      confirmationPassword,
       email,
       emailValid,
-      password,
-      passwordValid,
-      confirmationPasswordValid,
-      username,
-      usernameValid,
-      usernameInput,
-      userCreated,
-      verificationCode
     } = this.state;
-
-    if(this.state.userCreated){
+    
+    if(this.state.showResetPassword){
+      return(
+            <ImageBackground source={BackgroundImage} style={styles.container2}>
+            <ScrollView
+              scrollEnabled={false}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={styles.container}
+            >
+            <KeyboardAvoidingView
+              behavior="position"
+              contentContainerStyle={styles.formContainer}
+            >
+              <Image
+              style={{
+                width: logoWidth, height: logoHeight,
+                marginLeft: (SCREEN_WIDTH-logoWidth)/2,
+                marginRight: (SCREEN_WIDTH-logoWidth)/2,
+                marginTop: SCREEN_HEIGHT/15
+              }}
+              source={MovifyLogo}
+              />
+          
+              {/* change marginBottom of this view if you want to adjust space between login area and bottom of the screen  */}
+              <View style={{marginBottom: SCREEN_HEIGHT/8}}>
+              <FormInput
+                  refInput={input => (this.passwordInput = input)}
+                  icon="lock"
+                  value={this.state.password}
+                  onChangeText={password => this.setState({ password })}
+                  placeholder="Password"
+                  secureTextEntry
+                  returnKeyType="next"
+                  displayError={!this.state.passwordValid}
+                  errorMessage="Please enter at least 8 characters"
+                  onSubmitEditing={() => {
+                    this.validatePassword()
+                    this.confirmationPasswordInput.focus()
+                  }}
+                />
+                <FormInput
+                  refInput={input => (this.confirmationPasswordInput = input)}
+                  icon="lock"
+                  value={this.state.confirmationPassword}
+                  onChangeText={confirmationPassword =>
+                    this.setState({ confirmationPassword })}
+                  placeholder="Confirm Password"
+                  secureTextEntry
+                  displayError={!this.state.confirmationPasswordValid}
+                  errorMessage="The password fields are not identics"
+                  returnKeyType="go"
+                  onSubmitEditing={() => {
+                    this.validateConfirmationPassword();
+                    this.signup()
+                  }}
+                />
+                <Button
+                loading={isLoading}
+                text="RESET PASSWORD"
+                containerStyle={{ flex: -1 }}
+                buttonStyle={styles.signUpButton}
+                ViewComponent={require('expo').LinearGradient}
+                linearGradientProps={{
+                  colors: ['#FF9800', '#F44336'],
+                  start: [1, 0],
+                  end: [0.2, 0],
+                }}
+                textStyle={styles.signUpButtonText}
+                onPress={() => this.resetPassword()}
+                disabled={isLoading}
+              />
+          </View>
+          </KeyboardAvoidingView>
+          </ScrollView>
+          </ImageBackground>
+      );
+    }
+    else if(this.state.showResetCodeBox){
       return(
         <ImageBackground source={BackgroundImage} style={styles.container2}>
             <ScrollView
@@ -188,13 +250,14 @@ class SignupScreen extends Component {
                 <FormInput
                   refInput={input => (this.emailInput = input)}
                   icon="envelope"
-                  value={this.state.verificationCode}
-                  onChangeText={verificationCode => this.setState({ verificationCode: verificationCode })}
-                  placeholder="Verification Code"
+                  value={this.state.resetCode}
+                  onChangeText={resetCode => this.setState({ resetCode: resetCode })}
+                  placeholder="Reset Code"
                   keyboardType="email-address"
                   returnKeyType="next"
                   displayError={!emailValid}
-                  errorMessage="Please enter a valid email address" 
+                  errorMessage="Please enter a valid email address"
+                  
                 />
                 <Button
                 loading={isLoading}
@@ -208,60 +271,39 @@ class SignupScreen extends Component {
                   end: [0.2, 0],
                 }}
                 textStyle={styles.signUpButtonText}
-                onPress={() => this.verifyCode()}
+                onPress={() => this.verifyResetCode()}
                 disabled={isLoading}
               />
           </View>
           </KeyboardAvoidingView>
           </ScrollView>
           </ImageBackground>
-      )   
+      );
     }
     else{
       return (
         <ImageBackground source={BackgroundImage} style={styles.container2}>
-      <ScrollView
-        scrollEnabled={false}
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={styles.container}
-          >
+            <ScrollView
+              scrollEnabled={false}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={styles.container}
+            >
             <KeyboardAvoidingView
               behavior="position"
               contentContainerStyle={styles.formContainer}
             >
-              <Text style={styles.signUp}>SIGN UP</Text>
-              <View style={styles.userTypesContainer}>
-                <UserTypeItem
-                  label="Female"
-                  labelColor="white"
-                  image={FemaleImage}
-                  onPress={() => this.setState({selectedType: 'female'})}
-                  selected={this.state.selectedType === 'female'}
-                />
-                <UserTypeItem
-                  label="Male"
-                  labelColor="white"
-                  image={MaleImage}
-                  onPress={() => this.setState({selectedType: 'male'})}
-                  selected={this.state.selectedType === 'male'}
-                />
-              </View>
-              <View>
-              <FormInput
-                  refInput={input => (this.usernameInput = input)}
-                  icon="envelope"
-                  value={username}
-                  onChangeText={username => this.setState({ username })}
-                  placeholder="Username"
-                  keyboardType="username"
-                  returnKeyType="next"
-                  displayError={!usernameValid}
-                  errorMessage="Please enter a valid username"
-                  onSubmitEditing={() => {
-                    this.validateUsername()
-                    this.passwordInput.focus()
-                  }}
-                />
+              <Image
+              style={{
+                width: logoWidth, height: logoHeight,
+                marginLeft: (SCREEN_WIDTH-logoWidth)/2,
+                marginRight: (SCREEN_WIDTH-logoWidth)/2,
+                marginTop: SCREEN_HEIGHT/15
+              }}
+              source={MovifyLogo}
+            />
+          
+              {/* change marginBottom of this view if you want to adjust space between login area and bottom of the screen  */}
+              <View style={{marginBottom: SCREEN_HEIGHT/8}}>
                 <FormInput
                   refInput={input => (this.emailInput = input)}
                   icon="envelope"
@@ -277,41 +319,9 @@ class SignupScreen extends Component {
                     this.passwordInput.focus()
                   }}
                 />
-                <FormInput
-                  refInput={input => (this.passwordInput = input)}
-                  icon="lock"
-                  value={password}
-                  onChangeText={password => this.setState({ password })}
-                  placeholder="Password"
-                  secureTextEntry
-                  returnKeyType="next"
-                  displayError={!passwordValid}
-                  errorMessage="Please enter at least 8 characters"
-                  onSubmitEditing={() => {
-                    this.validatePassword()
-                    this.confirmationPasswordInput.focus()
-                  }}
-                />
-                <FormInput
-                  refInput={input => (this.confirmationPasswordInput = input)}
-                  icon="lock"
-                  value={confirmationPassword}
-                  onChangeText={confirmationPassword =>
-                    this.setState({ confirmationPassword })}
-                  placeholder="Confirm Password"
-                  secureTextEntry
-                  displayError={!confirmationPasswordValid}
-                  errorMessage="The password fields are not identics"
-                  returnKeyType="go"
-                  onSubmitEditing={() => {
-                    this.validateConfirmationPassword()
-                    this.signup()
-                  }}
-                />
-              </View>
-              <Button
+                <Button
                 loading={isLoading}
-                text="SIGNUP"
+                text="SEND RESET CODE"
                 containerStyle={{ flex: -1 }}
                 buttonStyle={styles.signUpButton}
                 ViewComponent={require('expo').LinearGradient}
@@ -321,31 +331,34 @@ class SignupScreen extends Component {
                   end: [0.2, 0],
                 }}
                 textStyle={styles.signUpButtonText}
-                onPress={this.signup}
+                onPress={() => this.sendResetCode()}
                 disabled={isLoading}
               />
-            </KeyboardAvoidingView>
-            <View style={styles.loginHereContainer}>
+              <View style={styles.loginHereContainer}>
               <Text style={styles.alreadyAccountText}>
-                Already have an account?
+                Already know your password?
               </Text>
               <Button
-                text="Login here"
+                text="Login"
                 textStyle={styles.loginHereText}
                 containerStyle={{ flex: -1 }}
                 buttonStyle={{ backgroundColor: 'transparent' }}
                 underlayColor="transparent"
                 onPress={() => {
                   //4.0.0-beta.28 Actions.replace gives TypeError: undefined is not an object (evaluating 'resetAction.actions.map')
-                  //it only works with 4.0.0-beta.27 for now
+                  //.replace() only works with 4.0.0-beta.27 for now
                   Actions.push('Login');
                 }}
               />
             </View>
+          </View>
+          </KeyboardAvoidingView>
+            
           </ScrollView>
           </ImageBackground>
-          )
+        )
     }
+
   }
 }
 
@@ -472,10 +485,13 @@ const styles = StyleSheet.create({
     width: 250,
     borderRadius: 50,
     height: 45,
+    marginTop: 15,
+    marginRight: 5
   },
   loginHereContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center'
   },
   alreadyAccountText: {
     fontSize: 12,
@@ -497,4 +513,4 @@ const mapStateToProps = ({allReducers}) => {
   return { user };
 };
 
-export default connect(mapStateToProps,  { userChanged })(SignupScreen);
+export default connect(mapStateToProps,  { userChanged })(ResetPassword);
