@@ -27,6 +27,7 @@
     "react-native": "0.52.0",
     "react-native-elements": "^1.0.0-beta2",
     "react-native-router-flux": "^4.0.0-beta.27",
+    "react-native-tabbar-bottom": "^1.0.4",
     "react-native-vector-icons": "^4.5.0",
     "redux-thunk": "^2.2.0"
   }

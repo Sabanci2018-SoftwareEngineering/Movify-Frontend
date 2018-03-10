@@ -46,7 +46,8 @@ class ComponentName extends React.Component {
           movieName: 'Avatar',
           moviePhotoUrl: 'https://images-na.ssl-images-amazon.com/images/I/91N1lG%2BLBIS._SY679_.jpg'
         },
-      ]
+      ],
+      pageIsLoaded: false,
     }
 
     this.renderRow = this.renderRow.bind(this);
@@ -74,7 +75,8 @@ class ComponentName extends React.Component {
     this.setState({fontsAreLoaded: true});
   }
 
-  componenDidMount(){
+  componentDidMount(){
+
     //get default data
     //set default data
     //let defaultData = request default data
@@ -82,6 +84,8 @@ class ComponentName extends React.Component {
   }
 
   renderRow(rowData){
+    this.setState({pageIsLoaded: true});
+    console.log(this.state.pageIsLoaded)
       return (
       <TouchableOpacity onPress={()=> console.log("Here we will call navigation function to movie page")}>
         <Row styleName="small">
@@ -126,9 +130,11 @@ class ComponentName extends React.Component {
             //change data with this.props.searchData.searchData when backend is ready
             data={this.state.mockData}
             renderRow={(rowData) => this.renderRow(rowData)}
+            //Don't remove.It is for this bug --> https://github.com/facebook/react-native/issues/1831
+            removeClippedSubviews={false}
           />
-          <Text>{this.props.searchText !== '' ? this.props.searchText.searchText : "saerch text is blank"}</Text>
-          <Text>{this.props.searchData !== undefined ? this.props.searchData.searchData : "saerch data is undefined"}</Text>
+          <Text>{this.props.searchText !== '' ? this.props.searchText.searchText : "search text is blank"}</Text>
+          <Text>{this.props.searchData !== undefined ? this.props.searchData.searchData : "search data is undefined"}</Text>
       </View>
      );
    }

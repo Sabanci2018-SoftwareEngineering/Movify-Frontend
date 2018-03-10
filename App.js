@@ -3,7 +3,7 @@ import { StyleSheet,  ActivityIndicator, Dimensions, AsyncStorage} from 'react-n
 
 //for shoutem UI
 import { Font, Components } from 'expo';
-import { View, DropDownMenu,ListView, NavigationBar, Screen, Icon, Title, Examples, Card, Image, Subtitle, Caption, Button, Row, styleName, Tile, Overlay, ImageBackground, Text } from '@shoutem/ui';
+import { View, DropDownMenu,ListView, Screen, Icon, Title, Examples, Card, Image, Subtitle, Caption, Button, Row, styleName, Tile, Overlay, ImageBackground, Text } from '@shoutem/ui';
 
 //redux stuff
 import { createStore, applyMiddleware } from 'redux';
@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import reducers from './src/reducers';
 
 //navigation
-import {Scene, Router, Modal} from 'react-native-router-flux';
+import {Scene, Router, Modal, Actions} from 'react-native-router-flux';
 
 //pages
 import NewPage from './src/pages/newPage';
@@ -23,6 +23,9 @@ import Signup from './src/pages/authPages/signup';
 import Login from './src/pages/authPages/login';
 import ResetPassword from './src/pages/authPages/resetPassword';
 
+//components
+import NavigationBar from './src/components/navigationBar';
+
 //IMPORTANT REMINDER: View should be imported from @shoutem/ui
 //If view is imported from react-native, shoutem components may have styling bugs
 
@@ -32,8 +35,10 @@ let height = Dimensions.get('window').height;
 
 // Simple component to render something in place of icon
 const TabIcon = ({ selected, title }) => {
+  let state = Actions.state;
+
   return (
-    <Text style={{color: selected ? 'red' :'black'}}>"{title}"</Text>
+    <Text style={{color: selected ? 'red' :'red'}}>"{title}"</Text>
   );
 }
 
@@ -70,7 +75,7 @@ export default class App extends React.Component {
 
   render() {
     //If fonts aren't loaded, spinner will continue to spin
-    if (!this.state.fontsAreLoaded) {
+    if(!this.state.fontsAreLoaded) {
         return  (
           <Row style={styles.container}>
               <ActivityIndicator size="large" color="#0000ff" />
@@ -88,10 +93,12 @@ export default class App extends React.Component {
                         {/* If you want to use modal animation, initial scene key should be modal */}
                         <Scene key="modal" modal>
                             {/* Tab Container */}
-                            <Scene key="tabbar" tabs={true} tabBarStyle={{borderTopColor:'black', borderTopWidth:1,backgroundColor:'white'}}>
+                            
+                            <Scene key="tabbar" tabs={true} tabBarPosition="bottom" tabBarComponent={NavigationBar} tabBarStyle={{borderTopColor:'black', borderTopWidth:1,backgroundColor:'white'}}>
                               {/*Tabs */}
-                                <Scene key="NewPage" component={NewPage} title="NewPage" icon={TabIcon}  hideNavBar={true} />
-                                <Scene key="NewPage2" component={NewPage2} title="Newpage2" icon={TabIcon}  hideNavBar={true} />
+                                <Scene key="NewPage" component={NewPage} title="NewPage" hideNavBar={true} />
+                                <Scene key="NewPage2" component={NewPage2} title="Newpage2" hideNavBar={true} />
+                                <Scene key="SearchPage" component={SearchPage} title="Search" hideNavBar={true} />
                             </Scene>
 
                             {/* This is how we use modal navigation animation
@@ -109,7 +116,7 @@ export default class App extends React.Component {
     }
     //If fonts are loaded, font errors won't occur so, our app can be rendered
     //If user isn't authenticated, auth pages will be shown
-    else if(false){ 
+    else if(true){ 
         const store = createStore(reducers, {}, applyMiddleware(ReduxThunk)); 
         return(
            <Provider store={store}>
@@ -119,7 +126,6 @@ export default class App extends React.Component {
                           <Scene key="LoginOrSignup" component={LoginOrSignup} title="LoginOrSignup"  hideNavBar={true} />
                           <Scene key="ResetPassword" component={ResetPassword} title="ResetPassword"  hideNavBar={true} />
                           <Scene key="Signup" component={Signup} title="Signup"  hideNavBar={true} />
-                          <Scene key="SearchPage" component={SearchPage} title="Search"  hideNavBar={true} />
                           <Scene key="Login" component={Login} title="Login"  hideNavBar={true} />
                         </Scene>
                     </Router>
