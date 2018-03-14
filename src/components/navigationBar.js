@@ -13,7 +13,6 @@ export default class NavigationBar extends Component {
       loading: true,
       page: 'NewPage'
     };
-    
   }
 
   async componentWillMount() {
@@ -30,13 +29,11 @@ export default class NavigationBar extends Component {
         return <Expo.AppLoading />;
       }
     return (
-      <View style={styles.container}>
-        {
-          // if you are using react-navigation just pass the navigation object in your components like this:
-          // {this.state.page === "HomeScreen" && <MyComp navigation={this.props.navigation}>Screen1</MyComp>}
-        }
-
+      <View>
         <Tabbar
+          //When user clicks another tab, this function will be executed
+          //It changes this.state.page and jumps to the page
+          //Actions.jump is a function of react-native-router-flux
           stateFunc={(tab) => {
             this.setState({page: tab.page});
             Actions.jump(tab.page);
@@ -71,9 +68,3 @@ export default class NavigationBar extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    //
-  }
-});
