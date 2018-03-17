@@ -84,7 +84,7 @@ export default class App extends React.Component {
     }
     //If fonts are loaded, font errors won't occur so, our app can be rendered
     //If user is authenticated, user will be able to use the app
-    else if(true){
+    else if(false){
       const store = createStore(reducers, {}, applyMiddleware(ReduxThunk)); 
         return(
            <Provider store={store}>

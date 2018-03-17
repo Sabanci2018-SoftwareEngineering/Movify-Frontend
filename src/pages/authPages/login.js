@@ -173,7 +173,7 @@ class LoginScreen extends Component {
               />
               <Button
               loading={isLoading}
-              text="LOGIN"
+              title="LOGIN"
               containerStyle={{ flex: -1 }}
               buttonStyle={styles.signUpButton}
               ViewComponent={require('expo').LinearGradient}
@@ -182,9 +182,10 @@ class LoginScreen extends Component {
                 start: [1, 0],
                 end: [0.2, 0],
               }}
-              textStyle={styles.signUpButtonText}
+              titleStyle={styles.signUpButtonText}
               onPress={this.login}
               disabled={isLoading}
+              disabledStyle={styles.signUpButton}
             />
 
             <View style={styles.loginHereContainer}>
@@ -192,8 +193,8 @@ class LoginScreen extends Component {
               Don't have an account?
             </Text>
             <Button
-              text="Sign Up"
-              textStyle={styles.loginHereText}
+              title="Sign Up"
+              titleStyle={styles.loginHereText}
               containerStyle={{ flex: -1 }}
               buttonStyle={{ backgroundColor: 'transparent' }}
               underlayColor="transparent"
@@ -210,8 +211,8 @@ class LoginScreen extends Component {
               Forgot password?
             </Text>
             <Button
-              text="Reset password"
-              textStyle={styles.loginHereText}
+              title="Reset password"
+              titleStyle={styles.loginHereText}
               containerStyle={{ flex: -1 }}
               buttonStyle={{ backgroundColor: 'transparent' }}
               underlayColor="transparent"

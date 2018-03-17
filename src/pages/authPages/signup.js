@@ -198,7 +198,7 @@ class SignupScreen extends Component {
                 />
                 <Button
                 loading={isLoading}
-                text="Verify"
+                title="Verify"
                 containerStyle={{ flex: -1 }}
                 buttonStyle={styles.signUpButton}
                 ViewComponent={require('expo').LinearGradient}
@@ -207,9 +207,10 @@ class SignupScreen extends Component {
                   start: [1, 0],
                   end: [0.2, 0],
                 }}
-                textStyle={styles.signUpButtonText}
+                titleStyle={styles.signUpButtonText}
                 onPress={() => this.verifyCode()}
                 disabled={isLoading}
+                disabledStyle={styles.signUpButton}
               />
           </View>
           </KeyboardAvoidingView>
@@ -311,7 +312,7 @@ class SignupScreen extends Component {
               </View>
               <Button
                 loading={isLoading}
-                text="SIGNUP"
+                title="SIGNUP"
                 containerStyle={{ flex: -1 }}
                 buttonStyle={styles.signUpButton}
                 ViewComponent={require('expo').LinearGradient}
@@ -320,9 +321,10 @@ class SignupScreen extends Component {
                   start: [1, 0],
                   end: [0.2, 0],
                 }}
-                textStyle={styles.signUpButtonText}
+                titleStyle={styles.signUpButtonText}
                 onPress={this.signup}
                 disabled={isLoading}
+                disabledStyle={styles.signUpButton}
               />
             </KeyboardAvoidingView>
             <View style={styles.loginHereContainer}>
@@ -330,8 +332,8 @@ class SignupScreen extends Component {
                 Already have an account?
               </Text>
               <Button
-                text="Login here"
-                textStyle={styles.loginHereText}
+                title="Login here"
+                titleStyle={styles.loginHereText}
                 containerStyle={{ flex: -1 }}
                 buttonStyle={{ backgroundColor: 'transparent' }}
                 underlayColor="transparent"

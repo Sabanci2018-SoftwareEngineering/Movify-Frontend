@@ -204,7 +204,7 @@ class ResetPassword extends Component {
                 />
                 <Button
                 loading={isLoading}
-                text="RESET PASSWORD"
+                title="RESET PASSWORD"
                 containerStyle={{ flex: -1 }}
                 buttonStyle={styles.signUpButton}
                 ViewComponent={require('expo').LinearGradient}
@@ -213,9 +213,10 @@ class ResetPassword extends Component {
                   start: [1, 0],
                   end: [0.2, 0],
                 }}
-                textStyle={styles.signUpButtonText}
+                titleStyle={styles.signUpButtonText}
                 onPress={() => this.resetPassword()}
                 disabled={isLoading}
+                disabledStyle={styles.signUpButton}
               />
           </View>
           </KeyboardAvoidingView>
@@ -261,7 +262,7 @@ class ResetPassword extends Component {
                 />
                 <Button
                 loading={isLoading}
-                text="Verify"
+                title="Verify"
                 containerStyle={{ flex: -1 }}
                 buttonStyle={styles.signUpButton}
                 ViewComponent={require('expo').LinearGradient}
@@ -270,9 +271,10 @@ class ResetPassword extends Component {
                   start: [1, 0],
                   end: [0.2, 0],
                 }}
-                textStyle={styles.signUpButtonText}
+                titleStyle={styles.signUpButtonText}
                 onPress={() => this.verifyResetCode()}
                 disabled={isLoading}
+                disabledStyle={styles.signUpButton}
               />
           </View>
           </KeyboardAvoidingView>
@@ -321,7 +323,7 @@ class ResetPassword extends Component {
                 />
                 <Button
                 loading={isLoading}
-                text="SEND RESET CODE"
+                title="SEND RESET CODE"
                 containerStyle={{ flex: -1 }}
                 buttonStyle={styles.signUpButton}
                 ViewComponent={require('expo').LinearGradient}
@@ -330,17 +332,18 @@ class ResetPassword extends Component {
                   start: [1, 0],
                   end: [0.2, 0],
                 }}
-                textStyle={styles.signUpButtonText}
+                titleStyle={styles.signUpButtonText}
                 onPress={() => this.sendResetCode()}
                 disabled={isLoading}
+                disabledStyle={styles.signUpButton}
               />
               <View style={styles.loginHereContainer}>
               <Text style={styles.alreadyAccountText}>
                 Already know your password?
               </Text>
               <Button
-                text="Login"
-                textStyle={styles.loginHereText}
+                title="Login"
+                titleStyle={styles.loginHereText}
                 containerStyle={{ flex: -1 }}
                 buttonStyle={{ backgroundColor: 'transparent' }}
                 underlayColor="transparent"

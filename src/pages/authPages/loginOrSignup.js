@@ -105,18 +105,18 @@ class LoginScreen extends Component {
           />
           <View style = {{flex:1, justifyContent: 'center'}}>
           <Button
-                text ='LOGIN'
+                title ='LOGIN'
                 onPress={() => Actions.Login()}
                 buttonStyle={{height: 50, width: 250, backgroundColor: 'white', borderRadius: 30}}
                 containerStyle={{marginVertical: 10}}
-                textStyle={{fontWeight: 'bold', color: 'black'}}
+                titleStyle={{fontWeight: 'bold', color: 'black'}}
             />
             <Button
-                text ='SIGN UP'
+                title ='SIGN UP'
                 onPress={() => Actions.Signup()}
                 buttonStyle={{height: 50, width: 250, backgroundColor: 'white', borderRadius: 30, marginTop: 18}}
                 containerStyle={{marginVertical: 10}}
-                textStyle={{fontWeight: 'bold', color: 'black'}}
+                titleStyle={{fontWeight: 'bold', color: 'black'}}
             />
           </View>
  
