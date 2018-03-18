@@ -4,6 +4,10 @@ import { Font, Components } from 'expo';
 
 import { View, DropDownMenu,ListView, NavigationBar, Screen, Icon, Title, Examples, Card, Image, Subtitle, Caption, Button, Row, styleName, Tile, Overlay, ImageBackground, Text, TextInput } from '@shoutem/ui';
 
+//IMPORTANT REMINDER: View should be imported from @shoutem/ui
+//If view is imported from react-native, shoutem components may have styling bugs
+
+
 //redux stuff
 import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
@@ -13,10 +17,6 @@ import {usernameChanged} from '../actions';
 
 //react router flux
 import {Actions} from "react-native-router-flux";
-
-//IMPORTANT REMINDER: View should be imported from @shoutem/ui
-//If view is imported from react-native, shoutem components may have styling bugs
-
 
 console.disableYellowBox = true;
 let width = Dimensions.get('window').width;

@@ -14,9 +14,6 @@ import {usernameChanged} from '../actions';
 //react router flux
 import {Actions} from "react-native-router-flux";
 
-//IMPORTANT REMINDER: View should be imported from @shoutem/ui
-//If view is imported from react-native, shoutem components may have styling bugs
-
 
 console.disableYellowBox = true;
 let width = Dimensions.get('window').width;

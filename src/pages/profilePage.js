@@ -1,50 +1,41 @@
 import React from 'react';
-import { StyleSheet,  ActivityIndicator, Dimensions, Platform, TouchableOpacity} from 'react-native';
+import { StyleSheet,  ActivityIndicator, Dimensions, TouchableOpacity, Platform, StatusBar} from 'react-native';
 import { Font, Components } from 'expo';
 
-import { View, DropDownMenu, NavigationBar, Screen, ListView, Icon, Title, Examples, Card, Image, Subtitle, Caption, Button, Row, styleName, Tile, Overlay, ImageBackground, Text, TextInput, ScrollView} from '@shoutem/ui';
+import { Heading,View, DropDownMenu,ListView, NavigationBar, Screen, Icon, Title, Examples, Card, Image, Subtitle, Caption, Button, Row, styleName, Tile, Overlay, ImageBackground, Text, TextInput, ScrollView} from '@shoutem/ui';
+
+//IMPORTANT REMINDER: View should be imported from @shoutem/ui
+//If view is imported from react-native, shoutem components may have styling bugs
+
 
 //redux stuff
 import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import { Provider, connect } from 'react-redux';
 import reducers from '../reducers'
-import {searchTextChanged} from '../actions';
+import {usernameChanged} from '../actions';
 
 //react router flux
 import {Actions} from "react-native-router-flux";
 
 import Mock from '../../assets/mockData.json';
 
-//react native elements
-import SearchBar from '../components/searchBar';
-import SearchIcon from '../../assets/searchIcon.png';
-
-//IMPORTANT REMINDER: View should be imported from @shoutem/ui
-//If view is imported from react-native, shoutem components may have styling bugs
-
-
 console.disableYellowBox = true;
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
 
-let data;
-
-class ComponentName extends React.Component {
+class ProfilePage extends React.Component {
 //---------------- CONSTRUCTOR --------------
   constructor(props){
     super(props);
     this.state = {
-      test: '',
       fontsAreLoaded: false,
-      searchText: '',
-      defaultData: undefined,
-      mockData: Mock,
-      pageIsLoaded: false,
+      username: 'boraik',
+      recentLikedMovieImage: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png',
+      mockData: Mock
     }
 
     this.renderRow = this.renderRow.bind(this);
-    this.handleData = this.handleData.bind(this);
   }
 
 //---------------- This part is mandatory for shoutem components because 
@@ -62,18 +53,9 @@ class ComponentName extends React.Component {
       'Rubik-MediumItalic': require('../../node_modules/@shoutem/ui/fonts/Rubik-MediumItalic.ttf'),
       'Rubik-Regular': require('../../node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf'),
       'rubicon-icon-font': require('../../node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
-      'Ionicons': require('../../node_modules/@expo/vector-icons/fonts/Ionicons.ttf'),
     });
 
     this.setState({fontsAreLoaded: true});
-  }
-
-  componentDidMount(){
-
-    //get default data
-    //set default data
-    //let defaultData = request default data
-    //this.setState({defaultData: defaultData})
   }
 
   renderRow(rowData){
@@ -91,21 +73,8 @@ class ComponentName extends React.Component {
       </TouchableOpacity>
       );
   }
-
-  handleData(props){
-    // if(this.props.searchText !== undefined){
-    //     //if user write something and then delete everything, default movies 
-    //     if(props.searchText.searchText === ''){
-    //       return this.defaultData;
-    //     }
-    //     else{
-    //       return 
-    //     }
-    // }
-  }
-
+  
   render() {
-    
     //If fonts aren't loaded, spinner will continue to spin
     if (!this.state.fontsAreLoaded) {
         return  (
@@ -117,11 +86,37 @@ class ComponentName extends React.Component {
     //If fonts are loaded, font errors won't occur so our app can be rendered
     else{ 
      return(
-      <View>
-          <SearchBar />
+       <Screen style={styles.container}>
+          <View style={{paddingTop: Platform.OS === "ios" ? 0 : (StatusBar.currentHeight || 0)}}>
+            <NavigationBar title={(this.state.username).toUpperCase()} styleName="inline" style={{container: {
+              height: (Platform.OS === "ios" ? height/12 : height/15),
+
+            }}}/>
+          </View>
           {/* marginBottom is for overlapping of bottom navigation bar and scrollview */}
-          <ScrollView style={{marginBottom: 115}} >
-          <ListView
+          <ScrollView style={{marginBottom: 41}} >
+            <ImageBackground styleName="large-banner"
+            blurRadius={10}
+            source={{ uri: this.state.recentLikedMovieImage }}>
+              <Tile>
+                <Image
+                styleName="medium-avatar"
+                style={{marginTop: 5}}
+                source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png'}}
+                />
+                <View style={{flexDirection: 'row'}}>
+                  <View style={{marginRight: width/5, alignItems: 'center'}}>
+                    <Title style={{color: 'white'}}> Followers </Title>
+                    <Subtitle style={{color: 'white'}}> 99 </Subtitle>
+                  </View>
+                  <View style={{alignItems: 'center'}}>
+                    <Title style={{color: 'white'}}> Following </Title>
+                    <Subtitle style={{color: 'white'}}> 68 </Subtitle>
+                  </View>
+                </View>
+              </Tile>
+            </ImageBackground>
+            <ListView
             //change data with this.props.searchData.searchData when backend is ready
             data={this.state.mockData}
             renderRow={(rowData) => this.renderRow(rowData)}
@@ -129,9 +124,7 @@ class ComponentName extends React.Component {
             removeClippedSubviews={false}
           />
           </ScrollView>
-          {/* <Text>{this.props.searchText !== '' ? this.props.searchText.searchText : "search text is blank"}</Text>
-          <Text>{this.props.searchData !== undefined ? this.props.searchData.searchData : "search data is undefined"}</Text> */}
-      </View>
+       </Screen>
      );
    }
   }
@@ -148,26 +141,24 @@ function dimensionRelativeToIphone(dimension, actualRefVal = window.width) {
   return getSizeRelativeToReference(dimension, 375, actualRefVal);
 }
 
-
 const styles = {
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   movieImage: {
     width: dimensionRelativeToIphone(45),
     height: dimensionRelativeToIphone(45),
     borderRadius: Platform.OS === 'ios' ? 20 : 50,
     borderWidth: 0,
-  }
+  },
 };
 
 const mapStateToProps = ({allReducers}) => {
   
-  const { searchText, searchData } = allReducers;
-  return { searchText, searchData };
+  const { username} = allReducers;
+  return { username};
 };
 
-export default connect(mapStateToProps,  { searchTextChanged})(ComponentName);
+export default connect(mapStateToProps,  { usernameChanged, })(ProfilePage);

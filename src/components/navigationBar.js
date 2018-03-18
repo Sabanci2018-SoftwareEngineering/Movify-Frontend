@@ -50,7 +50,7 @@ export default class NavigationBar extends Component {
               badgeNumber: 11,
             },
             {
-              page: "ProfileScreen",
+              page: "ProfilePage",
               icon: "person",
             },
             {

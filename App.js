@@ -22,6 +22,7 @@ import LoginOrSignup from './src/pages/authPages/loginOrSignup';
 import Signup from './src/pages/authPages/signup';
 import Login from './src/pages/authPages/login';
 import ResetPassword from './src/pages/authPages/resetPassword';
+import ProfilePage from './src/pages/profilePage';
 
 //components
 import NavigationBar from './src/components/navigationBar';
@@ -84,7 +85,7 @@ export default class App extends React.Component {
     }
     //If fonts are loaded, font errors won't occur so, our app can be rendered
     //If user is authenticated, user will be able to use the app
-    else if(false){
+    else if(true){
       const store = createStore(reducers, {}, applyMiddleware(ReduxThunk)); 
         return(
            <Provider store={store}>
@@ -93,11 +94,11 @@ export default class App extends React.Component {
                         {/* If you want to use modal animation, initial scene key should be modal */}
                         <Scene key="modal" modal>
                             {/* Tab Container */}
-                            
                             <Scene key="tabbar" tabs={true} tabBarPosition="bottom" tabBarComponent={NavigationBar} tabBarStyle={{borderTopColor:'black', borderTopWidth:1,backgroundColor:'white'}}>
                               {/*Tabs */}
                                 <Scene key="NewPage" component={NewPage} title="NewPage" hideNavBar={true} />
-                                <Scene key="NewPage2" component={NewPage2} title="Newpage2" hideNavBar={true} />
+                                <Scene key="NewPage2" component={NewPage2} title="NewPage" hideNavBar={true} />
+                                <Scene key="ProfilePage" component={ProfilePage} title="ProfilePage" hideNavBar={true} />
                                 <Scene key="SearchPage" component={SearchPage} title="Search" hideNavBar={true} />
                             </Scene>
 
