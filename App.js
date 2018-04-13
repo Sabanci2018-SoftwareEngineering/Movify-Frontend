@@ -1,18 +1,18 @@
 import React from 'react';
-import { StyleSheet,  ActivityIndicator, Dimensions, AsyncStorage} from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 //for shoutem UI
-import { Font, Components } from 'expo';
-import { View, DropDownMenu,ListView, Screen, Icon, Title, Examples, Card, Image, Subtitle, Caption, Button, Row, styleName, Tile, Overlay, ImageBackground, Text } from '@shoutem/ui';
+import { Font } from 'expo';
+import { View } from '@shoutem/ui';
+
+//navigation
+import { Scene, Router } from 'react-native-router-flux';
 
 //redux stuff
 import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import reducers from './src/reducers';
-
-//navigation
-import {Scene, Router, Modal, Actions} from 'react-native-router-flux';
 
 //pages
 import NewPage from './src/pages/newPage';
@@ -31,31 +31,20 @@ import NavigationBar from './src/components/navigationBar';
 //If view is imported from react-native, shoutem components may have styling bugs
 
 console.disableYellowBox = true;
-let width = Dimensions.get('window').width;
-let height = Dimensions.get('window').height;
-
-// Simple component to render something in place of icon
-const TabIcon = ({ selected, title }) => {
-  let state = Actions.state;
-
-  return (
-    <Text style={{color: selected ? 'red' :'red'}}>"{title}"</Text>
-  );
-}
 
 export default class App extends React.Component {
-  
-//---------------- CONSTRUCTOR --------------
-  constructor(props){
+
+  constructor(props) {
     super(props);
+
     this.state = {
       fontsAreLoaded: false,
-    }
+    };
   }
 
 //---------------- This part is mandatory for shoutem components because 
 // these fonts should be loaded before the compenents are mounted --------------
-  async componentWillMount() {
+  async componentDidMount() {
     await Font.loadAsync({
       'Rubik-Black': require('./node_modules/@shoutem/ui/fonts/Rubik-Black.ttf'),
       'Rubik-BlackItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BlackItalic.ttf'),
@@ -68,33 +57,30 @@ export default class App extends React.Component {
       'Rubik-MediumItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-MediumItalic.ttf'),
       'Rubik-Regular': require('./node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf'),
       'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
+      'Ionicons': require('./node_modules/@expo/vector-icons/fonts/Ionicons.ttf'),
+      'FontAwesome': require('./node_modules/@expo/vector-icons/fonts/FontAwesome.ttf'),
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     });
 
-    //When fonts are loaded, fontsAreLoaded state will be true
-    this.setState({fontsAreLoaded: true});
+    this.setState({ fonstAreLoaded: true });
   }
 
   render() {
     //If fonts aren't loaded, spinner will continue to spin
-    if(!this.state.fontsAreLoaded) {
-        return  (
-          <Row style={styles.container}>
-              <ActivityIndicator size="large" color="#0000ff" />
-          </Row>
-        );
+    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk)); 
+    if (!this.state.fonstAreLoaded) {
+      return <ActivityIndicator />;
     }
-    //If fonts are loaded, font errors won't occur so, our app can be rendered
-    //If user is authenticated, user will be able to use the app
-    else if(true){
-      const store = createStore(reducers, {}, applyMiddleware(ReduxThunk)); 
-        return(
+    else if (true) {
+        return (
            <Provider store={store}>
-               <View style={{flex: 1}}>
+               <View style={{ flex: 1 }}>
                     <Router hideNavBar={true}>
                         {/* If you want to use modal animation, initial scene key should be modal */}
                         <Scene key="modal" modal>
                             {/* Tab Container */}
-                            <Scene key="tabbar" tabs={true} tabBarPosition="bottom" tabBarComponent={NavigationBar} tabBarStyle={{borderTopColor:'black', borderTopWidth:1,backgroundColor:'white'}}>
+                            <Scene key="tabbar" tabs={true} tabBarPosition="bottom" tabBarComponent={NavigationBar} tabBarStyle={{ borderTopColor: 'black', borderTopWidth: 1, backgroundColor: 'white' }}>
                               {/*Tabs */}
                                 <Scene key="NewPage" component={NewPage} title="NewPage" hideNavBar={true} />
                                 <Scene key="NewPage2" component={NewPage2} title="NewPage" hideNavBar={true} />
@@ -109,6 +95,10 @@ export default class App extends React.Component {
                              }
                              This scene should be added to here
                             <Scene key="modalExample" component={NewPage} title="Modal" hideNavBar /> */}
+                             <Scene key="LoginOrSignup" component={LoginOrSignup} title="LoginOrSignup" hideNavBar={true} />
+                             <Scene key="ResetPassword" component={ResetPassword} title="ResetPassword" hideNavBar={true} />
+                             <Scene key="Signup" component={Signup} title="Signup" hideNavBar={true} />
+                             <Scene key="Login" component={Login} title="Login" hideNavBar={true} />
                         </Scene>
                     </Router>
                </View>
@@ -117,17 +107,16 @@ export default class App extends React.Component {
     }
     //If fonts are loaded, font errors won't occur so, our app can be rendered
     //If user isn't authenticated, auth pages will be shown
-    else if(true){ 
-        const store = createStore(reducers, {}, applyMiddleware(ReduxThunk)); 
-        return(
+    else if (false) { 
+        return (
            <Provider store={store}>
-               <View style={{flex: 1}}>
+               <View style={{ flex: 1 }}>
                     <Router hideNavBar={true}>
                         <Scene key="root">
-                          <Scene key="LoginOrSignup" component={LoginOrSignup} title="LoginOrSignup"  hideNavBar={true} />
-                          <Scene key="ResetPassword" component={ResetPassword} title="ResetPassword"  hideNavBar={true} />
-                          <Scene key="Signup" component={Signup} title="Signup"  hideNavBar={true} />
-                          <Scene key="Login" component={Login} title="Login"  hideNavBar={true} />
+                          <Scene key="LoginOrSignup" component={LoginOrSignup} title="LoginOrSignup" hideNavBar={true} />
+                          <Scene key="ResetPassword" component={ResetPassword} title="ResetPassword" hideNavBar={true} />
+                          <Scene key="Signup" component={Signup} title="Signup" hideNavBar={true} />
+                          <Scene key="Login" component={Login} title="Login" hideNavBar={true} />
                         </Scene>
                     </Router>
                </View>
@@ -136,12 +125,3 @@ export default class App extends React.Component {
     }
   }
 }
-
-const styles = {
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-};

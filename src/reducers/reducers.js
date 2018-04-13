@@ -5,17 +5,16 @@ const INITIAL_STATE = {
     searchData: undefined
 };
 
-export default ( state = INITIAL_STATE, action)=> {
-    
-    switch(action.type){
+export default (state = INITIAL_STATE, action) => {
+    switch (action.type) {
         case 'user_changed':
-            return { ...state, user: action.payload};
+            return { ...state, user: action.payload };
         case 'username_changed':
-            return { ...state, username: action.payload};
+            return { ...state, username: action.payload };
         case 'searchText_changed':
-            return { ...state, searchText: action.payload};
+            return { ...state, searchText: action.payload };
         case 'searchData_changed':
-            return { ...state, searchData: action.payload};
+            return { ...state, searchData: action.payload };
         default:
             return state;
     }

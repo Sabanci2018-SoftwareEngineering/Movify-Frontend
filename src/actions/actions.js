@@ -1,5 +1,4 @@
 export const userChanged = (user) => {
-  
     return (dispatch) => {
         dispatch({
             type: 'user_changed',
@@ -9,7 +8,6 @@ export const userChanged = (user) => {
 };
 
 export const usernameChanged = (username) => {
-
     return (dispatch) => {
         dispatch({
             type: 'username_changed',
@@ -19,7 +17,6 @@ export const usernameChanged = (username) => {
 };
 
 export const searchDataChanged = (searchData) => {
-
     return (dispatch) => {
         dispatch({
             type: 'searchData_changed',
@@ -29,7 +26,6 @@ export const searchDataChanged = (searchData) => {
 };
 
 export const searchTextChanged = (searchText) => {
-
     return (dispatch) => {
         dispatch({
             type: 'searchText_changed',

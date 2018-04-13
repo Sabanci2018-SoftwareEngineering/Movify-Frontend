@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import {
-  Alert,
   LayoutAnimation,
   TouchableOpacity,
   Dimensions,
@@ -12,23 +11,21 @@ import {
   Text,
   View,
   ImageBackground,
-  TextInput
-} from 'react-native'
-import { Font } from 'expo';
+} from 'react-native';
 import { Input, Button } from 'react-native-elements';
-
-//redux stuff
-import { connect } from 'react-redux';
-import { userChanged } from '../../actions'
 
 //navigation
 import { Actions } from 'react-native-router-flux';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
+
+//redux stuff
+import { connect } from 'react-redux';
+import { userChanged } from '../../actions';
 
 //images and icons
 import BackgroundImage from '../../../assets/authBackground.jpg';
 //If Icon line gives metro bundler error, simply run this command and restart the project
 // rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import FemaleImage from '../../../assets/female.png';
 import MaleImage from '../../../assets/male.png';
 
@@ -43,17 +40,12 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 //Simple math, just adjusts image sizes and positions
 const logoOriginalHeight = 162;
 const logoOriginalWidth = 435;
-const logoHeight = SCREEN_HEIGHT/10;
-const logoWidth = (SCREEN_HEIGHT/10)*(logoOriginalWidth/logoOriginalHeight);
-
-const sloganOriginalHeight = 114;
-const sloganOriginalWidth = 1020;
-const sloganHeight = SCREEN_HEIGHT/20;
-const sloganWidth = (SCREEN_HEIGHT/20)*(sloganOriginalWidth/sloganOriginalHeight);
+const logoHeight = SCREEN_HEIGHT / 10;
+const logoWidth = (SCREEN_HEIGHT / 10) * (logoOriginalWidth / logoOriginalHeight);
 
 class SignupScreen extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       isLoading: false,
       selectedType: null,
@@ -67,7 +59,7 @@ class SignupScreen extends Component {
       confirmationPasswordValid: true,
       userCreated: false,
       verificationCode: '',
-    }
+    };
 
     this.setSelectedType = this.setSelectedType.bind(this);
     this.validateEmail = this.validateEmail.bind(this);
@@ -76,26 +68,9 @@ class SignupScreen extends Component {
     this.signup = this.signup.bind(this);
     this.verifyCode = this.verifyCode.bind(this);
   }
- 
-  signup() {
 
-    LayoutAnimation.easeInEaseOut();
-    const usernameValid = this.validateUsername();
-    const emailValid = this.validateEmail();
-    const passwordValid = this.validatePassword();
-    const confirmationPasswordValid = this.validateConfirmationPassword();
-    if (
-      emailValid &&
-      passwordValid &&
-      confirmationPasswordValid &&
-      usernameValid
-    ) {
-      this.setState({ isLoading: true })
-      setTimeout(() => {
-        LayoutAnimation.easeInEaseOut();
-        this.setState({ isLoading: false, userCreated: true });
-      }, 1500)
-    }
+  setSelectedType = selectedType => {
+    LayoutAnimation.easeInEaseOut() || this.setState({ selectedType });
   }
 
   validateUsername() {
@@ -107,6 +82,27 @@ class SignupScreen extends Component {
     return usernameValid;
   }
 
+
+  signup() {
+    LayoutAnimation.easeInEaseOut();
+    const usernameValid = this.validateUsername();
+    const emailValid = this.validateEmail();
+    const passwordValid = this.validatePassword();
+    const confirmationPasswordValid = this.validateConfirmationPassword();
+    if (
+      emailValid &&
+      passwordValid &&
+      confirmationPasswordValid &&
+      usernameValid
+    ) {
+      this.setState({ isLoading: true });
+      setTimeout(() => {
+        LayoutAnimation.easeInEaseOut();
+        this.setState({ isLoading: false, userCreated: true });
+      }, 1500);
+    }
+  }
+
   validateEmail() {
     const { email } = this.state;
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -114,7 +110,7 @@ class SignupScreen extends Component {
     LayoutAnimation.easeInEaseOut();
     this.setState({ emailValid });
     emailValid || this.emailInput.shake();
-    return emailValid
+    return emailValid;
   }
 
   validatePassword() {
@@ -134,20 +130,10 @@ class SignupScreen extends Component {
     confirmationPasswordValid || this.confirmationPasswordInput.shake();
     return confirmationPasswordValid;
   }
-
-  setSelectedType = selectedType =>{
-    LayoutAnimation.easeInEaseOut() || this.setState({ selectedType });
-  }
-
-  verifyCode(){
-
-  }
   
   render() {
     const {
       isLoading,
-      selectedType,
-      fontLoaded,
       confirmationPassword,
       email,
       emailValid,
@@ -156,13 +142,10 @@ class SignupScreen extends Component {
       confirmationPasswordValid,
       username,
       usernameValid,
-      usernameInput,
-      userCreated,
-      verificationCode
     } = this.state;
 
-    if(this.state.userCreated){
-      return(
+    if (this.state.userCreated) {
+      return (
         <ImageBackground source={BackgroundImage} style={styles.container2}>
             <ScrollView
               scrollEnabled={false}
@@ -175,16 +158,17 @@ class SignupScreen extends Component {
             >
               <Image
               style={{
-                width: logoWidth, height: logoHeight,
-                marginLeft: (SCREEN_WIDTH-logoWidth)/2,
-                marginRight: (SCREEN_WIDTH-logoWidth)/2,
-                marginTop: SCREEN_HEIGHT/15
+                width: logoWidth, 
+                height: logoHeight,
+                marginLeft: (SCREEN_WIDTH - logoWidth) / 2,
+                marginRight: (SCREEN_WIDTH - logoWidth) / 2,
+                marginTop: SCREEN_HEIGHT / 15
               }}
               source={MovifyLogo}
               />
           
               {/* change marginBottom of this view if you want to adjust space between login area and bottom of the screen  */}
-              <View style={{marginBottom: SCREEN_HEIGHT/8}}>
+              <View style={{ marginBottom: SCREEN_HEIGHT / 8 }}>
                 <FormInput
                   refInput={input => (this.emailInput = input)}
                   icon="envelope"
@@ -211,20 +195,20 @@ class SignupScreen extends Component {
                 onPress={() => this.verifyCode()}
                 disabled={isLoading}
                 disabledStyle={styles.signUpButton}
-              />
+                />
           </View>
           </KeyboardAvoidingView>
           </ScrollView>
           </ImageBackground>
-      )   
+      );
     }
-    else{
+    else {
       return (
         <ImageBackground source={BackgroundImage} style={styles.container2}>
-      <ScrollView
-        scrollEnabled={false}
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={styles.container}
+          <ScrollView
+            scrollEnabled={false}
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={styles.container}
           >
             <KeyboardAvoidingView
               behavior="position"
@@ -236,14 +220,14 @@ class SignupScreen extends Component {
                   label="Female"
                   labelColor="white"
                   image={FemaleImage}
-                  onPress={() => this.setState({selectedType: 'female'})}
+                  onPress={() => this.setState({ selectedType: 'female' })}
                   selected={this.state.selectedType === 'female'}
                 />
                 <UserTypeItem
                   label="Male"
                   labelColor="white"
                   image={MaleImage}
-                  onPress={() => this.setState({selectedType: 'male'})}
+                  onPress={() => this.setState({ selectedType: 'male' })}
                   selected={this.state.selectedType === 'male'}
                 />
               </View>
@@ -252,61 +236,61 @@ class SignupScreen extends Component {
                   refInput={input => (this.usernameInput = input)}
                   icon="envelope"
                   value={username}
-                  onChangeText={username => this.setState({ username })}
+                  onChangeText={usernameInput => this.setState({ username: usernameInput })}
                   placeholder="Username"
                   keyboardType="username"
                   returnKeyType="next"
                   displayError={!usernameValid}
                   errorMessage="Please enter a valid username"
                   onSubmitEditing={() => {
-                    this.validateUsername()
-                    this.passwordInput.focus()
+                    this.validateUsername();
+                    this.passwordInput.focus();
                   }}
-                />
+              />
                 <FormInput
                   refInput={input => (this.emailInput = input)}
                   icon="envelope"
                   value={email}
-                  onChangeText={email => this.setState({ email })}
+                  onChangeText={emailInput => this.setState({ email: emailInput })}
                   placeholder="Email"
                   keyboardType="email-address"
                   returnKeyType="next"
                   displayError={!emailValid}
                   errorMessage="Please enter a valid email address"
                   onSubmitEditing={() => {
-                    this.validateEmail()
-                    this.passwordInput.focus()
+                    this.validateEmail();
+                    this.passwordInput.focus();
                   }}
                 />
                 <FormInput
                   refInput={input => (this.passwordInput = input)}
                   icon="lock"
                   value={password}
-                  onChangeText={password => this.setState({ password })}
+                  onChangeText={passwordInput => this.setState({ password: passwordInput })}
                   placeholder="Password"
                   secureTextEntry
                   returnKeyType="next"
                   displayError={!passwordValid}
                   errorMessage="Please enter at least 8 characters"
                   onSubmitEditing={() => {
-                    this.validatePassword()
-                    this.confirmationPasswordInput.focus()
+                    this.validatePassword();
+                    this.confirmationPasswordInput.focus();
                   }}
                 />
                 <FormInput
                   refInput={input => (this.confirmationPasswordInput = input)}
                   icon="lock"
                   value={confirmationPassword}
-                  onChangeText={confirmationPassword =>
-                    this.setState({ confirmationPassword })}
+                  onChangeText={confirmationPasswordInput =>
+                    this.setState({ confirmationPassword: confirmationPasswordInput })}
                   placeholder="Confirm Password"
                   secureTextEntry
                   displayError={!confirmationPasswordValid}
                   errorMessage="The password fields are not identics"
                   returnKeyType="go"
                   onSubmitEditing={() => {
-                    this.validateConfirmationPassword()
-                    this.signup()
+                    this.validateConfirmationPassword();
+                    this.signup();
                   }}
                 />
               </View>
@@ -346,13 +330,13 @@ class SignupScreen extends Component {
             </View>
           </ScrollView>
           </ImageBackground>
-          )
+          );
     }
   }
 }
 
 export const UserTypeItem = props => {
-  const { image, label, labelColor, selected, ...attributes } = props
+  const { image, label, labelColor, selected, ...attributes } = props;
   return (
     <TouchableOpacity {...attributes}>
       <View
@@ -373,8 +357,8 @@ export const UserTypeItem = props => {
         />
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 export const FormInput = props => {
   const { icon, refInput, ...otherProps } = props;
@@ -393,8 +377,8 @@ export const FormInput = props => {
       blurOnSubmit={false}
       placeholderTextColor="white"
     />
-  )
-}
+  );
+};
 
 //If you want to add background image, just change backgroundColor of container to transparent
 const styles = StyleSheet.create({
@@ -424,7 +408,7 @@ const styles = StyleSheet.create({
   userTypesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: SCREEN_WIDTH/(1.25),
+    width: SCREEN_WIDTH / (1.25),
     alignItems: 'center',
   },
   userTypeItemContainer: {
@@ -491,12 +475,11 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
-})
+});
 
-const mapStateToProps = ({allReducers}) => {
-  
+const mapStateToProps = ({ allReducers }) => {
   const { user } = allReducers;
   return { user };
 };
 
-export default connect(mapStateToProps,  { userChanged })(SignupScreen);
+export default connect(mapStateToProps, { userChanged })(SignupScreen);

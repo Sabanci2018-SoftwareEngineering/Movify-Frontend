@@ -1,33 +1,29 @@
 import React, { Component } from 'react';
-import { View, Platform, StatusBar } from 'react-native';
-import { Container, Header, Item, Input, Icon, Button, Text } from 'native-base';
+import { View, StatusBar } from 'react-native';
+import { Header, Item, Input, Icon, } from 'native-base';
 
 //redux stuff
-import { createStore, applyMiddleware } from 'redux';
-import ReduxThunk from 'redux-thunk';
-import { Provider, connect } from 'react-redux';
-import reducers from '../reducers'
+import { connect } from 'react-redux';
 import { searchTextChanged, searchDataChanged } from '../actions';
 
 class SearchBar extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind();
   }
 
-  handleChange(props, input){
-
+  handleChange(props, input) {
     //this line will be something like let searchData = axios.post(backend.com/givemeMovies=input)
 
     //since we don't have backend services right now, searchData = searchText
-    props.searchDataChanged({searchData: input});
-    props.searchTextChanged({searchText: input});
+    props.searchDataChanged({ searchData: input });
+    props.searchTextChanged({ searchText: input });
   }
   
   render() {
     return (
-      <View style={{paddingTop: StatusBar.currentHeight}}>
+      <View style={{ paddingTop: StatusBar.currentHeight }}>
         <Header searchBar rounded>
           <Item>
             <Icon name="ios-search" />
@@ -39,12 +35,9 @@ class SearchBar extends Component {
   }
 }
 
-
-
-const mapStateToProps = ({allReducers}) => {
-  
+const mapStateToProps = ({ allReducers }) => {
     const { searchText, searchData } = allReducers;
     return { searchText, searchData };
   };
   
-  export default connect(mapStateToProps,  { searchTextChanged, searchDataChanged })(SearchBar);
+  export default connect(mapStateToProps, { searchTextChanged, searchDataChanged })(SearchBar);

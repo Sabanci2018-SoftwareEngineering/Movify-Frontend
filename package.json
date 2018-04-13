@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "@exponent/vector-icons": "^4.0.0",
+    "eslint-config-rallycoding": "^3.2.0",
     "jest-expo": "25.0.0",
     "react-native-scripts": "1.11.1",
     "react-test-renderer": "16.2.0"
@@ -30,6 +31,8 @@
     "react-native-router-flux": "^4.0.0-beta.27",
     "react-native-tabbar-bottom": "^1.0.4",
     "react-native-vector-icons": "^4.5.0",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2",
     "redux-thunk": "^2.2.0"
   }
 }
