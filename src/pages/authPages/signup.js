@@ -82,6 +82,10 @@ class SignupScreen extends Component {
     return usernameValid;
   }
 
+  verifyCode() {
+    return -1;
+  }
+
 
   signup() {
     LayoutAnimation.easeInEaseOut();
