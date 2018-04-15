@@ -11,8 +11,10 @@ import {
   Text,
   View,
   ImageBackground,
+  Alert
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
+import axios from 'axios';
 
 //navigation
 import { Actions } from 'react-native-router-flux';
@@ -47,6 +49,8 @@ class ResetPassword extends Component {
     super(props);
     this.state = {
       isLoading: false,
+      username: '',
+      usernameValid: true,
       email: '',
       emailValid: true,
       resetCode: '',
@@ -59,6 +63,7 @@ class ResetPassword extends Component {
     };
 
     this.validateEmail = this.validateEmail.bind(this);
+    this.validateUsername = this.validateUsername.bind(this);
     this.sendResetCode = this.sendResetCode.bind(this);
     this.resetPassword = this.resetPassword.bind(this);
   }
@@ -66,13 +71,27 @@ class ResetPassword extends Component {
   sendResetCode() {
     LayoutAnimation.easeInEaseOut();
     const emailValid = this.validateEmail();
-    if (emailValid) {
-      this.setState({ isLoading: true });
-      setTimeout(() => {
+    const usernameValid = this.validateUsername();
+
+    this.setState({ isLoading: true });
+    setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        this.setState({ isLoading: false, showResetCodeBox: true });
-      }, 1500);
-    }
+        if (emailValid && usernameValid) {
+          axios.post('https://movify.monus.me/forgot', {
+          username: this.state.username,
+          email: this.state.email,
+          })
+          .then((response) => {
+          this.setState({ isLoading: false, showResetCodeBox: true });
+          console.log(response);
+          })
+          .catch((error) => {
+          this.setState({ isLoading: false, showResetCodeBox: false });
+          Alert.alert('😔', 'Invalid username or email. Please check them.');
+          console.log(error.response);
+          });
+        }
+      }, 1000);
   }
 
   verifyResetCode() {
@@ -115,6 +134,15 @@ class ResetPassword extends Component {
     return emailValid;
   }
 
+  validateUsername() {
+    const { username } = this.state;
+    const usernameValid = username.length > 0;
+    LayoutAnimation.easeInEaseOut();
+    this.setState({ usernameValid });
+    usernameValid || this.usernameInput.shake();
+    return usernameValid;
+  }
+
   validatePassword() {
     const { password } = this.state;
     const passwordValid = password.length >= 8;
@@ -136,6 +164,8 @@ class ResetPassword extends Component {
   render() {
     const {
       isLoading,
+      username,
+      usernameValid,
       email,
       emailValid,
     } = this.state;
@@ -313,6 +343,20 @@ class ResetPassword extends Component {
                   errorMessage="Please enter a valid email address"
                   onSubmitEditing={() => {
                     this.validateEmail();
+                    this.passwordInput.focus();
+                  }}
+                />
+                <FormInput
+                  refInput={input => (this.usernameInput = input)}
+                  icon="envelope"
+                  value={username}
+                  onChangeText={usernameInput => this.setState({ username: usernameInput })}
+                  placeholder="Username"
+                  returnKeyType="next"
+                  displayError={!usernameValid}
+                  errorMessage="Please enter a valid username"
+                  onSubmitEditing={() => {
+                    this.validateUsername();
                     this.passwordInput.focus();
                   }}
                 />

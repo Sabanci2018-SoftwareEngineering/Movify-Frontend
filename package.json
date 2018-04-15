@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@shoutem/ui": "^0.23.4",
+    "axios": "^0.18.0",
     "elements": "^0.6.0",
     "expo": "^25.0.0",
     "native-base": "^2.3.9",

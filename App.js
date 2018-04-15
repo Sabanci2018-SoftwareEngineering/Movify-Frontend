@@ -72,7 +72,7 @@ export default class App extends React.Component {
     if (!this.state.fonstAreLoaded) {
       return <ActivityIndicator />;
     }
-    else if (true) {
+    else if (false) {
         return (
            <Provider store={store}>
                <View style={{ flex: 1 }}>
@@ -107,14 +107,14 @@ export default class App extends React.Component {
     }
     //If fonts are loaded, font errors won't occur so, our app can be rendered
     //If user isn't authenticated, auth pages will be shown
-    else if (false) { 
+    else if (true) { 
         return (
            <Provider store={store}>
                <View style={{ flex: 1 }}>
                     <Router hideNavBar={true}>
                         <Scene key="root">
-                          <Scene key="LoginOrSignup" component={LoginOrSignup} title="LoginOrSignup" hideNavBar={true} />
                           <Scene key="ResetPassword" component={ResetPassword} title="ResetPassword" hideNavBar={true} />
+                          <Scene key="LoginOrSignup" component={LoginOrSignup} title="LoginOrSignup" hideNavBar={true} />
                           <Scene key="Signup" component={Signup} title="Signup" hideNavBar={true} />
                           <Scene key="Login" component={Login} title="Login" hideNavBar={true} />
                         </Scene>
