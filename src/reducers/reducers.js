@@ -3,13 +3,12 @@ const INITIAL_STATE = {
     username: undefined
 };
 
-export default ( state = INITIAL_STATE, action)=> {
-    
-    switch(action.type){
+export default (state = INITIAL_STATE, action) => {
+    switch (action.type) {
         case 'user_changed':
-            return { ...state, user: action.payload};
+            return { ...state, user: action.payload };
         case 'username_changed':
-            return { ...state, username: action.payload};
+            return { ...state, username: action.payload };
         default:
             return state;
     }
