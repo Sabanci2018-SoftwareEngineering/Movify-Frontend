@@ -1,21 +1,28 @@
+/* global require */
 import React from 'react';
-
 import { ActivityIndicator } from 'react-native';
-
 import { Font } from 'expo';
-import { View, Row } from '@shoutem/ui';
-
 import { createStore, applyMiddleware } from 'redux';
-import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
+import { Row } from '@shoutem/ui';
+import { TabNavigator } from 'react-navigation';
+import ReduxThunk from 'redux-thunk';
 
-import { Scene, Router } from 'react-native-router-flux';
-
-import NewPage from './src/pages/newPage';
-import NewPage2 from './src/pages/newPage2';
 import reducers from './src/reducers';
+import { HomeScreen, ProfileScreen, WatchlistScreen, SearchScreen, WatchedlistScreen } from './src/screens';
 
-console.disableYellowBox = true;
+const RootNavigator = TabNavigator(
+  {
+    Home: { screen: HomeScreen },
+    Profile: { screen: ProfileScreen },
+    Search: { screen: SearchScreen },
+    Watchlist: { screen: WatchlistScreen },
+    Watchedlist: { screen: WatchedlistScreen }
+  },
+  {
+    initialRouteName: 'Home',
+  }
+);
 
 export default class App extends React.Component {
   constructor(props) {
@@ -54,15 +61,8 @@ export default class App extends React.Component {
     const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
     return (
        <Provider store={store}>
-           <View style={{ flex: 1 }}>
-                <Router >
-                    <Scene key="root">
-                        <Scene key="NewPage" component={NewPage} title="New Page" />
-                        <Scene key="NewPage2" component={NewPage2} title="New Page2" />
-                    </Scene>
-                </Router>
-           </View>
-       </Provider>
+        <RootNavigator />
+      </Provider>
     );
     }
 }
