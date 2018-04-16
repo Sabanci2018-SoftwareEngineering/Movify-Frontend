@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   Dimensions,
-  Image,
   StyleSheet,
   View,
   ImageBackground,
@@ -17,49 +16,17 @@ import { userChanged } from '../../actions';
 
 //Logo, bgimage and slogan
 import BackgroundImage from '../../../assets/authBackground.jpg';
-import MovifyLogo from '../../../assets/movify.png';
-import YourCatalog from '../../../assets/yourCatalog.png';
+import MovifyLogo from '../../components/movifyLogo';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-
-//Simple math, just adjusts image sizes and positions
-const logoOriginalHeight = 162;
-const logoOriginalWidth = 435;
-const logoHeight = SCREEN_HEIGHT / 10;
-const logoWidth = (SCREEN_HEIGHT / 10) * (logoOriginalWidth / logoOriginalHeight);
-
-const sloganOriginalHeight = 114;
-const sloganOriginalWidth = 1020;
-const sloganHeight = SCREEN_HEIGHT / 20;
-const sloganWidth = (SCREEN_HEIGHT / 20) * (sloganOriginalWidth / sloganOriginalHeight);
 
 class LoginScreen extends Component {
   
   render() {
     return (
       <ImageBackground source={BackgroundImage} style={styles.container}>
-          <Image
-            style={{
-              width: logoWidth, 
-              height: logoHeight,
-              marginLeft: (SCREEN_WIDTH - logoWidth) / 2,
-              marginRight: (SCREEN_WIDTH - logoWidth) / 2,
-              marginTop: SCREEN_HEIGHT / 15
-            }}
-            source={MovifyLogo}
-          />
-
-          <Image
-            style={{
-              width: sloganWidth, 
-              height: sloganHeight,
-              marginLeft: (SCREEN_WIDTH - sloganWidth) / 2,
-              marginRight: (SCREEN_WIDTH - sloganWidth) / 2,
-              marginTop: SCREEN_HEIGHT / 100
-            }}
-            source={YourCatalog}
-          />
+          <MovifyLogo screen='loginOrSignUp' />
           <View style={{ flex: 1, justifyContent: 'center' }}>
             <Button
                 title='LOGIN'
@@ -76,8 +43,7 @@ class LoginScreen extends Component {
                 titleStyle={{ fontWeight: 'bold', color: 'black' }}
             />
           </View>
- 
-        </ImageBackground>
+          </ImageBackground>
         );
       }
   }

@@ -23,6 +23,7 @@ import Signup from './src/pages/authPages/signup';
 import Login from './src/pages/authPages/login';
 import ResetPassword from './src/pages/authPages/resetPassword';
 import ProfilePage from './src/pages/profilePage';
+import ActivateUser from './src/pages/authPages/activateUser';
 
 //components
 import NavigationBar from './src/components/navigationBar';
@@ -87,18 +88,6 @@ export default class App extends React.Component {
                                 <Scene key="ProfilePage" component={ProfilePage} title="ProfilePage" hideNavBar={true} />
                                 <Scene key="SearchPage" component={SearchPage} title="Search" hideNavBar={true} />
                             </Scene>
-
-                            {/* This is how we use modal navigation animation
-                            call this function onClick
-                            onPress={()=> {
-                              Actions.push("modalExample")}
-                             }
-                             This scene should be added to here
-                            <Scene key="modalExample" component={NewPage} title="Modal" hideNavBar /> */}
-                             <Scene key="LoginOrSignup" component={LoginOrSignup} title="LoginOrSignup" hideNavBar={true} />
-                             <Scene key="ResetPassword" component={ResetPassword} title="ResetPassword" hideNavBar={true} />
-                             <Scene key="Signup" component={Signup} title="Signup" hideNavBar={true} />
-                             <Scene key="Login" component={Login} title="Login" hideNavBar={true} />
                         </Scene>
                     </Router>
                </View>
@@ -113,10 +102,11 @@ export default class App extends React.Component {
                <View style={{ flex: 1 }}>
                     <Router hideNavBar={true}>
                         <Scene key="root">
-                          <Scene key="ResetPassword" component={ResetPassword} title="ResetPassword" hideNavBar={true} />
                           <Scene key="LoginOrSignup" component={LoginOrSignup} title="LoginOrSignup" hideNavBar={true} />
-                          <Scene key="Signup" component={Signup} title="Signup" hideNavBar={true} />
+                          <Scene key="ActivateUser" component={ActivateUser} title="ActivateUser" hideNavBar={true} />
                           <Scene key="Login" component={Login} title="Login" hideNavBar={true} />
+                          <Scene key="ResetPassword" component={ResetPassword} title="ResetPassword" hideNavBar={true} />
+                          <Scene key="Signup" component={Signup} title="Signup" hideNavBar={true} />
                         </Scene>
                     </Router>
                </View>

@@ -16,9 +16,6 @@ import {
 import { Input, Button } from 'react-native-elements';
 import axios from 'axios';
 
-//navigation
-import { Actions } from 'react-native-router-flux';
-
 //If Icon line gives metro bundler error, simply run this command and restart the project
 // rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
@@ -30,19 +27,14 @@ import { userChanged } from '../../actions';
 //images and icons
 import BackgroundImage from '../../../assets/authBackground.jpg';
 
-import MovifyLogo from '../../../assets/movify.png';
+import MovifyLogo from '../../components/movifyLogo';
+import RedirectHere from '../../components/redirectHere';
 
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-
-//Simple math, just adjusts image sizes and positions
-const logoOriginalHeight = 162;
-const logoOriginalWidth = 435;
-const logoHeight = SCREEN_HEIGHT / 10;
-const logoWidth = (SCREEN_HEIGHT / 10) * (logoOriginalWidth / logoOriginalHeight);
 
 class ResetPassword extends Component {
   constructor(props) {
@@ -83,11 +75,13 @@ class ResetPassword extends Component {
           })
           .then((response) => {
           this.setState({ isLoading: false, showResetCodeBox: true });
+          // to see response
           console.log(response);
           })
           .catch((error) => {
           this.setState({ isLoading: false, showResetCodeBox: false });
-          Alert.alert('😔', 'Invalid username or email. Please check them.');
+          Alert.alert('An error occurred😔', 'Invalid username or email. Please check them');
+          // to see error response
           console.log(error.response);
           });
         }
@@ -95,19 +89,26 @@ class ResetPassword extends Component {
   }
 
   verifyResetCode() {
-    //send reset code to the server
-    //wait for response
-    //when you have recieved the response, setState
-
-    LayoutAnimation.easeInEaseOut();
     //if backend says that it is the correct reset code
-    if (true) {
       this.setState({ isLoading: true });
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        this.setState({ isLoading: false, showResetPassword: true });
-      }, 1500);
-    }
+        axios.post('https://movify.monus.me/forgot', {
+          username: this.state.username,
+          email: this.state.email,
+          })
+          .then((response) => {
+          this.setState({ isLoading: false, showResetPassword: true });
+          // to see response
+          console.log(response);
+          })
+          .catch((error) => {
+          this.setState({ isLoading: false, showResetPassword: false });
+          Alert.alert('An error occurred😔', 'Invalid verification code');
+          // to see error response
+          console.log(error.response);
+          });
+          }, 1500);
   }
 
   resetPassword() {
@@ -182,17 +183,7 @@ class ResetPassword extends Component {
               behavior="position"
               contentContainerStyle={styles.formContainer}
             >
-              <Image
-              style={{
-                width: logoWidth, 
-                height: logoHeight,
-                marginLeft: (SCREEN_WIDTH - logoWidth) / 2,
-                marginRight: (SCREEN_WIDTH - logoWidth) / 2,
-                marginTop: SCREEN_HEIGHT / 15
-              }}
-              source={MovifyLogo}
-              />
-          
+              <MovifyLogo />
               {/* change marginBottom of this view if you want to adjust space between login area and bottom of the screen  */}
               <View style={{ marginBottom: SCREEN_HEIGHT / 8 }}>
                 <FormInput
@@ -260,16 +251,7 @@ class ResetPassword extends Component {
               behavior="position"
               contentContainerStyle={styles.formContainer}
             >
-              <Image
-              style={{
-                width: logoWidth, 
-                height: logoHeight,
-                marginLeft: (SCREEN_WIDTH - logoWidth) / 2,
-                marginRight: (SCREEN_WIDTH - logoWidth) / 2,
-                marginTop: SCREEN_HEIGHT / 15
-              }}
-              source={MovifyLogo}
-              />
+             <MovifyLogo />
           
               {/* change marginBottom of this view if you want to adjust space between login area and bottom of the screen  */}
               <View style={{ marginBottom: SCREEN_HEIGHT / 8 }}>
@@ -310,25 +292,16 @@ class ResetPassword extends Component {
     else {
       return (
         <ImageBackground source={BackgroundImage} style={styles.container2}>
-            <ScrollView
-              scrollEnabled={false}
-              keyboardShouldPersistTaps="handled"
-              contentContainerStyle={styles.container}
-            >
+          <ScrollView
+          scrollEnabled={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={styles.container}
+          >
             <KeyboardAvoidingView
-              behavior="position"
-              contentContainerStyle={styles.formContainer}
+            behavior="position"
+            contentContainerStyle={styles.formContainer}
             >
-              <Image
-              style={{
-                width: logoWidth, 
-                height: logoHeight,
-                marginLeft: (SCREEN_WIDTH - logoWidth) / 2,
-                marginRight: (SCREEN_WIDTH - logoWidth) / 2,
-                marginTop: SCREEN_HEIGHT / 15
-              }}
-              source={MovifyLogo}
-              />
+              <MovifyLogo />
               {/* change marginBottom of this view if you want to adjust space between login area and bottom of the screen  */}
               <View style={{ marginBottom: SCREEN_HEIGHT / 8 }}>
                 <FormInput
@@ -376,28 +349,15 @@ class ResetPassword extends Component {
                 disabled={isLoading}
                 disabledStyle={styles.signUpButton}
                 />
-              <View style={styles.loginHereContainer}>
-              <Text style={styles.alreadyAccountText}>
-                Already know your password?
-              </Text>
-              <Button
+                <RedirectHere
+                message="Already know your password?"
                 title="Login"
-                titleStyle={styles.loginHereText}
-                containerStyle={{ flex: -1 }}
-                buttonStyle={{ backgroundColor: 'transparent' }}
-                underlayColor="transparent"
-                onPress={() => {
-                  //4.0.0-beta.28 Actions.replace gives TypeError: undefined is not an object (evaluating 'resetAction.actions.map')
-                  //.replace() only works with 4.0.0-beta.27 for now
-                  Actions.pop();
-                }}
-              />
-            </View>
-          </View>
-          </KeyboardAvoidingView>
-            
+                redirect="Actions.pop()"
+                />
+              </View>
+            </KeyboardAvoidingView>
           </ScrollView>
-          </ImageBackground>
+        </ImageBackground>
         );
     }
   }
@@ -528,19 +488,6 @@ const styles = StyleSheet.create({
     height: 45,
     marginTop: 15,
     marginRight: 5
-  },
-  loginHereContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  alreadyAccountText: {
-    fontSize: 12,
-    color: 'white',
-  },
-  loginHereText: {
-    color: '#FF9800',
-    fontSize: 12,
   },
   container2: {
     flex: 1,

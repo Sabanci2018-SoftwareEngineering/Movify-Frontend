@@ -11,16 +11,20 @@ import {
   Text,
   View,
   ImageBackground,
+  Alert
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 
-//navigation
-import { Actions } from 'react-native-router-flux';
+import axios from 'axios';
+
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //redux stuff
 import { connect } from 'react-redux';
 import { userChanged } from '../../actions';
+
+import MovifyLogo from '../../components/movifyLogo';
+import RedirectHere from '../../components/redirectHere';
 
 //images and icons
 import BackgroundImage from '../../../assets/authBackground.jpg';
@@ -29,19 +33,11 @@ import BackgroundImage from '../../../assets/authBackground.jpg';
 import FemaleImage from '../../../assets/female.png';
 import MaleImage from '../../../assets/male.png';
 
-import MovifyLogo from '../../../assets/movify.png';
-
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-
-//Simple math, just adjusts image sizes and positions
-const logoOriginalHeight = 162;
-const logoOriginalWidth = 435;
-const logoHeight = SCREEN_HEIGHT / 10;
-const logoWidth = (SCREEN_HEIGHT / 10) * (logoOriginalWidth / logoOriginalHeight);
 
 class SignupScreen extends Component {
   constructor(props) {
@@ -83,7 +79,32 @@ class SignupScreen extends Component {
   }
 
   verifyCode() {
-    return -1;
+    const { verificationCode } = this.state;
+    if (verificationCode === '') {
+        Alert.alert('Error', 'Please enter the verification code.');
+    }
+    else {
+      this.setState({ isLoading: true });
+      setTimeout(() => {
+        LayoutAnimation.easeInEaseOut();
+        axios.post('https://movify.monus.me/activate', {
+          username: this.state.username,
+          activation_key: this.state.verificationCode
+          })
+          .then((response) => {
+          Alert.alert('Success', 'User is verified');
+          // to see response
+          console.log(response);
+          })
+          .catch((error) => {
+          const errorMessage = error.response.data.error;
+          this.setState({ isLoading: false });
+          Alert.alert('An error occurred😔', `${errorMessage}`);
+          // to see error response
+          console.log(error.response);
+          });
+          }, 1500);    
+    }
   }
 
 
@@ -102,8 +123,24 @@ class SignupScreen extends Component {
       this.setState({ isLoading: true });
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        this.setState({ isLoading: false, userCreated: true });
-      }, 1500);
+        axios.post('https://movify.monus.me/register', {
+          username: this.state.username,
+          email: this.state.email,
+          password: this.state.password
+          })
+          .then((response) => {
+          this.setState({ isLoading: false, userCreated: true });
+          // to see response
+          console.log(response);
+          })
+          .catch((error) => {
+          const errorMessage = error.response.headers['www-authenticate'];
+          this.setState({ isLoading: false, userCreated: false });
+          Alert.alert('An error occurred😔', `${errorMessage}`);
+          // to see error response
+          console.log(error.response);
+          });
+          }, 1500);    
     }
   }
 
@@ -160,17 +197,7 @@ class SignupScreen extends Component {
               behavior="position"
               contentContainerStyle={styles.formContainer}
             >
-              <Image
-              style={{
-                width: logoWidth, 
-                height: logoHeight,
-                marginLeft: (SCREEN_WIDTH - logoWidth) / 2,
-                marginRight: (SCREEN_WIDTH - logoWidth) / 2,
-                marginTop: SCREEN_HEIGHT / 15
-              }}
-              source={MovifyLogo}
-              />
-          
+            <MovifyLogo />
               {/* change marginBottom of this view if you want to adjust space between login area and bottom of the screen  */}
               <View style={{ marginBottom: SCREEN_HEIGHT / 8 }}>
                 <FormInput
@@ -315,23 +342,11 @@ class SignupScreen extends Component {
                 disabledStyle={styles.signUpButton}
               />
             </KeyboardAvoidingView>
-            <View style={styles.loginHereContainer}>
-              <Text style={styles.alreadyAccountText}>
-                Already have an account?
-              </Text>
-              <Button
-                title="Login here"
-                titleStyle={styles.loginHereText}
-                containerStyle={{ flex: -1 }}
-                buttonStyle={{ backgroundColor: 'transparent' }}
-                underlayColor="transparent"
-                onPress={() => {
-                  //4.0.0-beta.28 Actions.replace gives TypeError: undefined is not an object (evaluating 'resetAction.actions.map')
-                  //it only works with 4.0.0-beta.27 for now
-                  Actions.push('Login');
-                }}
-              />
-            </View>
+            <RedirectHere
+            message="Already have an account?"
+            title="Login Here"
+            redirect="Login"
+            />
           </ScrollView>
           </ImageBackground>
           );

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Alert,
   LayoutAnimation,
   TouchableOpacity,
   Dimensions,
@@ -12,9 +11,9 @@ import {
   Text,
   View,
   ImageBackground,
+  Alert
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
-
 import axios from 'axios';
 
 //If Icon line gives metro bundler error, simply run this command and restart the project
@@ -37,161 +36,131 @@ UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationE
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-class LoginScreen extends Component {
+class ActivateUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: false,
-      email: '',
-      password: '',
-      emailValid: true,
-      passwordValid: true,
+      username: '',
+      usernameValid: true,
+      activationCode: '',
     };
 
-    this.validateEmail = this.validateEmail.bind(this);
-    this.validatePassword = this.validatePassword.bind(this);
-    this.login = this.login.bind(this);
+    this.validateUsername = this.validateUsername.bind(this);
+    this.activateAccount = this.activateAccount.bind(this);
   }
  
-  login() {
+  activateAccount() {
     LayoutAnimation.easeInEaseOut();
-    const emailValid = this.validateEmail();
-    const passwordValid = this.validatePassword();
-    if (
-      emailValid &&
-      passwordValid
-    ) {
-      this.setState({ isLoading: true });
-      setTimeout(() => {
+    
+    const usernameValid = this.validateUsername();
+    if (this.state.activationCode !== '') {
+        this.setState({ isLoading: true });
+        setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        axios.post('https://localhost:3000/login', {
-          username: 'tt6',
-          password: '123123123',
+        if (usernameValid) {
+          axios.post(`http://localhost:3000/activate/${this.state.username}`, {
+          key: this.state.activationCode,
           })
           .then((response) => {
           this.setState({ isLoading: false });
-          Alert.alert('Success', 'Success');
+          Alert.alert('Verified', 'Verified');
           // to see response
           console.log(response);
           })
           .catch((error) => {
           this.setState({ isLoading: false });
-          Alert.alert('An error occurred😔', 'Error');
+          Alert.alert('An error occurred😔', error.response.data.error);
           // to see error response
           console.log(error.response);
           });
-          }, 1500);
+        }
+      }, 1000);
     }
   }
 
-  validateEmail() {
-    const { email } = this.state;
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    const emailValid = re.test(email);
+  validateUsername() {
+    const { username } = this.state;
+    const usernameValid = username.length > 0;
     LayoutAnimation.easeInEaseOut();
-    this.setState({ emailValid });
-    emailValid || this.emailInput.shake();
-    return emailValid;
-  }
-
-  validatePassword() {
-    const { password } = this.state;
-    const passwordValid = password.length >= 8;
-    LayoutAnimation.easeInEaseOut();
-    this.setState({ passwordValid });
-    passwordValid || this.passwordInput.shake();
-    return passwordValid;
+    this.setState({ usernameValid });
+    usernameValid || this.usernameInput.shake();
+    return usernameValid;
   }
 
   render() {
     const {
       isLoading,
-      email,
-      emailValid,
-      password,
-      passwordValid,
+      username,
+      usernameValid,
+      activationCode,
     } = this.state;
-
-
-    return (
-      <ImageBackground source={BackgroundImage} style={styles.container2}>
+    
+      return (
+        <ImageBackground source={BackgroundImage} style={styles.container2}>
           <ScrollView
-            scrollEnabled={false}
-                keyboardShouldPersistTaps="handled"
-                contentContainerStyle={styles.container}
+              scrollEnabled={false}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={styles.container}
           >
             <KeyboardAvoidingView
-              behavior="position"
-              contentContainerStyle={styles.formContainer}
+                behavior="position"
+                contentContainerStyle={styles.formContainer}
             >
               <MovifyLogo />
               {/* change marginBottom of this view if you want to adjust space between login area and bottom of the screen  */}
-              <View style={{ marginBottom: SCREEN_HEIGHT / 18 }}>
-                <FormInput
-                  refInput={input => (this.emailInput = input)}
-                  icon="envelope"
-                  value={email}
-                  onChangeText={currentEmail => this.setState({ email: currentEmail })}
-                  placeholder="Email"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  displayError={!emailValid}
-                  errorMessage="Please enter a valid email address"
-                  onSubmitEditing={() => {
-                    this.validateEmail();
-                    this.passwordInput.focus();
-                  }}
-                />
-                <FormInput
-                  refInput={input => (this.passwordInput = input)}
-                  icon="lock"
-                  value={password}
-                  onChangeText={currentPassword => this.setState({ password: currentPassword })}
-                  placeholder="Password"
-                  secureTextEntry
-                  returnKeyType="next"
-                  displayError={!passwordValid}
-                  errorMessage="Please enter at least 8 characters"
-                  onSubmitEditing={() => {
-                    this.validatePassword();
-                    this.confirmationPasswordInput.focus();
-                  }}
-                />
-                <Button
-                loading={isLoading}
-                title="LOGIN"
-                containerStyle={{ flex: -1 }}
-                buttonStyle={styles.signUpButton}
-                ViewComponent={require('expo').LinearGradient}
-                linearGradientProps={{
-                  colors: ['#FF9800', '#F44336'],
-                  start: [1, 0],
-                  end: [0.2, 0],
-                }}
-                titleStyle={styles.signUpButtonText}
-                onPress={this.login}
-                disabled={isLoading}
-                disabledStyle={styles.signUpButton}
-                />    
-                <RedirectHere 
-                  message="Don't have an account?"
-                  title="Sign Up"
-                  redirect="Signup"
-                />
-                <RedirectHere 
-                  message="Forgot Password?"
-                  title="Reset Password"
-                  redirect="ResetPassword"
-                />
-                <RedirectHere 
-                  message="Not activated account?"
-                  title="Activate Account"
-                  redirect="ActivateUser"
-                />
+              <View style={{ marginBottom: SCREEN_HEIGHT / 8 }}>
+                      <FormInput
+                      refInput={usernameInput => (this.usernameInput = usernameInput)}
+                      icon="envelope"
+                      value={username}
+                      onChangeText={usernameInput => this.setState({ username: usernameInput })}
+                      placeholder="Username"
+                      returnKeyType="next"
+                      displayError={!usernameValid}
+                      errorMessage="Please enter a valid username"
+                      onSubmitEditing={() => {
+                          this.validateUsername();
+                          this.passwordInput.focus();
+                      }}
+                      />
+                      <FormInput
+                      refInput={input => (this.activationCode = input)}
+                      icon="envelope"
+                      value={activationCode}
+                      onChangeText={activationCodeInput => this.setState({ activationCode: activationCodeInput })}
+                      placeholder="Activation code"
+                      returnKeyType="next"
+                      onSubmitEditing={() => {
+                          this.validateUsername();
+                          this.passwordInput.focus();
+                      }}
+                      />
+                      <Button
+                      loading={isLoading}
+                      title="ACTIVATE ACCOUNT"
+                      containerStyle={{ flex: -1 }}
+                      buttonStyle={styles.signUpButton}
+                      ViewComponent={require('expo').LinearGradient}
+                      linearGradientProps={{
+                      colors: ['#FF9800', '#F44336'],
+                      start: [1, 0],
+                      end: [0.2, 0],
+                      }}
+                      titleStyle={styles.signUpButtonText}
+                      onPress={() => this.activateAccount()}
+                      disabled={isLoading}
+                      disabledStyle={styles.signUpButton}
+                      />
+                      <RedirectHere 
+                      message="Activated account?"
+                      title="Login Here"
+                      redirect="Actions.pop()"
+                      />
               </View>
-            </KeyboardAvoidingView> 
+            </KeyboardAvoidingView>
           </ScrollView>
-      </ImageBackground>
+        </ImageBackground>
         );
   }
 }
@@ -333,4 +302,4 @@ const mapStateToProps = ({ allReducers }) => {
   return { user };
 };
 
-export default connect(mapStateToProps, { userChanged })(LoginScreen);
+export default connect(mapStateToProps, { userChanged })(ActivateUser);
