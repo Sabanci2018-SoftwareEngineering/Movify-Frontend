@@ -1,20 +1,15 @@
 /* global require */
 import React from 'react';
-import { ActivityIndicator, AsyncStorage } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { Font } from 'expo';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { Row } from '@shoutem/ui';
-import { TabNavigator, StackNavigator } from 'react-navigation';
+import { TabNavigator } from 'react-navigation';
 import ReduxThunk from 'redux-thunk';
 
 import reducers from './src/reducers';
-import { HomeScreen, ProfileScreen, WatchlistScreen, SearchScreen, WatchedlistScreen, 
-         ActivateUser, Login, LoginOrSignup, ResetPassword, Signup } from './src/screens';
-
-console.disableYellowBox = true;
-
-let user = null;
+import { HomeScreen, ProfileScreen, WatchlistScreen, SearchScreen, WatchedlistScreen } from './src/screens';
 
 const RootNavigator = TabNavigator(
   {
@@ -29,26 +24,11 @@ const RootNavigator = TabNavigator(
   }
 );
 
-const AuthPages = StackNavigator(
-  {
-    ActivateUser: { screen: ActivateUser },
-    Login: { screen: Login },
-    LoginOrSignup: { screen: LoginOrSignup },
-    ResetPassword: { screen: ResetPassword },
-    Signup: { screen: Signup },
-  },
-  {
-    initialRouteName: 'LoginOrSignup',
-    headerMode: 'none' //to hide header for auth pages
-  }
-);
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { ...this.state,
       fontsAreLoaded: false,
-      asyncGetFinished: false,
     };
   }
 
@@ -64,26 +44,14 @@ export default class App extends React.Component {
       'Rubik-Medium': require('./node_modules/@shoutem/ui/fonts/Rubik-Medium.ttf'),
       'Rubik-MediumItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-MediumItalic.ttf'),
       'Rubik-Regular': require('./node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf'),
-      'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
-      'Ionicons': require('./node_modules/@expo/vector-icons/fonts/Ionicons.ttf'),
-      'FontAwesome': require('./node_modules/@expo/vector-icons/fonts/FontAwesome.ttf'),
-      'Roboto': require('native-base/Fonts/Roboto.ttf'),
-      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+      'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf')
     });
 
-    try{
-      await AsyncStorage.getItem('user', (err, result) => {
-      user = JSON.parse(result);
-    });
-    } catch(error){
-      //console.log(error);
-    }
-
-    this.setState({ fontsAreLoaded: true, asyncGetFinished: true});
+    this.setState({ fontsAreLoaded: true });
   }
 
   render() {
-    if (!this.state.fontsAreLoaded && !this.state.asyncGetFinished) {
+    if (!this.state.fontsAreLoaded) {
         return (
           <Row style={styles.container}>
               <ActivityIndicator size="large" color="#0000ff" />
@@ -91,21 +59,12 @@ export default class App extends React.Component {
         );
     }
     const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
-    if(user !== null){
-      return (
-        <Provider store={store}>
-         <RootNavigator />
-       </Provider>
-     );
-    }
-    else {
-      return (
+    return (
        <Provider store={store}>
-         <AuthPages />
-       </Provider>
-      );
+        <RootNavigator />
+      </Provider>
+    );
     }
-  }
 }
 
 const styles = {

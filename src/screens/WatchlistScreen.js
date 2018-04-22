@@ -21,8 +21,8 @@ class WatchlistScreen extends React.Component {
         (input) => this.props.usernameChanged({ username: input })
         }
         />
-        <Text> {this.props.user !== undefined ?
-        `Email:  ${this.props.user.user.email}` : 'User is undefined.'}
+        <Text> {this.props.username !== undefined ?
+        `Username:  ${this.props.username.username}` : 'User is undefined.'}
         </Text>
         <Button
         styleName="secondary" style={{ marginTop: 20 }}
@@ -35,8 +35,8 @@ class WatchlistScreen extends React.Component {
   }
 }
 const mapStateToProps = ({ allReducers }) => {
-  const { username, user } = allReducers;
-  return { username, user };
+  const { username } = allReducers;
+  return { username };
 };
 
 const WatchlistStack = StackNavigator({
