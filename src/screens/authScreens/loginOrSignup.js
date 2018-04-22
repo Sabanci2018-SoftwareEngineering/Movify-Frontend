@@ -7,9 +7,6 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-elements';
 
-//navigation
-import { Actions } from 'react-native-router-flux';
-
 //redux stuff
 import { connect } from 'react-redux';
 import { userChanged } from '../../actions';
@@ -30,14 +27,14 @@ class LoginScreen extends Component {
           <View style={{ flex: 1, justifyContent: 'center' }}>
             <Button
                 title='LOGIN'
-                onPress={() => Actions.Login()}
+                onPress={() => this.props.navigation.navigate('Login')}
                 buttonStyle={{ height: 50, width: 250, backgroundColor: 'white', borderRadius: 30 }}
                 containerStyle={{ marginVertical: 10 }}
                 titleStyle={{ fontWeight: 'bold', color: 'black' }}
             />
             <Button
                 title='SIGN UP'
-                onPress={() => Actions.Signup()}
+                onPress={() => this.props.navigation.navigate('Signup')}
                 buttonStyle={{ height: 50, width: 250, backgroundColor: 'white', borderRadius: 30, marginTop: 18 }}
                 containerStyle={{ marginVertical: 10 }}
                 titleStyle={{ fontWeight: 'bold', color: 'black' }}

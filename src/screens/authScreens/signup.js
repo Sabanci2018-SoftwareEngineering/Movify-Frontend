@@ -13,23 +13,19 @@ import {
   ImageBackground,
   Alert
 } from 'react-native';
-import { Input, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 
 import axios from 'axios';
-
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //redux stuff
 import { connect } from 'react-redux';
 import { userChanged } from '../../actions';
 
-import MovifyLogo from '../../components/movifyLogo';
-import RedirectHere from '../../components/redirectHere';
+//components
+import { MovifyLogo, RedirectHere, FormInput} from '../../components';
 
 //images and icons
 import BackgroundImage from '../../../assets/authBackground.jpg';
-//If Icon line gives metro bundler error, simply run this command and restart the project
-// rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json
 import FemaleImage from '../../../assets/female.png';
 import MaleImage from '../../../assets/male.png';
 
@@ -78,36 +74,6 @@ class SignupScreen extends Component {
     return usernameValid;
   }
 
-  verifyCode() {
-    const { verificationCode } = this.state;
-    if (verificationCode === '') {
-        Alert.alert('Error', 'Please enter the verification code.');
-    }
-    else {
-      this.setState({ isLoading: true });
-      setTimeout(() => {
-        LayoutAnimation.easeInEaseOut();
-        axios.post('https://movify.monus.me/activate', {
-          username: this.state.username,
-          activation_key: this.state.verificationCode
-          })
-          .then((response) => {
-          Alert.alert('Success', 'User is verified');
-          // to see response
-          console.log(response);
-          })
-          .catch((error) => {
-          const errorMessage = error.response.data.error;
-          this.setState({ isLoading: false });
-          Alert.alert('An error occurred😔', `${errorMessage}`);
-          // to see error response
-          console.log(error.response);
-          });
-          }, 1500);    
-    }
-  }
-
-
   signup() {
     LayoutAnimation.easeInEaseOut();
     const usernameValid = this.validateUsername();
@@ -123,22 +89,49 @@ class SignupScreen extends Component {
       this.setState({ isLoading: true });
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        axios.post('https://movify.monus.me/register', {
+        axios.post('http://localhost:3000/register', {
           username: this.state.username,
           email: this.state.email,
-          password: this.state.password
+          password: this.state.password,
           })
           .then((response) => {
-          this.setState({ isLoading: false, userCreated: true });
-          // to see response
-          console.log(response);
+            this.setState({ isLoading: false, userCreated: true });
           })
           .catch((error) => {
-          const errorMessage = error.response.headers['www-authenticate'];
-          this.setState({ isLoading: false, userCreated: false });
+            const errorMessage = error.response.headers['www-authenticate'];
+            this.setState({ isLoading: false, userCreated: false });
+            Alert.alert('An error occurred😔', errorMessage);
+          });
+          }, 1500);    
+        }
+  }
+
+  verifyCode() {
+    const { verificationCode } = this.state;
+    if (verificationCode === '') {
+        Alert.alert('Error', 'Please enter the verification code.');
+    }
+    else {
+      this.setState({ isLoading: true });
+      setTimeout(() => {
+        LayoutAnimation.easeInEaseOut();
+        axios.post(`http://localhost:3000/activate/${this.state.username}`, {
+          activation_key: this.state.verificationCode
+          })
+          .then((response) => {
+          Alert.alert(
+              'Success', 
+              'User is verified. Please login',
+              [
+                {text: 'Okay', onPress: () => this.props.navigation.replace('Login')},
+              ],
+              { cancelable: false }
+            );
+          })
+          .catch((error) => {
+          const errorMessage = error.response.data.error;
+          this.setState({ isLoading: false });
           Alert.alert('An error occurred😔', `${errorMessage}`);
-          // to see error response
-          console.log(error.response);
           });
           }, 1500);    
     }
@@ -206,7 +199,7 @@ class SignupScreen extends Component {
                   value={this.state.verificationCode}
                   onChangeText={verificationCode => this.setState({ verificationCode: verificationCode })}
                   placeholder="Verification Code"
-                  keyboardType="email-address"
+                  keyboardType="numeric"
                   returnKeyType="next"
                   displayError={!emailValid}
                   errorMessage="Please enter a valid email address" 
@@ -269,7 +262,7 @@ class SignupScreen extends Component {
                   value={username}
                   onChangeText={usernameInput => this.setState({ username: usernameInput })}
                   placeholder="Username"
-                  keyboardType="username"
+                  keyboardType="default"
                   returnKeyType="next"
                   displayError={!usernameValid}
                   errorMessage="Please enter a valid username"
@@ -379,26 +372,6 @@ export const UserTypeItem = props => {
   );
 };
 
-export const FormInput = props => {
-  const { icon, refInput, ...otherProps } = props;
-  return (
-    <Input
-      {...otherProps}
-      ref={refInput}
-      containerStyle={styles.inputContainer}
-      icon={<Icon name={icon} color="#7384B4" size={18} />}
-      inputStyle={styles.inputStyle}
-      autoFocus={false}
-      autoCapitalize="none"
-      keyboardAppearance="dark"
-      errorStyle={styles.errorInputStyle}
-      autoCorrect={false}
-      blurOnSubmit={false}
-      placeholderTextColor="white"
-    />
-  );
-};
-
 //If you want to add background image, just change backgroundColor of container to transparent
 const styles = StyleSheet.create({
   container: {
@@ -450,25 +423,6 @@ const styles = StyleSheet.create({
   userTypeLabel: {
     color: 'yellow',
     fontSize: 11,
-  },
-  inputContainer: {
-    paddingLeft: 8,
-    borderRadius: 40,
-    borderWidth: 1,
-    borderColor: 'white',
-    height: 45,
-    marginVertical: 10,
-  },
-  inputStyle: {
-    flex: 1,
-    marginLeft: 10,
-    color: 'white',
-    fontSize: 16,
-  },
-  errorInputStyle: {
-    marginTop: 0,
-    textAlign: 'center',
-    color: 'white', //#F44336
   },
   signUpButtonText: {
     fontSize: 13,

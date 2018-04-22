@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 
 import Tabbar from 'react-native-tabbar-bottom';
-import { Actions } from 'react-native-router-flux';
 
 export default class NavigationBar extends Component {
 
@@ -17,12 +16,18 @@ export default class NavigationBar extends Component {
     return (
       <View>
         <Tabbar
-          //When user clicks another tab, this function will be executed
-          //It changes this.state.page and jumps to the page
-          //Actions.jump is a function of react-native-router-flux
+          //           {
+          //   // if you are using react-navigation just pass the navigation object in your components like this:
+          //   // {this.state.page === "HomeScreen" && <MyComp navigation={this.props.navigation}>Screen1</MyComp>}
+          // }
+          // {this.state.page === "HomeScreen" && <Text>Screen1</Text>}
+          // {this.state.page === "NotificationScreen" && <Text>Screen2</Text>}
+          // {this.state.page === "ProfileScreen" && <Text>Screen3</Text>}
+          // {this.state.page === "ChatScreen" && <Text>Screen4</Text>}
+          // {this.state.page === "SearchScreen" && <Text>Screen5</Text>}
           stateFunc={(tab) => {
             this.setState({ page: tab.page });
-            Actions.jump(tab.page);
+            this.props.navigation.setParams({tabTitle: tab.title})
           }}
           activePage={this.state.page}
           tabs={[

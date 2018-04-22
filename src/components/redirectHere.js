@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { Button } from 'react-native-elements';
-import { Actions } from 'react-native-router-flux';
+import { withNavigation } from 'react-navigation';
 
-export default class MovifyLogo extends Component {
-
+class MovifyLogo extends Component {
+    
     render() {
             return (
             <View style={styles.loginHereContainer}>
@@ -20,17 +20,20 @@ export default class MovifyLogo extends Component {
                 onPress={() => {
                     //4.0.0-beta.28 Actions.replace gives TypeError: undefined is not an object (evaluating 'resetAction.actions.map')
                     //it only works with 4.0.0-beta.27 for now
-                    this.props.redirect !== 'Actions.pop()' 
+                    this.props.redirect !== 'Actions.pop()'
                     ?
-                    Actions.push(this.props.redirect)
+                    this.props.navigation.navigate(this.props.redirect)
                     :
-                    Actions.pop();
+                    this.props.navigation.goBack();
                 }}
                 />
             </View>
             );
     }
 }
+
+// withNavigation returns a component that wraps MovifyLogo and passes in the navigation prop
+export default withNavigation(MovifyLogo);
 
 const styles = {
     loginHereContainer: {

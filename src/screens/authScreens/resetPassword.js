@@ -1,24 +1,17 @@
 import React, { Component } from 'react';
 import {
   LayoutAnimation,
-  TouchableOpacity,
   Dimensions,
-  Image,
   UIManager,
   KeyboardAvoidingView,
   StyleSheet,
   ScrollView,
-  Text,
   View,
   ImageBackground,
   Alert
 } from 'react-native';
-import { Input, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import axios from 'axios';
-
-//If Icon line gives metro bundler error, simply run this command and restart the project
-// rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //redux stuff
 import { connect } from 'react-redux';
@@ -27,8 +20,8 @@ import { userChanged } from '../../actions';
 //images and icons
 import BackgroundImage from '../../../assets/authBackground.jpg';
 
-import MovifyLogo from '../../components/movifyLogo';
-import RedirectHere from '../../components/redirectHere';
+//components
+import { MovifyLogo, RedirectHere, FormInput} from '../../components';
 
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -41,8 +34,6 @@ class ResetPassword extends Component {
     super(props);
     this.state = {
       isLoading: false,
-      username: '',
-      usernameValid: true,
       email: '',
       emailValid: true,
       resetCode: '',
@@ -55,7 +46,6 @@ class ResetPassword extends Component {
     };
 
     this.validateEmail = this.validateEmail.bind(this);
-    this.validateUsername = this.validateUsername.bind(this);
     this.sendResetCode = this.sendResetCode.bind(this);
     this.resetPassword = this.resetPassword.bind(this);
   }
@@ -63,65 +53,55 @@ class ResetPassword extends Component {
   sendResetCode() {
     LayoutAnimation.easeInEaseOut();
     const emailValid = this.validateEmail();
-    const usernameValid = this.validateUsername();
-
-    this.setState({ isLoading: true });
-    setTimeout(() => {
-        LayoutAnimation.easeInEaseOut();
-        if (emailValid && usernameValid) {
-          axios.post('https://movify.monus.me/forgot', {
-          username: this.state.username,
-          email: this.state.email,
-          })
-          .then((response) => {
-          this.setState({ isLoading: false, showResetCodeBox: true });
-          // to see response
-          console.log(response);
-          })
-          .catch((error) => {
-          this.setState({ isLoading: false, showResetCodeBox: false });
-          Alert.alert('An error occurred😔', 'Invalid username or email. Please check them');
-          // to see error response
-          console.log(error.response);
-          });
-        }
-      }, 1000);
-  }
-
-  verifyResetCode() {
-    //if backend says that it is the correct reset code
-      this.setState({ isLoading: true });
-      setTimeout(() => {
-        LayoutAnimation.easeInEaseOut();
-        axios.post('https://movify.monus.me/forgot', {
-          username: this.state.username,
-          email: this.state.email,
-          })
-          .then((response) => {
-          this.setState({ isLoading: false, showResetPassword: true });
-          // to see response
-          console.log(response);
-          })
-          .catch((error) => {
-          this.setState({ isLoading: false, showResetPassword: false });
-          Alert.alert('An error occurred😔', 'Invalid verification code');
-          // to see error response
-          console.log(error.response);
-          });
-          }, 1500);
+    if(emailValid){
+        this.setState({ isLoading: true });
+        setTimeout(() => {
+          LayoutAnimation.easeInEaseOut();
+          axios.post('http://localhost:3000/forgot', {
+            email: this.state.email,
+            })
+            .then((response) => {
+              if(!response.data.error){
+                this.setState({ isLoading: false, showResetPassword: true })
+              }
+              else{
+                this.setState({ isLoading: false })
+                Alert.alert('An error occurred😔', 'Invalid email. Please check it');
+              }
+            })
+            .catch((error) => {
+              this.setState({ isLoading: false, showResetPassword: false });
+              Alert.alert('An error occurred😔', 'Invalid email. Please check it');
+            });
+        }, 1000);
+    }
   }
 
   resetPassword() {
     LayoutAnimation.easeInEaseOut();
-
     if (this.validatePassword() && this.validateConfirmationPassword()) {
-      //send new password to the server
-      //redirect user to login page
       this.setState({ isLoading: true });
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        this.setState({ isLoading: false });
-      }, 1500);
+        axios.post(`http://localhost:3000/forgot/${this.state.resetCode}`, {
+          email: this.state.email,
+          password: this.state.password,
+          })
+          .then((response) => {
+            Alert.alert(
+              'Success', 
+              'Your password has been reset successfully',
+              [
+                {text: 'Okay', onPress: () => this.props.navigation.goBack()},
+              ],
+              { cancelable: false }
+            );
+          })
+          .catch((error) => {
+            this.setState({ isLoading: false });
+            Alert.alert('An error occurred😔', 'Invalid verification code');
+          });
+          }, 1500);
     }
   }
 
@@ -133,15 +113,6 @@ class ResetPassword extends Component {
     this.setState({ emailValid });
     emailValid || this.emailInput.shake();
     return emailValid;
-  }
-
-  validateUsername() {
-    const { username } = this.state;
-    const usernameValid = username.length > 0;
-    LayoutAnimation.easeInEaseOut();
-    this.setState({ usernameValid });
-    usernameValid || this.usernameInput.shake();
-    return usernameValid;
   }
 
   validatePassword() {
@@ -165,8 +136,6 @@ class ResetPassword extends Component {
   render() {
     const {
       isLoading,
-      username,
-      usernameValid,
       email,
       emailValid,
     } = this.state;
@@ -217,6 +186,17 @@ class ResetPassword extends Component {
                     this.signup();
                   }}
                 />
+                <FormInput
+                  refInput={input => (this.emailInput = input)}
+                  icon="envelope"
+                  value={this.state.resetCode}
+                  onChangeText={resetCode => this.setState({ resetCode: resetCode })}
+                  placeholder="Reset Code"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  displayError={!emailValid}
+                  errorMessage="Please enter a valid email address"
+                />
                 <Button
                 loading={isLoading}
                 title="RESET PASSWORD"
@@ -230,56 +210,6 @@ class ResetPassword extends Component {
                 }}
                 titleStyle={styles.signUpButtonText}
                 onPress={() => this.resetPassword()}
-                disabled={isLoading}
-                disabledStyle={styles.signUpButton}
-                />
-          </View>
-          </KeyboardAvoidingView>
-          </ScrollView>
-          </ImageBackground>
-      );
-    }
-    else if (this.state.showResetCodeBox) {
-      return (
-        <ImageBackground source={BackgroundImage} style={styles.container2}>
-            <ScrollView
-              scrollEnabled={false}
-              keyboardShouldPersistTaps="handled"
-              contentContainerStyle={styles.container}
-            >
-            <KeyboardAvoidingView
-              behavior="position"
-              contentContainerStyle={styles.formContainer}
-            >
-             <MovifyLogo />
-          
-              {/* change marginBottom of this view if you want to adjust space between login area and bottom of the screen  */}
-              <View style={{ marginBottom: SCREEN_HEIGHT / 8 }}>
-                <FormInput
-                  refInput={input => (this.emailInput = input)}
-                  icon="envelope"
-                  value={this.state.resetCode}
-                  onChangeText={resetCode => this.setState({ resetCode: resetCode })}
-                  placeholder="Reset Code"
-                  keyboardType="email-address"
-                  returnKeyType="next"
-                  displayError={!emailValid}
-                  errorMessage="Please enter a valid email address"
-                  
-                />
-                <Button
-                loading={isLoading}
-                title="Verify"
-                containerStyle={{ flex: -1 }}
-                buttonStyle={styles.signUpButton}
-                ViewComponent={require('expo').LinearGradient}
-                linearGradientProps={{
-                  colors: ['#FF9800', '#F44336'],
-                  start: [1, 0],
-                  end: [0.2, 0],
-                }}
-                titleStyle={styles.signUpButtonText}
-                onPress={() => this.verifyResetCode()}
                 disabled={isLoading}
                 disabledStyle={styles.signUpButton}
                 />
@@ -319,20 +249,6 @@ class ResetPassword extends Component {
                     this.passwordInput.focus();
                   }}
                 />
-                <FormInput
-                  refInput={input => (this.usernameInput = input)}
-                  icon="envelope"
-                  value={username}
-                  onChangeText={usernameInput => this.setState({ username: usernameInput })}
-                  placeholder="Username"
-                  returnKeyType="next"
-                  displayError={!usernameValid}
-                  errorMessage="Please enter a valid username"
-                  onSubmitEditing={() => {
-                    this.validateUsername();
-                    this.passwordInput.focus();
-                  }}
-                />
                 <Button
                 loading={isLoading}
                 title="SEND RESET CODE"
@@ -363,51 +279,6 @@ class ResetPassword extends Component {
   }
 }
 
-export const UserTypeItem = props => {
-  const { image, label, labelColor, selected, ...attributes } = props;
-  return (
-    <TouchableOpacity {...attributes}>
-      <View
-        style={[
-          styles.userTypeItemContainer,
-          selected && styles.userTypeItemContainerSelected,
-        ]}
-      >
-        <Text style={[styles.userTypeLabel, { color: labelColor }]}>
-          {label}
-        </Text>
-        <Image
-          source={image}
-          style={[
-            styles.userTypeMugshot,
-            selected && styles.userTypeMugshotSelected,
-          ]}
-        />
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-export const FormInput = props => {
-  const { icon, refInput, ...otherProps } = props;
-  return (
-    <Input
-      {...otherProps}
-      ref={refInput}
-      containerStyle={styles.inputContainer}
-      icon={<Icon name={icon} color="#7384B4" size={18} />}
-      inputStyle={styles.inputStyle}
-      autoFocus={false}
-      autoCapitalize="none"
-      keyboardAppearance="dark"
-      errorStyle={styles.errorInputStyle}
-      autoCorrect={false}
-      blurOnSubmit={false}
-      placeholderTextColor="white"
-    />
-  );
-};
-
 //If you want to add background image, just change backgroundColor of container to transparent
 const styles = StyleSheet.create({
   container: {
@@ -432,52 +303,6 @@ const styles = StyleSheet.create({
   signUp: {
     color: 'white',
     fontSize: 25,
-  },
-  userTypesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: SCREEN_WIDTH / (1.25),
-    alignItems: 'center',
-  },
-  userTypeItemContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 1,
-  },
-  userTypeItemContainerSelected: {
-    opacity: 1,
-  },
-  userTypeMugshot: {
-    margin: 4,
-    height: 70,
-    width: 70,
-  },
-  userTypeMugshotSelected: {
-    height: 100,
-    width: 100,
-  },
-  userTypeLabel: {
-    color: 'yellow',
-    fontSize: 11,
-  },
-  inputContainer: {
-    paddingLeft: 8,
-    borderRadius: 40,
-    borderWidth: 1,
-    borderColor: 'white',
-    height: 45,
-    marginVertical: 10,
-  },
-  inputStyle: {
-    flex: 1,
-    marginLeft: 10,
-    color: 'white',
-    fontSize: 16,
-  },
-  errorInputStyle: {
-    marginTop: 0,
-    textAlign: 'center',
-    color: 'white', //#F44336
   },
   signUpButtonText: {
     fontSize: 13,

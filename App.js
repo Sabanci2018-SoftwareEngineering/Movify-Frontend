@@ -1,50 +1,57 @@
+/* global require */
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
-
-//for shoutem UI
+import { ActivityIndicator, AsyncStorage } from 'react-native';
 import { Font } from 'expo';
-import { View } from '@shoutem/ui';
-
-//navigation
-import { Scene, Router } from 'react-native-router-flux';
-
-//redux stuff
 import { createStore, applyMiddleware } from 'redux';
-import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
+import { Row } from '@shoutem/ui';
+import { TabNavigator, StackNavigator } from 'react-navigation';
+import ReduxThunk from 'redux-thunk';
+
 import reducers from './src/reducers';
-
-//pages
-import NewPage from './src/pages/newPage';
-import NewPage2 from './src/pages/newPage2';
-import SearchPage from './src/pages/searchPage';
-import LoginOrSignup from './src/pages/authPages/loginOrSignup';
-import Signup from './src/pages/authPages/signup';
-import Login from './src/pages/authPages/login';
-import ResetPassword from './src/pages/authPages/resetPassword';
-import ProfilePage from './src/pages/profilePage';
-import ActivateUser from './src/pages/authPages/activateUser';
-
-//components
-import NavigationBar from './src/components/navigationBar';
-
-//IMPORTANT REMINDER: View should be imported from @shoutem/ui
-//If view is imported from react-native, shoutem components may have styling bugs
+import { HomeScreen, ProfileScreen, WatchlistScreen, SearchScreen, WatchedlistScreen, 
+         ActivateUser, Login, LoginOrSignup, ResetPassword, Signup } from './src/screens';
 
 console.disableYellowBox = true;
 
-export default class App extends React.Component {
+let user = null;
 
+const RootNavigator = TabNavigator(
+  {
+    Home: { screen: HomeScreen },
+    Profile: { screen: ProfileScreen },
+    Search: { screen: SearchScreen },
+    Watchlist: { screen: WatchlistScreen },
+    Watchedlist: { screen: WatchedlistScreen }
+  },
+  {
+    initialRouteName: 'Home',
+  }
+);
+
+const AuthPages = StackNavigator(
+  {
+    ActivateUser: { screen: ActivateUser },
+    Login: { screen: Login },
+    LoginOrSignup: { screen: LoginOrSignup },
+    ResetPassword: { screen: ResetPassword },
+    Signup: { screen: Signup },
+  },
+  {
+    initialRouteName: 'LoginOrSignup',
+    headerMode: 'none' //to hide header for auth pages
+  }
+);
+
+export default class App extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
+    this.state = { ...this.state,
       fontsAreLoaded: false,
+      asyncGetFinished: false,
     };
   }
 
-//---------------- This part is mandatory for shoutem components because 
-// these fonts should be loaded before the compenents are mounted --------------
   async componentDidMount() {
     await Font.loadAsync({
       'Rubik-Black': require('./node_modules/@shoutem/ui/fonts/Rubik-Black.ttf'),
@@ -64,54 +71,48 @@ export default class App extends React.Component {
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     });
 
-    this.setState({ fonstAreLoaded: true });
+    try{
+      await AsyncStorage.getItem('user', (err, result) => {
+      user = JSON.parse(result);
+    });
+    } catch(error){
+      //console.log(error);
+    }
+
+    this.setState({ fontsAreLoaded: true, asyncGetFinished: true});
   }
 
   render() {
-    //If fonts aren't loaded, spinner will continue to spin
-    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk)); 
-    if (!this.state.fonstAreLoaded) {
-      return <ActivityIndicator />;
-    }
-    else if (false) {
+    if (!this.state.fontsAreLoaded && !this.state.asyncGetFinished) {
         return (
-           <Provider store={store}>
-               <View style={{ flex: 1 }}>
-                    <Router hideNavBar={true}>
-                        {/* If you want to use modal animation, initial scene key should be modal */}
-                        <Scene key="modal" modal>
-                            {/* Tab Container */}
-                            <Scene key="tabbar" tabs={true} tabBarPosition="bottom" tabBarComponent={NavigationBar} tabBarStyle={{ borderTopColor: 'black', borderTopWidth: 1, backgroundColor: 'white' }}>
-                              {/*Tabs */}
-                                <Scene key="NewPage" component={NewPage} title="NewPage" hideNavBar={true} />
-                                <Scene key="NewPage2" component={NewPage2} title="NewPage" hideNavBar={true} />
-                                <Scene key="ProfilePage" component={ProfilePage} title="ProfilePage" hideNavBar={true} />
-                                <Scene key="SearchPage" component={SearchPage} title="Search" hideNavBar={true} />
-                            </Scene>
-                        </Scene>
-                    </Router>
-               </View>
-           </Provider>
+          <Row style={styles.container}>
+              <ActivityIndicator size="large" color="#0000ff" />
+          </Row>
         );
     }
-    //If fonts are loaded, font errors won't occur so, our app can be rendered
-    //If user isn't authenticated, auth pages will be shown
-    else if (true) { 
-        return (
-           <Provider store={store}>
-               <View style={{ flex: 1 }}>
-                    <Router hideNavBar={true}>
-                        <Scene key="root">
-                          <Scene key="LoginOrSignup" component={LoginOrSignup} title="LoginOrSignup" hideNavBar={true} />
-                          <Scene key="ActivateUser" component={ActivateUser} title="ActivateUser" hideNavBar={true} />
-                          <Scene key="Login" component={Login} title="Login" hideNavBar={true} />
-                          <Scene key="ResetPassword" component={ResetPassword} title="ResetPassword" hideNavBar={true} />
-                          <Scene key="Signup" component={Signup} title="Signup" hideNavBar={true} />
-                        </Scene>
-                    </Router>
-               </View>
-           </Provider>
-        );
+    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
+    if(user !== null){
+      return (
+        <Provider store={store}>
+         <RootNavigator />
+       </Provider>
+     );
+    }
+    else {
+      return (
+       <Provider store={store}>
+         <AuthPages />
+       </Provider>
+      );
     }
   }
 }
+
+const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+};

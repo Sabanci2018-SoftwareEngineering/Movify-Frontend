@@ -2,24 +2,19 @@ import React, { Component } from 'react';
 import {
   Alert,
   LayoutAnimation,
-  TouchableOpacity,
   Dimensions,
-  Image,
   UIManager,
   KeyboardAvoidingView,
   StyleSheet,
   ScrollView,
-  Text,
   View,
   ImageBackground,
+  AsyncStorage,
 } from 'react-native';
-import { Input, Button } from 'react-native-elements';
-
+//import Expo from 'expo';
+import { Button } from 'react-native-elements';
+import Expo from 'expo';
 import axios from 'axios';
-
-//If Icon line gives metro bundler error, simply run this command and restart the project
-// rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 //redux stuff
 import { connect } from 'react-redux';
@@ -28,8 +23,8 @@ import { userChanged } from '../../actions';
 //images and icons
 import BackgroundImage from '../../../assets/authBackground.jpg';
 
-import MovifyLogo from '../../components/movifyLogo';
-import RedirectHere from '../../components/redirectHere';
+//components
+import { MovifyLogo, RedirectHere, FormInput} from '../../components';
 
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -64,21 +59,28 @@ class LoginScreen extends Component {
       this.setState({ isLoading: true });
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        axios.post('https://localhost:3000/login', {
-          username: 'tt6',
-          password: '123123123',
+        axios.post('http://localhost:3000/login', {
+          username: this.state.email,
+          password: this.state.password,
           })
           .then((response) => {
-          this.setState({ isLoading: false });
-          Alert.alert('Success', 'Success');
-          // to see response
-          console.log(response);
+            this.setState({ isLoading: false });
+            let userObject = {
+              email: this.state.email,
+              username: null,
+              cookie: null
+            }
+            try {
+              AsyncStorage.setItem('user', JSON.stringify(userObject));
+            } catch (error) {
+              Alert.alert('An error occurred😔', error.result);
+            }
+            Expo.Util.reload();
           })
           .catch((error) => {
-          this.setState({ isLoading: false });
-          Alert.alert('An error occurred😔', 'Error');
-          // to see error response
-          console.log(error.response);
+            const errorMessage = error.response.headers['www-authenticate'];
+            this.setState({ isLoading: false });
+            Alert.alert('An error occurred😔', errorMessage);
           });
           }, 1500);
     }
@@ -196,50 +198,6 @@ class LoginScreen extends Component {
   }
 }
 
-export const UserTypeItem = props => {
-  const { image, label, labelColor, selected, ...attributes } = props;
-  return (
-    <TouchableOpacity {...attributes}>
-      <View
-        style={[
-          styles.userTypeItemContainer,
-          selected && styles.userTypeItemContainerSelected,
-        ]}
-      >
-        <Text style={[styles.userTypeLabel, { color: labelColor }]}>
-          {label}
-        </Text>
-        <Image
-          source={image}
-          style={[
-            styles.userTypeMugshot,
-            selected && styles.userTypeMugshotSelected,
-          ]}
-        />
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-export const FormInput = props => {
-  const { icon, refInput, ...otherProps } = props;
-  return (
-    <Input
-      {...otherProps}
-      ref={refInput}
-      containerStyle={styles.inputContainer}
-      icon={<Icon name={icon} color="#7384B4" size={18} />}
-      inputStyle={styles.inputStyle}
-      autoFocus={false}
-      autoCapitalize="none"
-      keyboardAppearance="dark"
-      errorStyle={styles.errorInputStyle}
-      autoCorrect={false}
-      blurOnSubmit={false}
-      placeholderTextColor="white"
-    />
-  );
-};
 
 //If you want to add background image, just change backgroundColor of container to transparent
 const styles = StyleSheet.create({
@@ -265,52 +223,6 @@ const styles = StyleSheet.create({
   signUp: {
     color: 'white',
     fontSize: 25,
-  },
-  userTypesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: SCREEN_WIDTH / (1.25),
-    alignItems: 'center',
-  },
-  userTypeItemContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 1,
-  },
-  userTypeItemContainerSelected: {
-    opacity: 1,
-  },
-  userTypeMugshot: {
-    margin: 4,
-    height: 70,
-    width: 70,
-  },
-  userTypeMugshotSelected: {
-    height: 100,
-    width: 100,
-  },
-  userTypeLabel: {
-    color: 'yellow',
-    fontSize: 11,
-  },
-  inputContainer: {
-    paddingLeft: 8,
-    borderRadius: 40,
-    borderWidth: 1,
-    borderColor: 'white',
-    height: 45,
-    marginVertical: 10,
-  },
-  inputStyle: {
-    flex: 1,
-    marginLeft: 10,
-    color: 'white',
-    fontSize: 16,
-  },
-  errorInputStyle: {
-    marginTop: 0,
-    textAlign: 'center',
-    color: 'white', //#F44336
   },
   signUpButtonText: {
     fontSize: 13,
