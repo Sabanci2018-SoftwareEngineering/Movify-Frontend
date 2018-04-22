@@ -4,7 +4,7 @@ import { Input } from 'react-native-elements';
 
 //If Icon line gives metro bundler error, simply run this command and restart the project
 // rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
+// import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 export default class FormInput extends React.Component{
 
@@ -15,7 +15,7 @@ export default class FormInput extends React.Component{
                 {...otherProps}
                 ref={refInput}
                 containerStyle={styles.inputContainer}
-                icon={<Icon name={icon} color="#7384B4" size={18} />}
+                // icon={<Icon name={icon} color="#7384B4" size={18} />}
                 inputStyle={styles.inputStyle}
                 autoFocus={false}
                 autoCapitalize="none"
@@ -28,6 +28,7 @@ export default class FormInput extends React.Component{
         );
     }
 }
+
 const styles = StyleSheet.create({
     inputContainer: {
         paddingLeft: 8,
