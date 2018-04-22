@@ -1,4 +1,3 @@
-/* global require */
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { Font } from 'expo';
