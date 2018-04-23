@@ -44,7 +44,11 @@ export default class App extends React.Component {
       'Rubik-Medium': require('./node_modules/@shoutem/ui/fonts/Rubik-Medium.ttf'),
       'Rubik-MediumItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-MediumItalic.ttf'),
       'Rubik-Regular': require('./node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf'),
-      'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf')
+      'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
+      'Ionicons': require('./node_modules/@expo/vector-icons/fonts/Ionicons.ttf'),
+      'FontAwesome': require('./node_modules/@expo/vector-icons/fonts/FontAwesome.ttf'),
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     });
 
     this.setState({ fontsAreLoaded: true });
