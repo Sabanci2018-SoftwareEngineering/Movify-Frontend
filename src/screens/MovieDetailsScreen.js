@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Image, Text } from '@shoutem/ui';
+import { View, Image, Text, Button } from '@shoutem/ui';
 import { connect } from 'react-redux';
 
 import { usernameChanged } from '../actions';
 
+const image_path = 'http://image.tmdb.org/t/p/original'
 const testMovieJson = {
   "adult": false,
   "backdrop_path": "/s2bT29y0ngXxxu2IA8AOzzXTRhd.jpg",
@@ -95,12 +96,26 @@ class MovieDetailsScreen extends React.Component {
   };
 
   render() {
-    return (
+     return (
       <View>
-      <Image
-        source={require('../temp-assets/inception-poster.jpg')}
-      />
-      <Text> Inception Movew </Text>
+        <View style={{flexDirection: 'row'}}>
+        <Image
+          styleName="medium-square"
+          source={{uri: image_path + testMovieJson.poster_path}}
+        />
+          <View>
+          <Text>{testMovieJson.original_title}</Text>
+          <Text>Rate: {testMovieJson.vote_average}</Text>
+          <Text>Duration: {testMovieJson.runtime} min.</Text>
+          <Button>
+            <Text>Add to Watchlist</Text>
+          </Button>
+          <Button>
+            <Text>Add to Watched</Text>
+          </Button>
+          </View>
+        </View>
+        <Text>{testMovieJson.overview}</Text>
       </View>
     );
   }
