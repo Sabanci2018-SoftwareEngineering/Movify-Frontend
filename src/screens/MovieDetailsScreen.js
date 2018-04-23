@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, Button } from '@shoutem/ui';
+import { View, Image, Text, Button, Subtitle, ListView } from '@shoutem/ui';
 import { connect } from 'react-redux';
 
 import { usernameChanged } from '../actions';
@@ -86,6 +86,11 @@ const testMovieJson = {
   "vote_average": 8.2,
   "vote_count": 16926
 };
+const testCast = [
+  {name: "Brad Pitt", movieName: "Movie Name", imageUri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-11.png'},
+  {name: "Other Guy", movieName: "Movie Name Of Other Guy", imageUri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-11.png'},
+  {name: "Fat Guy", movieName: "Fat Guy With Glasses", imageUri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-11.png'}
+]
 
 class MovieDetailsScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -94,6 +99,22 @@ class MovieDetailsScreen extends React.Component {
       title: params ? params.movieName : 'Details',
     }
   };
+
+  renderRow(person){
+    return(
+      <View style={{flexDirection: 'row'}}>
+        <Image
+          styleName="small"
+          source={{uri: person.imageUri}}
+        />
+        <View styleName="horizontal v-center space-around">
+          <Subtitle styleName="md-gutter-right">{person.name}</Subtitle>
+          <Subtitle styleName="md-gutter-right">|</Subtitle>
+          <Subtitle styleName="md-gutter-left">{person.movieName}</Subtitle>
+        </View>
+      </View>
+    )
+  }
 
   render() {
      return (
@@ -104,18 +125,25 @@ class MovieDetailsScreen extends React.Component {
           source={{uri: image_path + testMovieJson.poster_path}}
         />
           <View>
-          <Text>{testMovieJson.original_title}</Text>
-          <Text>Rate: {testMovieJson.vote_average}</Text>
-          <Text>Duration: {testMovieJson.runtime} min.</Text>
-          <Button>
-            <Text>Add to Watchlist</Text>
-          </Button>
-          <Button>
-            <Text>Add to Watched</Text>
-          </Button>
+            <Text>{testMovieJson.original_title}</Text>
+            <Text>Rate: {testMovieJson.vote_average}</Text>
+            <Text>Duration: {testMovieJson.runtime} min.</Text>
+            <Button>
+              <Text>Add to Watchlist</Text>
+            </Button>
+            <Button>
+              <Text>Add to Watched</Text>
+            </Button>
           </View>
         </View>
+
         <Text>{testMovieJson.overview}</Text>
+
+        <ListView
+          data={testCast}
+          renderRow={this.renderRow}
+          />
+
       </View>
     );
   }
