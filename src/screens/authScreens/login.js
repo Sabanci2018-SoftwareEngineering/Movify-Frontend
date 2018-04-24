@@ -37,36 +37,37 @@ class LoginScreen extends Component {
     super(props);
     this.state = {
       isLoading: false,
-      email: '',
+      key: '',
+      keyValid: true,
       password: '',
-      emailValid: true,
       passwordValid: true,
     };
 
-    this.validateEmail = this.validateEmail.bind(this);
+    this.validateKey = this.validateKey.bind(this);
     this.validatePassword = this.validatePassword.bind(this);
     this.login = this.login.bind(this);
   }
  
   login() {
     LayoutAnimation.easeInEaseOut();
-    const emailValid = this.validateEmail();
+
     const passwordValid = this.validatePassword();
+    const keyValid = this.validateKey();
     if (
-      emailValid &&
+      keyValid &&
       passwordValid
     ) {
       this.setState({ isLoading: true });
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
         axios.post('http://localhost:3000/login', {
-          username: this.state.email,
+          key: this.state.key,
           password: this.state.password,
           })
           .then((response) => {
             this.setState({ isLoading: false });
             let userObject = {
-              email: this.state.email,
+              email: this.state.key,
               username: null,
               cookie: null
             }
@@ -86,14 +87,12 @@ class LoginScreen extends Component {
     }
   }
 
-  validateEmail() {
-    const { email } = this.state;
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    const emailValid = re.test(email);
-    LayoutAnimation.easeInEaseOut();
-    this.setState({ emailValid });
-    emailValid || this.emailInput.shake();
-    return emailValid;
+  validateKey(){
+    const { key } = this.state;
+    const keyValid = key.length !== 0;
+    this.setState({keyValid: keyValid});
+    keyValid || this.keyInput.shake();
+    return keyValid;
   }
 
   validatePassword() {
@@ -108,8 +107,8 @@ class LoginScreen extends Component {
   render() {
     const {
       isLoading,
-      email,
-      emailValid,
+      key,
+      keyValid,
       password,
       passwordValid,
     } = this.state;
@@ -130,18 +129,18 @@ class LoginScreen extends Component {
               {/* change marginBottom of this view if you want to adjust space between login area and bottom of the screen  */}
               <View style={{ marginBottom: SCREEN_HEIGHT / 18 }}>
                 <FormInput
-                  refInput={input => (this.emailInput = input)}
+                  refInput={input => (this.keyInput = input)}
                   icon="envelope"
-                  value={email}
-                  onChangeText={currentEmail => this.setState({ email: currentEmail })}
-                  placeholder="Email"
+                  value={key}
+                  onChangeText={currentKey => this.setState({ key: currentKey })}
+                  placeholder="Username or email"
                   keyboardType="email-address"
                   returnKeyType="next"
-                  displayError={!emailValid}
-                  errorMessage="Please enter a valid email address"
+                  displayError={!keyValid}
+                  errorMessage="Please enter a valid email or username"
                   onSubmitEditing={() => {
-                    this.validateEmail();
-                    this.passwordInput.focus();
+                    this.validateKey();
+                    this.keyInput.focus();
                   }}
                 />
                 <FormInput
@@ -156,7 +155,7 @@ class LoginScreen extends Component {
                   errorMessage="Please enter at least 8 characters"
                   onSubmitEditing={() => {
                     this.validatePassword();
-                    this.confirmationPasswordInput.focus();
+                    this.passwordInput.focus();
                   }}
                 />
                 <Button

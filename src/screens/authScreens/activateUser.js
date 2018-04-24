@@ -58,14 +58,19 @@ class ActivateUser extends Component {
             key: this.state.verificationCode
             })
             .then((response) => {
-              Alert.alert(
-                'Success', 
-                'User is verified. Please login',
-                [
-                  {text: 'Okay', onPress: () => this.props.navigation.goBack()},
-                ],
-                { cancelable: false }
-              );
+              if(response.data.success){
+                Alert.alert(
+                  'Success', 
+                  'User is verified. Please login',
+                  [
+                    {text: 'Okay', onPress: () => this.props.navigation.goBack()},
+                  ],
+                  { cancelable: false }
+                );
+              }
+              else{
+                Alert.alert('An error occurred😔', `${response.data.error}`);
+              }
             })
             .catch((error) => {
             const errorMessage = error.response.data.error;
