@@ -1,10 +1,10 @@
 import React from 'react';
-import { Dimensions, Platform, TouchableOpacity } from 'react-native';
-
+import { Dimensions, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { View, ListView, Image, Row, Text, ScrollView } from '@shoutem/ui';
 
+//redux stuff
 import { connect } from 'react-redux';
-import { searchTextChanged } from '../actions';
+import { searchDataChanged } from '../actions';
 
 //react native elements
 import SearchBar from '../components/searchBar';
@@ -12,65 +12,64 @@ import SearchBar from '../components/searchBar';
 //IMPORTANT REMINDER: View should be imported from @shoutem/ui
 //If view is imported from react-native, shoutem components may have styling bugs
 
-
 console.disableYellowBox = true;
 
-class ComponentName extends React.Component {
+class SearchScreen extends React.Component {
   static navigationOptions = {
     title: 'Search',
   };
-  
-//---------------- CONSTRUCTOR --------------
+
   constructor(props) {
     super(props);
-    this.state = {
-      test: '',
-      searchText: '',
-      defaultData: undefined,
-      mockData: [],
-    };
-
     this.renderRow = this.renderRow.bind(this);
-  }
-
-  componentDidMount() {
-    //get default data
-    //set default data
-    //let defaultData = request default data
-    //this.setState({defaultData: defaultData})
+    this.renderListView = this.renderListView.bind(this);
   }
 
   renderRow(rowData) {
-      return (
-      <TouchableOpacity onPress={() => console.log('Here we will call navigation function to movie page')}>
-        <Row styleName="small">
-            <Image
-              style={styles.movieImage}
-              source={{ uri: rowData.moviePhotoUrl }}
-            />
-            <Text>{rowData.movieName}</Text>
-        </Row>
-      </TouchableOpacity>
-      );
+    // to check available poster sizes --> https://www.themoviedb.org/talk/53c11d4ec3a3684cf4006400
+    return (
+    <TouchableOpacity onPress={() => console.log('Here we will call navigation function to movie page')}>
+      <Row styleName="small">
+          <Image
+            style={styles.movieImage}
+            source={{ uri: `http://image.tmdb.org/t/p/w92${rowData.poster_path}` }}
+          />
+          <Text>{rowData.title}</Text>
+      </Row>
+    </TouchableOpacity>
+    );
   }
 
-  render() {
-     return (
-      <View>
-          <SearchBar />
-          {/* marginBottom is for overlapping of bottom navigation bar and scrollview */}
-          <ScrollView style={{ marginBottom: 115 }} >
+  //If search response is received, it renders listview. Otherwise, spinner will be rendered.
+  renderListView(){
+    if (this.props.searchSpinner.searchSpinner !== undefined && this.props.searchSpinner.searchSpinner === true) {
+      return (
+        <Row style={{alignItems: 'center', justifyContent: 'center'}}>
+            <ActivityIndicator size="large" color="#0000ff" />
+        </Row>
+      );
+    }
+    else{
+      /* marginBottom is for overlapping of bottom navigation bar and scrollview */
+      return(
+        <ScrollView style={{ marginBottom: window.height/11.5 }} >
           <ListView
-            //change data with this.props.searchData.searchData when backend is ready
-            data={this.state.mockData}
+            data={ this.props.searchData.searchData !== undefined ? this.props.searchData.searchData : this.props.searchData }
             renderRow={(rowData) => this.renderRow(rowData)}
             //Don't remove.It is for this bug --> https://github.com/facebook/react-native/issues/1831
             removeClippedSubviews={false}
           />
-          </ScrollView>
-          {/* <Text>{this.props.searchText !== '' ? this.props.searchText.searchText : "search text is blank"}</Text>
-          <Text>{this.props.searchData !== undefined ? this.props.searchData.searchData : "search data is undefined"}</Text> */}
-      </View>
+        </ScrollView>
+      )
+    }
+  }
+  
+  render() {
+    return (
+    <View>
+        <SearchBar />
+        {this.renderListView()}
+    </View>
      );
   }
 }
@@ -85,7 +84,6 @@ function dimensionRelativeToIphone(dimension, actualRefVal = window.width) {
   // 375 is iPhone width
   return getSizeRelativeToReference(dimension, 375, actualRefVal);
 }
-
 
 const styles = {
   container: {
@@ -103,8 +101,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ allReducers }) => {
-  const { searchText, searchData } = allReducers;
-  return { searchText, searchData };
+  const { searchData, searchSpinner } = allReducers;
+  return { searchData, searchSpinner };
 };
 
-export default connect(mapStateToProps, { searchTextChanged })(ComponentName);
+export default connect(mapStateToProps, { searchDataChanged })(SearchScreen);

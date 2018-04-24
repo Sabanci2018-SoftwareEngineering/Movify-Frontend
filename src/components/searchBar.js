@@ -4,21 +4,35 @@ import { Header, Item, Input, Icon, } from 'native-base';
 
 //redux stuff
 import { connect } from 'react-redux';
-import { searchTextChanged, searchDataChanged } from '../actions';
+import { searchDataChanged, searchSpinnerChanged } from '../actions';
+
+//axios
+import axios from 'axios';
 
 class SearchBar extends Component {
 
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind();
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(props, input) {
-    //this line will be something like let searchData = axios.post(backend.com/givemeMovies=input)
+  handleChange(input) {
 
-    //since we don't have backend services right now, searchData = searchText
-    props.searchDataChanged({ searchData: input });
-    props.searchTextChanged({ searchText: input });
+    //if input isn't blank and the last elements isn't space
+    //(if the last element is space, search result will not change. So, request isn't needed )
+    if(input !== '' && input.charAt(input.length-1) !== ' '){
+      this.props.searchSpinnerChanged({ searchSpinner: true });
+      axios.post('http://localhost:3000/search', {
+        keyword: input,
+        })
+        .then((response) => {
+          this.props.searchSpinnerChanged({ searchSpinner: false });
+          this.props.searchDataChanged({ searchData: response.data.results.results});
+        })
+        .catch((error) => {
+          console.log(error);
+      });
+    }
   }
   
   render() {
@@ -27,7 +41,7 @@ class SearchBar extends Component {
         <Header searchBar rounded>
           <Item>
             <Icon name="ios-search" />
-            <Input placeholder="Search" onChangeText={(input) => this.handleChange(this.props, input)} />
+            <Input placeholder="Search" onChangeText={(input) => this.handleChange(input)} />
           </Item>
         </Header>
       </View>
@@ -36,8 +50,8 @@ class SearchBar extends Component {
 }
 
 const mapStateToProps = ({ allReducers }) => {
-    const { searchText, searchData } = allReducers;
-    return { searchText, searchData };
+    const { searchData } = allReducers;
+    return { searchData };
   };
   
-  export default connect(mapStateToProps, { searchTextChanged, searchDataChanged })(SearchBar);
+  export default connect(mapStateToProps, { searchDataChanged, searchSpinnerChanged })(SearchBar);

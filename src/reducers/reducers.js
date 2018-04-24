@@ -1,6 +1,8 @@
 const INITIAL_STATE = {
     user: undefined,
-    username: undefined
+    username: undefined,
+    searchData: [],
+    searchSpinner: false
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -9,6 +11,10 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, user: action.payload };
         case 'username_changed':
             return { ...state, username: action.payload };
+        case 'searchData_changed':
+            return { ...state, searchData: action.payload };
+        case 'searchSpinner_changed':
+            return { ...state, searchSpinner: action.payload };
         default:
             return state;
     }
