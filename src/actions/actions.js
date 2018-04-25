@@ -10,3 +10,17 @@ export const usernameChanged = (username) => (dispatch) => {
             payload: username,
         });
     };
+
+export const searchDataChanged = (searchData) => (dispatch) => {
+    dispatch({
+        type: 'searchData_changed',
+        payload: searchData,
+    });
+};
+
+export const searchSpinnerChanged = (searchSpinner) => (dispatch) => {
+    dispatch({
+        type: 'searchSpinner_changed',
+        payload: searchSpinner,
+    });
+};
