@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Image, Text, Button, Subtitle, ListView } from '@shoutem/ui';
 import { connect } from 'react-redux';
 
-import { usernameChanged } from '../actions';
+import { userChanged } from '../actions';
 
 const image_path = 'http://image.tmdb.org/t/p/original'
 const testMovieJson = {
@@ -150,8 +150,8 @@ class MovieDetailsScreen extends React.Component {
 }
 
 const mapStateToProps = ({ allReducers }) => {
-  const { username } = allReducers;
-  return { username };
+  const { user } = allReducers;
+  return { user };
 };
 
-export default connect(mapStateToProps, { usernameChanged })(MovieDetailsScreen);
+export default connect(mapStateToProps, { userChanged })(MovieDetailsScreen);

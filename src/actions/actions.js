@@ -4,13 +4,7 @@ export const userChanged = (user) => (dispatch) => {
             payload: user,
         });
     };
-export const usernameChanged = (username) => (dispatch) => {
-        dispatch({
-            type: 'username_changed',
-            payload: username,
-        });
-    };
-
+    
 export const searchDataChanged = (searchData) => (dispatch) => {
     dispatch({
         type: 'searchData_changed',

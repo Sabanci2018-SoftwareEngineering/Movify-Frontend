@@ -67,9 +67,7 @@ class LoginScreen extends Component {
           .then((response) => {
             this.setState({ isLoading: false });
             let userObject = {
-              email: this.state.key,
-              username: null,
-              cookie: null
+              key: this.state.key,
             }
             try {
               AsyncStorage.setItem('user', JSON.stringify(userObject));

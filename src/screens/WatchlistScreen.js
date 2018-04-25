@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Button } from '@shoutem/ui';
 import { StackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
-import { usernameChanged } from '../actions';
+import { userChanged } from '../actions';
 
 import MovieDetailsScreen from './MovieDetailsScreen';
 
@@ -26,12 +26,12 @@ class WatchlistScreen extends React.Component {
   }
 }
 const mapStateToProps = ({ allReducers }) => {
-  const { username } = allReducers;
-  return { username };
+  const { user } = allReducers;
+  return { user };
 };
 
 const WatchlistStack = StackNavigator({
-  Home: { screen: connect(mapStateToProps, { usernameChanged })(WatchlistScreen)},
+  Home: { screen: connect(mapStateToProps, { userChanged })(WatchlistScreen)},
   MovieDetails: { screen: MovieDetailsScreen },
 });
 

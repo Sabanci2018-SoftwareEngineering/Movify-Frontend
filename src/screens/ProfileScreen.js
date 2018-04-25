@@ -1,13 +1,14 @@
 import React from 'react';
-import { Dimensions, TouchableOpacity, Platform, StatusBar } from 'react-native';
-import { View, ScrollView, ListView, NavigationBar, Screen, Title, Image, Subtitle, Row, Tile, ImageBackground, Text, } from '@shoutem/ui';
-
+import { Dimensions, TouchableOpacity, Platform, StatusBar, ActivityIndicator } from 'react-native';
 //IMPORTANT REMINDER: View should be imported from @shoutem/ui
 //If view is imported from react-native, shoutem components may have styling bugs
+import { View, ScrollView, ListView, NavigationBar, Screen, Title, Image, Subtitle, Row, Tile, ImageBackground, Text, } from '@shoutem/ui';
+
+import axios from 'axios';
 
 //redux stuff
 import { connect } from 'react-redux';
-import { usernameChanged } from '../actions';
+import { userChanged } from '../actions';
 
 console.disableYellowBox = true;
 
@@ -22,7 +23,8 @@ class ProfilePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'boraik',
+      userData: undefined,
+      userWatchlist: undefined,
       recentLikedMovieImage: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png',
       mockData: [
         {
@@ -60,6 +62,24 @@ class ProfilePage extends React.Component {
 
     this.renderRow = this.renderRow.bind(this);
   }
+  
+  componentDidMount(){
+    axios.get('http://localhost:3000/profile', { withCredentials: true })
+    .then((response) => {
+      this.setState({userData: response.data.results});
+    })
+    .catch((error) => {
+      console.log(error.response);
+    });
+
+    axios.get('http://localhost:3000/watchlist', { withCredentials: true })
+    .then((response) => {
+      this.setState({userWatchlist: response.data.results});
+    })
+    .catch((error) => {
+      console.log(error.response);
+    });
+  }
 
   renderRow(rowData) {
       return (
@@ -76,11 +96,19 @@ class ProfilePage extends React.Component {
   }
   
   render() {
+     const { userData, userWatchlist } = this.state;
+     if(userData === undefined || userWatchlist === undefined){
+      return (
+        <Row style={{alignItems: 'center', justifyContent: 'center'}}>
+            <ActivityIndicator size="large" color="#0000ff" />
+        </Row>
+      );
+     }
      return (
        <Screen style={styles.container}>
           <View style={{ paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0) }}>
             <NavigationBar 
-            title={(this.state.username).toUpperCase()} styleName="inline" 
+            title={(userData.username).toUpperCase()} styleName="inline" 
             style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) } }} 
             />
           </View>
@@ -148,8 +176,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ allReducers }) => {
-  const { username } = allReducers;
-  return { username };
+  const { user } = allReducers;
+  return { user };
 };
 
-export default connect(mapStateToProps, { usernameChanged })(ProfilePage);
+export default connect(mapStateToProps, { userChanged })(ProfilePage);
