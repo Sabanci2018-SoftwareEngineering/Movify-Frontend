@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 
 import { userChanged } from '../actions';
 
+import axios from 'axios';
+
 let user;
 
 class HomeScreen extends React.Component {
@@ -16,7 +18,20 @@ class HomeScreen extends React.Component {
     try{
       AsyncStorage.getItem('user', (err, result) => {
         user = JSON.parse(result);
-        this.props.userChanged({ user: user })
+        this.props.userChanged({ user: user });
+        
+        //user logins again when app is opened
+        axios.post('http://localhost:3000/login', {
+          key: user.key,
+          password: user.password,
+          })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error.response);
+          });
+
       });
     } catch(error){
       //console.log(error);
