@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, TextInput } from '@shoutem/ui';
+import { View, Text, Button } from '@shoutem/ui';
 import { StackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
 import { usernameChanged } from '../actions';
@@ -8,27 +8,18 @@ import MovieDetailsScreen from './MovieDetailsScreen';
 
 class WatchlistScreen extends React.Component {
   static navigationOptions = {
-    title: 'Watchlist',
+    title: 'Watchlist'
   };
 
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ marginBottom: 10 }}> This is a new page starter. </Text>
-        <TextInput
-        placeholder={'This is a demo. Type the username'}
-        onChangeText={
-        (input) => this.props.usernameChanged({ username: input })
-        }
-        />
-        <Text> {this.props.username !== undefined ?
-        `Username:  ${this.props.username.username}` : 'User is undefined.'}
-        </Text>
         <Button
         styleName="secondary" style={{ marginTop: 20 }}
-        onPress={() => this.props.navigation.navigate('MovieDetails')}
+        onPress={() => this.props.navigation
+          .navigate('MovieDetails', {movieName: "Inception", movieId: "27205"})}
         >
-        <Text>Click here to navigate the other page</Text>
+        <Text>Inception</Text>
         </Button>
       </View>
     );
