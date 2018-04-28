@@ -38,14 +38,12 @@ class SearchBar extends Component {
   
   render() {
     return (
-      <View style={{ paddingTop: StatusBar.currentHeight }}>
         <Header searchBar rounded>
           <Item>
             <Icon name="ios-search" />
             <Input placeholder="Search" onChangeText={(input) => this.handleChange(input)} />
           </Item>
         </Header>
-      </View>
     );
   }
 }
