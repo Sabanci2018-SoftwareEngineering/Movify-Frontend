@@ -1,19 +1,17 @@
 import React from 'react';
-import { View, Image, Text, Button, Subtitle, ListView } from '@shoutem/ui';
+import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView } from '@shoutem/ui';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { usernameChanged } from '../actions';
 
 const image_path = 'http://image.tmdb.org/t/p/original'
-const testCast = [
-  {name: "Brad Pitt", movieName: "Movie Name", imageUri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-11.png'},
-  {name: "Other Guy", movieName: "Movie Name Of Other Guy", imageUri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-11.png'},
-  {name: "Fat Guy", movieName: "Fat Guy With Glasses", imageUri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-11.png'}
-]
 
 class MovieDetailsScreen extends React.Component {
-  state = {}
+  state = {
+    movie: {},
+    cast: []
+  }
 
 
   static navigationOptions = ({ navigation }) => {
@@ -28,59 +26,76 @@ class MovieDetailsScreen extends React.Component {
     axios.get(`https://movify.monus.me/title/${params.movieId}`)
       .then(res => {
         const movie = res.data.results;
-        this.setState(movie);
+        this.setState({movie});
+      })
+    axios.get(`https://movify.monus.me/title/${params.movieId}/credits`)
+      .then(res => {
+        const cast = res.data.results;
+        this.setState({...cast});
       })
   }
 
   renderRow(person){
     return(
-      <View style={{flexDirection: 'row'}}>
+      <View>
+      <Row>
         <Image
-          styleName="small"
-          source={{uri: person.imageUri}}
+          styleName="small-avatar"
+          source={{ uri: image_path + person.profile_path }}
         />
-        <View styleName="horizontal v-center space-around">
-          <Subtitle styleName="md-gutter-right">{person.name}</Subtitle>
-          <Subtitle styleName="md-gutter-right">|</Subtitle>
-          <Subtitle styleName="md-gutter-left">{person.movieName}</Subtitle>
+        <View style={{ flexDirection: 'row' }}>
+          <Subtitle>{person.name}</Subtitle>
+          <Caption style={{marginLeft: 'auto'}}>{person.character}</Caption>
         </View>
+      </Row>
+      <Divider styleName="line" />
       </View>
     )
   }
 
   render() {
      return (
-      <View>
+      <ScrollView style={{ marginVertical: 10, marginHorizontal: 10 }}>
         <View style={{flexDirection: 'row'}}>
         <Image
           styleName="medium-square"
-          source={{uri: image_path + this.state.poster_path}}
+          source={{uri: image_path + this.state.movie.poster_path}}
+          style={{ marginRight: 10, marginBottom: 10 }}
         />
           <View>
-            <Text>{this.state.original_title}</Text>
-            <Text>Rate: {this.state.vote_average}</Text>
-            <Text>Duration: {this.state.runtime} min.</Text>
-            <Button>
-              <Text>Add to Watchlist</Text>
-            </Button>
-            <Button>
-              <Text>Add to Watched</Text>
-            </Button>
+            <Title style={styles.textStyle}>{this.state.movie.original_title}</Title>
+            <Text style={styles.textStyle}>Rate: {this.state.movie.vote_average}</Text>
+            <Text style={styles.textStyle}>Duration: {this.state.movie.runtime} min.</Text>
+            <Text style={styles.textStyle}>Release: {this.state.movie.release_date}</Text>
+            <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 10 }}>
+              <Button style={styles.smallButton}><Icon name="share" /></Button>
+              <Button style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
+              <Button style={styles.smallButton}><Icon name="checkbox-on" /></Button>
+            </View>
           </View>
         </View>
 
-        <Text>{this.state.overview}</Text>
-
+        <Text style={{marginVertical: 15, marginHorizontal: 10}}>{this.state.movie.overview}</Text>
+        <Title style={{marginBottom: 15}}>Actors</Title>
         <ListView
-          data={testCast}
+          data={this.state.cast}
           renderRow={this.renderRow}
+          initialNumToRender={5}
           />
 
-      </View>
+      </ScrollView>
     );
   }
 }
 
+const styles = {
+  textStyle: {
+    marginVertical: 3
+  },
+  smallButton: {
+    paddingHorizontal: 5
+  }
+}
 const mapStateToProps = ({ allReducers }) => {
   const { username } = allReducers;
   return { username };
