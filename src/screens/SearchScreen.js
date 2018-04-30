@@ -1,22 +1,17 @@
 import React from 'react';
 import { Dimensions, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { View, ListView, Image, Row, Text, ScrollView } from '@shoutem/ui';
+import { View, ListView, Image, Row, Text, ScrollView, Icon } from '@shoutem/ui';
+import { StackNavigator } from 'react-navigation';
 
-//redux stuff
 import { connect } from 'react-redux';
 import { searchDataChanged } from '../actions';
-
-//react native elements
+import MovieDetailsScreen from './MovieDetailsScreen';
 import SearchBar from '../components/searchBar';
-
-//IMPORTANT REMINDER: View should be imported from @shoutem/ui
-//If view is imported from react-native, shoutem components may have styling bugs
-
-console.disableYellowBox = true;
 
 class SearchScreen extends React.Component {
   static navigationOptions = {
     title: 'Search',
+    header: null
   };
 
   constructor(props) {
@@ -28,13 +23,15 @@ class SearchScreen extends React.Component {
   renderRow(rowData) {
     // to check available poster sizes --> https://www.themoviedb.org/talk/53c11d4ec3a3684cf4006400
     return (
-    <TouchableOpacity onPress={() => console.log('Here we will call navigation function to movie page')}>
+    <TouchableOpacity onPress={() => this.props.navigation
+      .navigate('MovieDetails', {movieName: rowData.title, movieId: rowData.id})}>
       <Row styleName="small">
           <Image
             style={styles.movieImage}
             source={{ uri: `http://image.tmdb.org/t/p/w92${rowData.poster_path}` }}
           />
           <Text>{rowData.title}</Text>
+          <Icon styleName="disclosure" name="right-arrow" />
       </Row>
     </TouchableOpacity>
     );
@@ -63,7 +60,7 @@ class SearchScreen extends React.Component {
       )
     }
   }
-  
+
   render() {
     return (
     <View>
@@ -104,5 +101,11 @@ const mapStateToProps = ({ allReducers }) => {
   const { searchData, searchSpinner } = allReducers;
   return { searchData, searchSpinner };
 };
+const SearchStack = StackNavigator(
+  {
+    Home: { screen: connect(mapStateToProps, { searchDataChanged })(SearchScreen)},
+    MovieDetails: { screen: MovieDetailsScreen },
+  }
+);
 
-export default connect(mapStateToProps, { searchDataChanged })(SearchScreen);
+export default SearchStack;
