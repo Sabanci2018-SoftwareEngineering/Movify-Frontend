@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements'
 
 //Example call <FollowButton selected={true} />
-export class FollowButton extends React.Component {
+export default class FollowButton extends React.Component {
     constructor() {
       super();
       this.state = {
@@ -18,7 +18,6 @@ export class FollowButton extends React.Component {
   
     render() {
       const { selected } = this.state;
-  
       return (
         <Button
           title={selected ? 'Following' : 'Follow'}

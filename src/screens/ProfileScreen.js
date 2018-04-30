@@ -1,14 +1,16 @@
 import React from 'react';
-import { Dimensions, TouchableOpacity, Platform, StatusBar, ActivityIndicator } from 'react-native';
+import { Dimensions, TouchableOpacity, Platform, StatusBar, ActivityIndicator, Image} from 'react-native';
 //IMPORTANT REMINDER: View should be imported from @shoutem/ui
 //If view is imported from react-native, shoutem components may have styling bugs
-import { View, ScrollView, ListView, NavigationBar, Screen, Title, Image, Subtitle, Row, Tile, ImageBackground, Text, } from '@shoutem/ui';
+import { View, ScrollView, ListView, NavigationBar, Screen, Title, Subtitle, Row, Tile, ImageBackground, Text, } from '@shoutem/ui';
+import { Avatar } from 'react-native-elements';
 
 import axios from 'axios';
 
-//redux stuff
 import { connect } from 'react-redux';
 import { userChanged } from '../actions';
+
+import { FollowButton } from '../components';
 
 console.disableYellowBox = true;
 
@@ -125,16 +127,16 @@ class ProfilePage extends React.Component {
             />
           </View>
           {/* marginBottom is for overlapping of bottom navigation bar and scrollview */}
-          <ScrollView style={{ marginBottom: 41 }} >
+          <ScrollView style={{ marginBottom: height/11.5 }} >
             <ImageBackground 
             styleName="large-banner"
+            style={{height: height/2.8}}
             blurRadius={10}
             source={{ uri: this.state.recentLikedMovieImage }}
             >
               <Tile>
                 <Image
-                styleName="medium-avatar"
-                style={{ marginTop: 5 }}
+                style={{ marginTop: 2, borderRadius: '50%', height: 100, width: 100}}
                 source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png' }}
                 />
                 <View style={{ flexDirection: 'row' }}>
@@ -147,6 +149,7 @@ class ProfilePage extends React.Component {
                     <Subtitle style={{ color: 'white' }}> 68 </Subtitle>
                   </View>
                 </View>
+                <FollowButton selected={false} />
               </Tile>
             </ImageBackground>
             <ListView
