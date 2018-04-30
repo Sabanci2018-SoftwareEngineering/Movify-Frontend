@@ -1,9 +1,8 @@
 import React from 'react';
-import { Dimensions, TouchableOpacity, Platform, StatusBar, ActivityIndicator, Image} from 'react-native';
+import { Dimensions, Platform, StatusBar, ActivityIndicator, Image} from 'react-native';
 //IMPORTANT REMINDER: View should be imported from @shoutem/ui
 //If view is imported from react-native, shoutem components may have styling bugs
-import { View, ScrollView, ListView, NavigationBar, Screen, Title, Subtitle, Row, Tile, ImageBackground, Text, } from '@shoutem/ui';
-import { Avatar } from 'react-native-elements';
+import { View, ScrollView, ListView, NavigationBar, Screen, Title, Subtitle, Row, Tile, ImageBackground, Icon, Divider} from '@shoutem/ui';
 
 import axios from 'axios';
 
@@ -27,38 +26,11 @@ class ProfilePage extends React.Component {
     this.state = {
       userData: undefined,
       userWatchlist: undefined,
-      recentLikedMovieImage: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png',
-      mockData: [
-        {
-          "name": "Gaspar Brasserie",
-          "address": "185 Sutter St, San Francisco, CA 94109",
-          "image": { "url": "https://shoutem.github.io/static/getting-started/restaurant-1.jpg" },
-        },
-        {
-          "name": "Chalk Point Kitchen",
-          "address": "527 Broome St, New York, NY 10013",
-          "image": { "url": "https://shoutem.github.io/static/getting-started/restaurant-2.jpg" },
-        },
-        {
-          "name": "Kyoto Amber Upper East",
-          "address": "225 Mulberry St, New York, NY 10012",
-          "image": { "url": "https://shoutem.github.io/static/getting-started/restaurant-3.jpg" },
-        },
-        {
-          "name": "Sushi Academy",
-          "address": "1900 Warner Ave. Unit A Santa Ana, CA",
-          "image": { "url": "https://shoutem.github.io/static/getting-started/restaurant-4.jpg" },
-        },
-        {
-          "name": "Sushibo",
-          "address": "35 Sipes Key, New York, NY 10012",
-          "image": { "url": "https://shoutem.github.io/static/getting-started/restaurant-5.jpg" },
-        },
-        {
-          "name": "Mastergrill",
-          "address": "550 Upton Rue, San Francisco, CA 94109",
-          "image": { "url": "https://shoutem.github.io/static/getting-started/restaurant-6.jpg" },
-        }
+      data: [
+        { "id": 27205, original_title: "Inception", poster_path: "/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg", release_date: "2010-07-14", overview: "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: \"inception\", the implantation of another person's idea into a target's subconscious." },
+        { "id": 27206, original_title: "Bald", poster_path: "/jUKFcsIL3WllT2AkWv4msOweJ42.jpg", release_date: "2008-01-01", overview:"BALD is the tale of Andrew Wood, a second year university student whose grades are receding faster than his hairline. He hits rock bottom when he finds out that hes been kicked out of school. In an effort to increase his own self esteem and erase his insecurity about losing his hair, Andrew and his best friend Max start an online internet business with all of the girls at college." },
+        { "id": 27207, original_title: "Bloodsucking Pharaohs in Pittsburgh", poster_path: "/2Hp0DHqObkKOuRweeTlJr7i9xaY.jpg", release_date: "1991-05-02", overview: "Two cops and a detective's daughter go after a chainsaw killer." },
+        { "id": 27208, original_title: "Un lever de rideau", poster_path: "/83rxCh3KD7as0nBJfv2Ls3esteM.jpg", release_date: "2006-08-07", overview: "Bruno, a young Frenchman, is frustated by his girlfriend's constant lack of punctuality. He decides to end their relationship the next time she is again late." }
       ]
     };
 
@@ -95,18 +67,22 @@ class ProfilePage extends React.Component {
     this.getResponse();
   }
 
-  renderRow(rowData) {
-      return (
-        <TouchableOpacity onPress={() => console.log('Here we will call navigation function to movie page')}>
-          <Row styleName="small">
-              <Image
-                style={styles.movieImage}
-                source={{ uri: rowData.moviePhotoUrl }}
-              />
-              <Text>{rowData.movieName}</Text>
-          </Row>
-        </TouchableOpacity>
-      );
+  renderRow(movie){
+    return(
+      <View>
+      <Row>
+        <Image
+            style={{ borderRadius: 30, height: 60, width: 60, borderWidth: 2, borderColor: 'rgba(253, 179, 43, 1)', marginRight: 10}}
+            source={{ uri: 'http://image.tmdb.org/t/p/original' + movie.poster_path }}
+        />
+        <View style={{ flexDirection: 'row' }}>
+          <Subtitle>{movie.original_title}</Subtitle>
+        </View>
+        <Icon styleName="disclosure" name="right-arrow" />
+      </Row>
+      <Divider styleName="line" />
+      </View>
+    )
   }
   
   render() {
@@ -127,26 +103,27 @@ class ProfilePage extends React.Component {
             />
           </View>
           {/* marginBottom is for overlapping of bottom navigation bar and scrollview */}
-          <ScrollView style={{ marginBottom: height/11.5 }} >
+          <ScrollView>
             <ImageBackground 
             styleName="large-banner"
-            style={{height: height/2.8}}
+            style={{height: height/3}}
             blurRadius={10}
-            source={{ uri: this.state.recentLikedMovieImage }}
+            source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-3.png"}}
+            //We will show last watched movie poster as background image --> source={{ uri: this.state.data[0] !== undefined ? this.state.data[0].poster_path : "" }}
             >
               <Tile>
                 <Image
-                style={{ marginTop: 2, borderRadius: '50%', height: 100, width: 100}}
+                style={{ borderRadius: 60, height: 120, width: 120, borderWidth: 2 ,borderColor: 'rgba(34, 212, 118, 1)'}}
                 source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png' }}
                 />
                 <View style={{ flexDirection: 'row' }}>
-                  <View style={{ marginRight: width / 5, alignItems: 'center' }}>
-                    <Title style={{ color: 'white' }}> Followers </Title>
-                    <Subtitle style={{ color: 'white' }}> 99 </Subtitle>
+                  <View style={{ marginRight: width / 10, alignItems: 'center' }}>
+                    <Title style={{ color: 'white', fontFamily: 'regular'}}> Followers </Title>
+                    <Subtitle style={{ color: 'white', fontFamily: 'regular' }}> 99 </Subtitle>
                   </View>
-                  <View style={{ alignItems: 'center' }}>
-                    <Title style={{ color: 'white' }}> Following </Title>
-                    <Subtitle style={{ color: 'white' }}> 68 </Subtitle>
+                  <View style={{ marginLeft: width / 10, alignItems: 'center' }}>
+                    <Title style={{ color: 'white', fontFamily: 'regular'}}> Following </Title>
+                    <Subtitle style={{ color: 'white', fontFamily: 'regular' }}> 68 </Subtitle>
                   </View>
                 </View>
                 <FollowButton selected={false} />
@@ -154,7 +131,7 @@ class ProfilePage extends React.Component {
             </ImageBackground>
             <ListView
             //change data with this.props.searchData.searchData when backend is ready
-            data={this.state.mockData}
+            data={this.state.data}
             renderRow={(rowData) => this.renderRow(rowData)}
             //Don't remove.It is for this bug --> https://github.com/facebook/react-native/issues/1831
             removeClippedSubviews={false}
