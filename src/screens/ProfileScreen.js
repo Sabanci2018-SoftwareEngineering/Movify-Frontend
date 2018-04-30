@@ -1,8 +1,6 @@
 import React from 'react';
 import { Dimensions, Platform, StatusBar, ActivityIndicator, Image} from 'react-native';
-//IMPORTANT REMINDER: View should be imported from @shoutem/ui
-//If view is imported from react-native, shoutem components may have styling bugs
-import { View, ScrollView, ListView, NavigationBar, Screen, Title, Subtitle, Row, Tile, ImageBackground, Icon, Divider} from '@shoutem/ui';
+import { View, ScrollView, ListView, NavigationBar, Screen, Title, Subtitle, Row, Tile, ImageBackground, Icon, Divider, Button} from '@shoutem/ui';
 
 import axios from 'axios';
 
@@ -10,8 +8,6 @@ import { connect } from 'react-redux';
 import { userChanged } from '../actions';
 
 import { FollowButton } from '../components';
-
-console.disableYellowBox = true;
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -36,6 +32,8 @@ class ProfilePage extends React.Component {
 
     this.renderRow = this.renderRow.bind(this);
     this.getResponse = this.getResponse.bind(this);
+    this.returnUserInfo = this.returnUserInfo.bind(this);
+    this.returnNavigationBar = this.returnNavigationBar.bind(this);
   }
   
   getResponse(){
@@ -61,6 +59,7 @@ class ProfilePage extends React.Component {
     .catch((error) => {
       this.setState({userWatchlist: undefined});
     });
+
   }
 
   componentDidMount(){
@@ -72,10 +71,10 @@ class ProfilePage extends React.Component {
       <View>
       <Row>
         <Image
-            style={{ borderRadius: 30, height: 60, width: 60, borderWidth: 2, borderColor: 'rgba(253, 179, 43, 1)', marginRight: 10}}
+            style={styles.moviePoster}
             source={{ uri: 'http://image.tmdb.org/t/p/original' + movie.poster_path }}
         />
-        <View style={{ flexDirection: 'row' }}>
+        <View style={styles.movieTitle}>
           <Subtitle>{movie.original_title}</Subtitle>
         </View>
         <Icon styleName="disclosure" name="right-arrow" />
@@ -84,7 +83,55 @@ class ProfilePage extends React.Component {
       </View>
     )
   }
-  
+
+  returnNavigationBar(userData){
+    return(
+      <View style={styles.navigationBarView}>
+        <NavigationBar 
+              title={(userData.username).toUpperCase()} styleName="inline" 
+              style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) }}} 
+              rightComponent={
+                <Button
+                onPress={()=> console.log("Navigate to user search page")}
+                >
+                  <Icon name="search" />
+                </Button>
+              }
+        />
+      </View>
+    );
+  }
+
+  returnUserInfo(userData){
+    return(
+      <ImageBackground 
+            styleName="large-banner"
+            style={{height: height/3}}
+            blurRadius={10}
+            source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-3.png"}}
+            //We will show last watched movie poster as background image --> source={{ uri: this.state.data[0] !== undefined ? this.state.data[0].poster_path : "" }}
+            >
+              <Tile>
+                <Image
+                style={styles.userAvatar}
+                source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png' }}
+                />
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={styles.followersView}>
+                    <Title style={styles.followText}> Followers </Title>
+                    <Subtitle style={styles.followText}> 99 </Subtitle>
+                  </View>
+                  <View style={styles.followingView}>
+                    <Title style={styles.followText}> Following </Title>
+                    <Subtitle style={styles.followText}> 68 </Subtitle>
+                  </View>
+                </View>
+                <FollowButton selected={false} />
+              </Tile>
+      </ImageBackground>
+    );
+  }
+
   render() {
      const { userData, userWatchlist } = this.state;
      if(userData === undefined || userWatchlist === undefined){
@@ -96,41 +143,10 @@ class ProfilePage extends React.Component {
      }
      return (
        <Screen style={styles.container}>
-          <View style={{ paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0) }}>
-            <NavigationBar 
-            title={(userData.username).toUpperCase()} styleName="inline" 
-            style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) } }} 
-            />
-          </View>
-          {/* marginBottom is for overlapping of bottom navigation bar and scrollview */}
+          {this.returnNavigationBar(userData)}
           <ScrollView>
-            <ImageBackground 
-            styleName="large-banner"
-            style={{height: height/3}}
-            blurRadius={10}
-            source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-3.png"}}
-            //We will show last watched movie poster as background image --> source={{ uri: this.state.data[0] !== undefined ? this.state.data[0].poster_path : "" }}
-            >
-              <Tile>
-                <Image
-                style={{ borderRadius: 60, height: 120, width: 120, borderWidth: 2 ,borderColor: 'rgba(34, 212, 118, 1)'}}
-                source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png' }}
-                />
-                <View style={{ flexDirection: 'row' }}>
-                  <View style={{ marginRight: width / 10, alignItems: 'center' }}>
-                    <Title style={{ color: 'white', fontFamily: 'regular'}}> Followers </Title>
-                    <Subtitle style={{ color: 'white', fontFamily: 'regular' }}> 99 </Subtitle>
-                  </View>
-                  <View style={{ marginLeft: width / 10, alignItems: 'center' }}>
-                    <Title style={{ color: 'white', fontFamily: 'regular'}}> Following </Title>
-                    <Subtitle style={{ color: 'white', fontFamily: 'regular' }}> 68 </Subtitle>
-                  </View>
-                </View>
-                <FollowButton selected={false} />
-              </Tile>
-            </ImageBackground>
+            {this.returnUserInfo(userData)}
             <ListView
-            //change data with this.props.searchData.searchData when backend is ready
             data={this.state.data}
             renderRow={(rowData) => this.renderRow(rowData)}
             //Don't remove.It is for this bug --> https://github.com/facebook/react-native/issues/1831
@@ -153,6 +169,8 @@ function dimensionRelativeToIphone(dimension, actualRefVal = window.width) {
   return getSizeRelativeToReference(dimension, 375, actualRefVal);
 }
 
+
+//Don't user StyleSheet.create(); It affects styling for some components so styling doesn't work properly
 const styles = {
   container: {
     flex: 1,
@@ -165,6 +183,39 @@ const styles = {
     borderRadius: Platform.OS === 'ios' ? 20 : 50,
     borderWidth: 0,
   },
+  navigationBarView: { 
+    paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0) 
+  },
+  moviePoster: { 
+    borderRadius: 30,
+    height: 60,
+    width: 60,
+    borderWidth: 2,
+    borderColor: 'rgba(253, 179, 43, 1)',
+    marginRight: 10
+  },
+  movieTitle: { 
+    flexDirection: 'row' 
+  },
+  userAvatar: {
+    borderRadius: 60,
+    height: 120,
+    width: 120,
+    borderWidth: 2,
+    borderColor: 'rgba(34, 212, 118, 1)'
+  },
+  followersView: { 
+    marginRight: width / 10, 
+    alignItems: 'center' 
+  },
+  followingView: {
+    marginLeft: width / 10,
+    alignItems: 'center'
+  },
+  followText: { 
+    color: 'white',
+    fontFamily: 'regular'
+  }
 };
 
 const mapStateToProps = ({ allReducers }) => {
