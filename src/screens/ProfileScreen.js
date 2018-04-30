@@ -61,24 +61,36 @@ class ProfilePage extends React.Component {
     };
 
     this.renderRow = this.renderRow.bind(this);
+    this.getResponse = this.getResponse.bind(this);
   }
   
-  componentDidMount(){
-    axios.get('http://localhost:3000/profile', { withCredentials: true })
+  getResponse(){
+    const username = this.props.user.user.key;
+
+    axios.get('http://localhost:3000/profile', {
+      target_username: username,
+      withCredentials: true,
+    })
     .then((response) => {
       this.setState({userData: response.data.results});
     })
     .catch((error) => {
-      console.log(error.response);
+      this.setState({userData: undefined});
     });
 
-    axios.get('http://localhost:3000/watchlist', { withCredentials: true })
+    axios.get(`http://localhost:3000/profile/${username}/watchlist`, {
+      withCredentials: true
+    })
     .then((response) => {
       this.setState({userWatchlist: response.data.results});
     })
     .catch((error) => {
-      console.log(error.response);
+      this.setState({userWatchlist: undefined});
     });
+  }
+
+  componentDidMount(){
+    this.getResponse();
   }
 
   renderRow(rowData) {

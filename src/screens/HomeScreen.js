@@ -19,14 +19,15 @@ class HomeScreen extends React.Component {
       AsyncStorage.getItem('user', (err, result) => {
         user = JSON.parse(result);
         this.props.userChanged({ user: user });
-        
-        //user logins again when app is opened
+
+        //user logins again when app is opened because 
+        //it loses cookies when app is closed
         axios.post('http://localhost:3000/login', {
           key: user.key,
           password: user.password,
           })
           .then((response) => {
-            console.log(response);
+            //console.log(response);
           })
           .catch((error) => {
             console.log(error.response);
@@ -34,7 +35,7 @@ class HomeScreen extends React.Component {
 
       });
     } catch(error){
-      //console.log(error);
+      console.log(error);
     }
   }
 
