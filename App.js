@@ -3,15 +3,13 @@ import { ActivityIndicator, AsyncStorage } from 'react-native';
 import { Font } from 'expo';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import { Row } from '@shoutem/ui';
+import { Row, Icon } from '@shoutem/ui';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 import ReduxThunk from 'redux-thunk';
 
 import reducers from './src/reducers';
-import { HomeScreen, ProfileScreen, WatchlistScreen, SearchScreen, WatchedlistScreen, 
+import { HomeScreen, ProfileScreen, WatchlistScreen, SearchScreen, WatchedlistScreen,
          ActivateUser, Login, LoginOrSignup, ResetPassword, Signup } from './src/screens';
-
-console.disableYellowBox = true;
 
 let user = null;
 
@@ -25,6 +23,41 @@ const RootNavigator = TabNavigator(
   },
   {
     initialRouteName: 'Home',
+    tabBarOptions: {
+      showLabel: false,
+      activeTintColor: 'black',
+      inactiveTintColor: 'white'
+    },
+    navigationOptions: ({navigation}) => ({
+      tabBarIcon: () => {
+        const { routeName } = navigation.state;
+        let iconName;
+        switch (routeName) {
+          case 'Home':
+            iconName = "home";
+            break;
+          case 'Profile':
+            iconName = "user-profile";
+            break;
+          case 'Search':
+            iconName = "search";
+            break;
+          case 'Watchlist':
+            iconName = "add-to-favorites-on";
+            break;
+          case 'Watchedlist':
+            iconName = "checkbox-on";
+            break;
+          default:
+            iconName = "lock"
+        }
+
+        // shoutemui icons doesn't support coloring, so we're stuck with black.
+        return (
+          <Icon name={iconName} />
+        );
+      }
+    })
   }
 );
 
