@@ -37,14 +37,18 @@ const styles = StyleSheet.create({
         fontFamily: 'regular' 
     },
     selected: { 
+        borderWidth: 1,
+        borderColor: 'transparent', //Border width and border color is added because  
+        //size of button changes after selection and other elements in same view changes postion (moves below)
+        //if other elements move, it looks like a bug
         backgroundColor: 'rgba(213, 100, 140, 1)', 
         borderRadius: 100, 
-        width: 127 
+        width: 127
     },
     notSelected: { 
         borderWidth: 1, 
         borderColor: 'white', 
-        borderRadius: 30, 
+        borderRadius: 31001000, 
         width: 127, 
         backgroundColor: 'transparent'
     },
