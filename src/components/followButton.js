@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
   title: { 
     fontSize: 15,
     color: 'white',
-    fontFamily: 'regular' 
+    fontFamily: 'Rubik-Regular' 
   },
   selectedTitle: { 
     fontSize: 15,
     color: 'black',
-    fontFamily: 'regular' 
+    fontFamily: 'Rubik-Regular' 
   },
   selected: { 
       borderWidth: 1,

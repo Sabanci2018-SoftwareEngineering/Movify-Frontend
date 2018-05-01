@@ -68,10 +68,6 @@ export default class App extends React.Component {
       'FontAwesome': require('./node_modules/@expo/vector-icons/fonts/FontAwesome.ttf'),
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-      'georgia': require('./assets/fonts/Georgia.ttf'),
-      'regular': require('./assets/fonts/Montserrat-Regular.ttf'),
-      'light': require('./assets/fonts/Montserrat-Light.ttf'),
-      'bold': require('./assets/fonts/Montserrat-Bold.ttf'),
     });
 
     try{

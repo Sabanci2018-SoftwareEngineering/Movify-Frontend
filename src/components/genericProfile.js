@@ -64,7 +64,7 @@ export default class GenericProfile extends React.Component {
   }
 
   returnBackButton(type){
-      if(type === 'other'){
+      if(type){
         return(
             <Button
             onPress={()=> this.props.navigation.goBack()}
@@ -75,8 +75,7 @@ export default class GenericProfile extends React.Component {
       }
   }
 
-  returnSearchButton(type){
-      if(type === 'own'){
+  returnSearchButton(){
           return(
             <Button
             onPress={()=> console.log("Navigate to user search page")}
@@ -84,7 +83,6 @@ export default class GenericProfile extends React.Component {
               <Icon name="search" />
             </Button>
           );
-      }
   }
 
   returnNavigationBar(userData){
@@ -94,7 +92,7 @@ export default class GenericProfile extends React.Component {
               title={(userData.username).toUpperCase()} styleName="inline" 
               style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) }}}
               leftComponent={this.returnBackButton(this.props.type)} 
-              rightComponent={this.returnSearchButton(this.props.type)}
+              rightComponent={this.returnSearchButton()}
         />
       </View>
     );
@@ -104,7 +102,7 @@ export default class GenericProfile extends React.Component {
     return(
       <ImageBackground 
             styleName="large-banner"
-            style={{ height: this.props.type === 'other' ? height/3 : height/3.3 }}
+            style={{ height: this.props.type ? height/3 : height/3.3 }}
             blurRadius={10}
             source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-3.png"}}
             //We will show last watched movie poster as background image --> source={{ uri: this.state.data[0] !== undefined ? this.state.data[0].poster_path : "" }}
@@ -124,7 +122,7 @@ export default class GenericProfile extends React.Component {
                     <Subtitle style={styles.followText}> 68 </Subtitle>
                   </View>
                 </View>
-                {this.props.type === 'other' ? <FollowButton selected={false} /> : null}
+                {this.props.type ? <FollowButton selected={false} /> : null}
               </Tile>
       </ImageBackground>
     );
@@ -210,7 +208,7 @@ const styles = {
     height: 60,
     width: 60,
     borderWidth: 2,
-    borderColor: 'rgba(253, 179, 43, 1)',
+    borderColor: 'transparent',
     marginRight: 10
   },
   movieTitle: { 
@@ -233,6 +231,6 @@ const styles = {
   },
   followText: { 
     color: 'white',
-    fontFamily: 'regular'
+    fontFamily: 'Rubik-Regular'
   }
 };

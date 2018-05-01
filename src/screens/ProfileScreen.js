@@ -15,7 +15,7 @@ class ProfilePage extends React.Component {
       <GenericProfile
       navigation={this.props.navigation}
       username={this.props.user.user.key}
-      type={'own'} // own or other 
+      type={true} // false own profile, true other profile
       />
     );
   }
