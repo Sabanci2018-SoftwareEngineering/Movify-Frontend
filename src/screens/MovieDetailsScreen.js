@@ -23,12 +23,13 @@ class MovieDetailsScreen extends React.Component {
 
   componentDidMount(){
     const { params } = this.props.navigation.state;
-    axios.get(`https://movify.monus.me/title/${params.movieId}`)
+    axios.get(`http://localhost:3000/title/${params.movieId}`)
       .then(res => {
         const movie = res.data.results;
         this.setState({movie});
       })
-    axios.get(`https://movify.monus.me/title/${params.movieId}/credits`)
+
+    axios.get(`http://localhost:3000/title/${params.movieId}/credits`)
       .then(res => {
         const cast = res.data.results;
         this.setState({...cast});
@@ -69,8 +70,8 @@ class MovieDetailsScreen extends React.Component {
             <Text style={styles.textStyle}>Release: {this.state.movie.release_date}</Text>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 10 }}>
               <Button style={styles.smallButton}><Icon name="share" /></Button>
-              <Button style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
-              <Button style={styles.smallButton}><Icon name="checkbox-on" /></Button>
+              <Button onPress={() => axios.post('http://localhost:3000/profile/watchlist', {titleID: this.props.navigation.state.params.movieId})} style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
+              <Button onPress={() => axios.post('http://localhost:3000/profile/watched', {titleID: this.props.navigation.state.params.movieId})} style={styles.smallButton}><Icon name="checkbox-on" /></Button>
             </View>
           </View>
         </View>
