@@ -103,7 +103,7 @@ const mapStateToProps = ({ allReducers }) => {
 };
 const SearchStack = StackNavigator(
   {
-    Home: { screen: connect(mapStateToProps, { searchDataChanged })(SearchScreen)},
+    Search: { screen: connect(mapStateToProps, { searchDataChanged })(SearchScreen)},
     MovieDetails: { screen: MovieDetailsScreen },
   }
 );
