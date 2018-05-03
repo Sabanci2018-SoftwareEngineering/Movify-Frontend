@@ -14,12 +14,7 @@ let user;
 const image_path = 'http://image.tmdb.org/t/p/original'
 class HomeScreen extends React.Component {
   state = {
-    titles: [
-      { "id": 27205, original_title: "Inception", poster_path: "/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg", release_date: "2010-07-14", overview: "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: \"inception\", the implantation of another person's idea into a target's subconscious." },
-      { "id": 27206, original_title: "Bald", poster_path: "/jUKFcsIL3WllT2AkWv4msOweJ42.jpg", release_date: "2008-01-01", overview:"BALD is the tale of Andrew Wood, a second year university student whose grades are receding faster than his hairline. He hits rock bottom when he finds out that hes been kicked out of school. In an effort to increase his own self esteem and erase his insecurity about losing his hair, Andrew and his best friend Max start an online internet business with all of the girls at college." },
-      { "id": 27207, original_title: "Bloodsucking Pharaohs in Pittsburgh", poster_path: "/2Hp0DHqObkKOuRweeTlJr7i9xaY.jpg", release_date: "1991-05-02", overview: "Two cops and a detective's daughter go after a chainsaw killer." },
-      { "id": 27208, original_title: "Un lever de rideau", poster_path: "/83rxCh3KD7as0nBJfv2Ls3esteM.jpg", release_date: "2006-08-07", overview: "Bruno, a young Frenchman, is frustated by his girlfriend's constant lack of punctuality. He decides to end their relationship the next time she is again late." }
-    ]
+    titles: []
   }
   static navigationOptions = {
     title: 'Home',
@@ -53,6 +48,17 @@ class HomeScreen extends React.Component {
     } catch(error){
       console.log(error);
     }
+    this.onRefresh()
+  }
+
+  onRefresh(){
+    axios.get('http://localhost:3000/feed/100')
+      .then((response) => {
+        this.setState({titles: response.data.results})
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
   }
 
   renderRow(oneTitle){
@@ -68,8 +74,8 @@ class HomeScreen extends React.Component {
             <Caption style={{marginVertical: 4}}>{oneTitle.release_date}</Caption>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
               <Button style={styles.smallButton}><Icon name="share" /></Button>
-              <Button style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
-              <Button style={styles.smallButton}><Icon name="checkbox-on" /></Button>
+              <Button onPress={() => axios.post('http://localhost:3000/profile/watchlist', {titleID: oneTitle.titleID})} style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
+              <Button onPress={() => axios.post('http://localhost:3000/profile/watched', {titleID: oneTitle.titleID})} style={styles.smallButton}><Icon name="checkbox-on" /></Button>
             </View>
           </View>
         </View>
@@ -81,7 +87,7 @@ class HomeScreen extends React.Component {
     return (
         <ListView
           data={titles}
-          renderRow={this.renderRow}
+          renderRow={this.renderRow.bind(this)}
         />
     );
   }
