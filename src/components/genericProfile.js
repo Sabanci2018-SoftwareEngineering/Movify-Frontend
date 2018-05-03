@@ -18,13 +18,7 @@ export default class GenericProfile extends React.Component {
     super(props);
     this.state = {
       userData: undefined,
-      userWatchlist: undefined,
-      data: [
-        { "id": 27205, original_title: "Inception", poster_path: "/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg", release_date: "2010-07-14", overview: "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: \"inception\", the implantation of another person's idea into a target's subconscious." },
-        { "id": 27206, original_title: "Bald", poster_path: "/jUKFcsIL3WllT2AkWv4msOweJ42.jpg", release_date: "2008-01-01", overview:"BALD is the tale of Andrew Wood, a second year university student whose grades are receding faster than his hairline. He hits rock bottom when he finds out that hes been kicked out of school. In an effort to increase his own self esteem and erase his insecurity about losing his hair, Andrew and his best friend Max start an online internet business with all of the girls at college." },
-        { "id": 27207, original_title: "Bloodsucking Pharaohs in Pittsburgh", poster_path: "/2Hp0DHqObkKOuRweeTlJr7i9xaY.jpg", release_date: "1991-05-02", overview: "Two cops and a detective's daughter go after a chainsaw killer." },
-        { "id": 27208, original_title: "Un lever de rideau", poster_path: "/83rxCh3KD7as0nBJfv2Ls3esteM.jpg", release_date: "2006-08-07", overview: "Bruno, a young Frenchman, is frustated by his girlfriend's constant lack of punctuality. He decides to end their relationship the next time she is again late." }
-      ]
+      userWatchlist: undefined
     };
 
     this.renderRow = this.renderRow.bind(this);
@@ -32,7 +26,7 @@ export default class GenericProfile extends React.Component {
     this.returnUserInfo = this.returnUserInfo.bind(this);
     this.returnNavigationBar = this.returnNavigationBar.bind(this);
   }
-  
+
   getResponse(){
     const username = this.props.username;
 
@@ -42,6 +36,7 @@ export default class GenericProfile extends React.Component {
     })
     .then((response) => {
       this.setState({userData: response.data.results});
+      console.log(this.state.userData);
     })
     .catch((error) => {
       this.setState({userData: undefined});
@@ -88,10 +83,10 @@ export default class GenericProfile extends React.Component {
   returnNavigationBar(userData){
     return(
       <View style={styles.navigationBarView}>
-        <NavigationBar 
-              title={(userData.username).toUpperCase()} styleName="inline" 
+        <NavigationBar
+              title={(userData.username).toUpperCase()} styleName="inline"
               style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) }}}
-              leftComponent={this.returnBackButton(this.props.type)} 
+              leftComponent={this.returnBackButton(this.props.type)}
               rightComponent={this.returnSearchButton()}
         />
       </View>
@@ -100,7 +95,7 @@ export default class GenericProfile extends React.Component {
 
   returnUserInfo(userData){
     return(
-      <ImageBackground 
+      <ImageBackground
             styleName="large-banner"
             style={{ height: this.props.type ? height/3 : height/3.3 }}
             blurRadius={10}
@@ -115,11 +110,11 @@ export default class GenericProfile extends React.Component {
                 <View style={{ flexDirection: 'row' }}>
                   <View style={styles.followersView}>
                     <Title style={styles.followText}> Followers </Title>
-                    <Subtitle style={styles.followText}> 99 </Subtitle>
+                    <Subtitle style={styles.followText}> {this.state.userData.followers} </Subtitle>
                   </View>
                   <View style={styles.followingView}>
                     <Title style={styles.followText}> Following </Title>
-                    <Subtitle style={styles.followText}> 68 </Subtitle>
+                    <Subtitle style={styles.followText}> {this.state.userData.follows} </Subtitle>
                   </View>
                 </View>
                 {this.props.type ? <FollowButton selected={false} /> : null}
@@ -164,7 +159,7 @@ export default class GenericProfile extends React.Component {
           <ScrollView>
             {this.returnUserInfo(userData)}
             <ListView
-            data={this.state.data}
+            data={this.state.userWatchlist}
             renderRow={(rowData) => this.renderRow(rowData)}
             //Don't remove.It is for this bug --> https://github.com/facebook/react-native/issues/1831
             removeClippedSubviews={false}
@@ -200,10 +195,10 @@ const styles = {
     borderRadius: Platform.OS === 'ios' ? 20 : 50,
     borderWidth: 0,
   },
-  navigationBarView: { 
-    paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0) 
+  navigationBarView: {
+    paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0)
   },
-  moviePoster: { 
+  moviePoster: {
     borderRadius: 30,
     height: 60,
     width: 60,
@@ -211,8 +206,8 @@ const styles = {
     borderColor: 'transparent',
     marginRight: 10
   },
-  movieTitle: { 
-    flexDirection: 'row' 
+  movieTitle: {
+    flexDirection: 'row'
   },
   userAvatar: {
     borderRadius: 60,
@@ -221,15 +216,15 @@ const styles = {
     borderWidth: 2,
     borderColor: 'rgba(34, 212, 118, 1)'
   },
-  followersView: { 
-    marginRight: width / 10, 
-    alignItems: 'center' 
+  followersView: {
+    marginRight: width / 10,
+    alignItems: 'center'
   },
   followingView: {
     marginLeft: width / 10,
     alignItems: 'center'
   },
-  followText: { 
+  followText: {
     color: 'white',
     fontFamily: 'Rubik-Regular'
   }
