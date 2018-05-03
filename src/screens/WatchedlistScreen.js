@@ -11,6 +11,7 @@ import MovieDetailsScreen from './MovieDetailsScreen';
 //  {title: 27206, release_date:"2016", original_title: "Bald", poster_path: "http://image.tmdb.org/t/p/original/jUKFcsIL3WllT2AkWv4msOweJ42.jpg"},
 //  {title: 27207, release_date:"2017", original_title: "Bloodsucking Pharaohs in Pittsburgh", poster_path: "http://image.tmdb.org/t/p/original/2Hp0DHqObkKOuRweeTlJr7i9xaY.jpg"},
 //]
+const image_path = 'http://image.tmdb.org/t/p/original'
 
 class WatchedlistScreen extends React.Component {
 
@@ -22,7 +23,7 @@ class WatchedlistScreen extends React.Component {
 
   componentDidMount(){
      const { params } = this.props.navigation.state;
-     axios.get(`http://localhost:3000/profile/${this.props.user.user.key}/watchedlist`)
+     axios.get(`http://localhost:3000/profile/${this.props.user.user.key}/watched`)
        .then(res => {
          const movieList = res.data.results;
          this.setState({movieList});
@@ -46,13 +47,13 @@ class WatchedlistScreen extends React.Component {
         <View style={styles.rowCard}>
           <Image
             styleName="medium-square"
-            source={{uri: movieList.poster_path}}
+            source={{uri: image_path + movieList.poster_path}}
           />
           <View style={{ flex: 1, marginHorizontal: 8}}>
             <Title
             style={{marginVertical: 4}}>{movieList.original_title}
             </Title>
-            <Text style={headerTextStyle}>{movieList.releaseDate}</Text>
+            <Text>{movieList.releaseDate}</Text>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
 
               <Button style={styles.smallButton}><Icon name="checkbox-on" /></Button>
@@ -85,7 +86,7 @@ const mapStateToProps = ({ allReducers }) => {
 };
 
 const WatchedlistStack = StackNavigator({
-  Home: { screen: connect(mapStateToProps, { userChanged })(WatchedlistScreen)},
+  Watched: { screen: connect(mapStateToProps, { userChanged })(WatchedlistScreen)},
   MovieDetails: { screen: MovieDetailsScreen },
 });
 

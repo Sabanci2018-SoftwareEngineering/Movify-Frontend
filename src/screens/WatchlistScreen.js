@@ -13,6 +13,8 @@ import MovieDetailsScreen from './MovieDetailsScreen';
 //  {title: 27207, release_date:"2017", original_title: "Bloodsucking Pharaohs in Pittsburgh", poster_path: "http://image.tmdb.org/t/p/original/2Hp0DHqObkKOuRweeTlJr7i9xaY.jpg"},
 //]
 
+const image_path = 'http://image.tmdb.org/t/p/original'
+
 class WatchlistScreen extends React.Component {
 
   state= {movieList: []}
@@ -42,17 +44,15 @@ class WatchlistScreen extends React.Component {
     }
 
       renderRow(movieList){
-        const { headerTextStyle} = styles ;
+        const { headerTextStyle} = styles;
       return (
         <View style={styles.rowCard}>
           <Image
             styleName="medium-square"
-            source={{uri: movieList.poster_path}}
+            source={{uri: image_path + movieList.poster_path}}
           />
           <View style={{ flex: 1, marginHorizontal: 8}}>
-            <Title
-            onPress={() => this.props.navigation.navigate('MovieDetailsScreen')}
-            style={{marginVertical: 4}}>{movieList.original_title}
+            <Title style={{marginVertical: 4}}>{movieList.original_title}
             </Title>
             <Text style={headerTextStyle}>{movieList.releaseDate}</Text>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
@@ -87,7 +87,7 @@ const mapStateToProps = ({ allReducers }) => {
 };
 
 const WatchlistStack = StackNavigator({
-  Home: { screen: connect(mapStateToProps, { userChanged })(WatchlistScreen)},
+  Watchlist: { screen: connect(mapStateToProps, { userChanged })(WatchlistScreen)},
   MovieDetails: { screen: MovieDetailsScreen },
 });
 
