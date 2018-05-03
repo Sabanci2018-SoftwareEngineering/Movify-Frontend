@@ -85,7 +85,7 @@ const mapStateToProps = ({ allReducers }) => {
 };
 
 const WatchedlistStack = StackNavigator({
-  Home: { screen: connect(mapStateToProps, { userChanged })(WatchedlistScreen)},
+  Watched: { screen: connect(mapStateToProps, { userChanged })(WatchedlistScreen)},
   MovieDetails: { screen: MovieDetailsScreen },
 });
 
