@@ -79,59 +79,6 @@ class WatchedlistScreen extends React.Component {
   }
 
 
-
-
-
-
-
-    render() {
-
-      return(
-        <ListView
-          data={this.state.movieList}
-          renderRow={this.renderRow}
-        />
-      )
-
-    }
-
-      renderRow(movieList){
-        const { headerTextStyle} = styles ;
-      return (
-        <View style={styles.rowCard}>
-          <Image
-            styleName="medium-square"
-            source={{uri: movieList.poster_path}}
-          />
-          <View style={{ flex: 1, marginHorizontal: 8}}>
-            <Title
-            style={{marginVertical: 4}}>{movieList.original_title}
-            </Title>
-            <Text style={headerTextStyle}>{movieList.releaseDate}</Text>
-            <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
-
-              <Button style={styles.smallButton}><Icon name="checkbox-on" /></Button>
-            </View>
-          </View>
-        </View>
-      );
-  }
-  }
-
-  const styles = {
-    rowCard: {
-      flexDirection: 'row',
-      marginVertical: 8,
-      backgroundColor: 'white',
-      alignItems: 'center'
-    },
-    headerTextStyle: {
-      fontSize: 18
-    },
-    smallButton: {
-      paddingHorizontal: 5
-    }
-  }
 const mapStateToProps = ({ allReducers }) => {
   const { user } = allReducers;
   return { user };
