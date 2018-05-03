@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     color: 'white', //#F44336
   },
   signUpButtonText: {
-    
+    fontFamily: 'bold',
     fontSize: 13,
   },
   signUpButton: {

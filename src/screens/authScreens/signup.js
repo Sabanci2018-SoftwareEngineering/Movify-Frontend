@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   signUpButtonText: {
-    
+    fontFamily: 'bold',
     fontSize: 13,
   },
   signUpButton: {
