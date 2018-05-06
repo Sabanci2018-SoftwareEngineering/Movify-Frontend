@@ -92,7 +92,7 @@ const styles = {
   movieImage: {
     width: dimensionRelativeToIphone(45),
     height: dimensionRelativeToIphone(45),
-    borderRadius: Platform.OS === 'ios' ? 20 : 50,
+    borderRadius: Platform.OS === 'ios' ? dimensionRelativeToIphone(45) / 2 : 50,
     borderWidth: 0,
   }
 };
