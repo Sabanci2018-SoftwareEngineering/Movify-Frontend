@@ -8,3 +8,5 @@ export { default as Login } from './authScreens/login';
 export { default as LoginOrSignup } from './authScreens/loginOrSignup';
 export { default as ResetPassword } from './authScreens/resetPassword';
 export { default as Signup } from './authScreens/signup';
+export { default as ProfileSettings } from './ProfileSettings';
+export { default as ProfileSearch } from './ProfileSearch';

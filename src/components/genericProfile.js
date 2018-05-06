@@ -58,7 +58,7 @@ export default class GenericProfile extends React.Component {
     this.getResponse();
   }
 
-  returnBackButton(type){
+  returnLeftComponent(type){
       if(type){
         return(
             <Button
@@ -68,9 +68,18 @@ export default class GenericProfile extends React.Component {
             </Button>
           );
       }
+      else{
+        return(
+          <Button
+          onPress={()=> this.props.navigation.goBack()}
+          >
+            <Icon name="settings" />
+          </Button>
+        );
+      }
   }
 
-  returnSearchButton(){
+  returnRightComponent(){
           return(
             <Button
             onPress={()=> console.log("Navigate to user search page")}
@@ -86,14 +95,15 @@ export default class GenericProfile extends React.Component {
         <NavigationBar
               title={(userData.username).toUpperCase()} styleName="inline"
               style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) }}}
-              leftComponent={this.returnBackButton(this.props.type)}
-              rightComponent={this.returnSearchButton()}
+              leftComponent={this.returnLeftComponent(this.props.type)}
+              rightComponent={this.returnRightComponent()}
         />
       </View>
     );
   }
 
   returnUserInfo(userData){
+
     return(
       <ImageBackground
             styleName="large-banner"
@@ -126,7 +136,7 @@ export default class GenericProfile extends React.Component {
   renderRow(movie){
     return(
       <TouchableOpacity
-      onPress={() => this.props.navigation.navigate('MovieDetails', {movieName: movie.original_title, movieId: movie.id})}
+      onPress={() => this.props.navigation.navigate('MovieDetails', {movieName: movie.original_title, movieId: movie.titleID})}
       >
       <Row>
         <Image
