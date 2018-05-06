@@ -5,7 +5,7 @@ import { Header, Item, Input, Icon, } from 'native-base';
 //redux stuff
 import { connect } from 'react-redux';
 
-import { searchDataChanged, searchSpinnerChanged } from '../actions';
+import { profileSearchDataChanged, movieSearchDataChanged, searchSpinnerChanged } from '../actions';
 
 //axios
 import axios from 'axios';
@@ -14,11 +14,11 @@ class SearchBar extends Component {
 
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleMovieSearch = this.handleMovieSearch.bind(this);
+    this.handleUserSearch = this.handleUserSearch.bind(this);
   }
 
-  handleChange(input) {
-
+  handleMovieSearch(input) {
     //if input isn't blank and the last elements isn't space
     //(if the last element is space, search result will not change. So, request isn't needed )
     if(input !== '' && input.charAt(input.length-1) !== ' '){
@@ -28,7 +28,25 @@ class SearchBar extends Component {
         })
         .then((response) => {
           this.props.searchSpinnerChanged({ searchSpinner: false });
-          this.props.searchDataChanged({ searchData: response.data.results.results});
+          this.props.movieSearchDataChanged({ movieSearchData: response.data.results.results});
+        })
+        .catch((error) => {
+          console.log(error);
+      });
+    }
+  }
+
+  handleUserSearch(input) {
+    //if input isn't blank and the last elements isn't space
+    //(if the last element is space, search result will not change. So, request isn't needed )
+    if(input !== '' && input.charAt(input.length-1) !== ' '){
+      this.props.searchSpinnerChanged({ searchSpinner: true });
+      axios.post('http://localhost:3000/profile/search', {
+        keyword: input,
+        })
+        .then((response) => {
+          this.props.searchSpinnerChanged({ searchSpinner: false });
+          this.props.profileSearchDataChanged({ profileSearchData: response.data.results.results});
         })
         .catch((error) => {
           console.log(error);
@@ -37,11 +55,12 @@ class SearchBar extends Component {
   }
   
   render() {
+    const { type } = this.props; //User search page --> type = true. Movie search page --> type = false;
     return (
         <Header searchBar rounded>
           <Item>
             <Icon name="ios-search" />
-            <Input placeholder="Search" onChangeText={(input) => this.handleChange(input)} />
+            <Input placeholder="Search" onChangeText={(input) => type ? this.handleUserSearch(input) : this.handleMovieSearch(input)} />
           </Item>
         </Header>
     );
@@ -49,8 +68,8 @@ class SearchBar extends Component {
 }
 
 const mapStateToProps = ({ allReducers }) => {
-    const { searchData } = allReducers;
-    return { searchData };
+    const { movieSearchData, profileSearchData } = allReducers;
+    return { movieSearchData, profileSearchData };
   };
   
-  export default connect(mapStateToProps, { searchDataChanged, searchSpinnerChanged })(SearchBar);
+export default connect(mapStateToProps, { profileSearchDataChanged, movieSearchDataChanged, searchSpinnerChanged })(SearchBar);

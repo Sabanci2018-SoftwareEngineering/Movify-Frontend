@@ -5,10 +5,17 @@ export const userChanged = (user) => (dispatch) => {
         });
     };
     
-export const searchDataChanged = (searchData) => (dispatch) => {
+export const movieSearchDataChanged = (movieSearchData) => (dispatch) => {
     dispatch({
-        type: 'searchData_changed',
-        payload: searchData,
+        type: 'movieSearchData_changed',
+        payload: movieSearchData,
+    });
+};
+
+export const profileSearchDataChanged = (profileSearchData) => (dispatch) => {
+    dispatch({
+        type: 'profileSearchData_changed',
+        payload: profileSearchData,
     });
 };
 

@@ -36,7 +36,6 @@ export default class GenericProfile extends React.Component {
     })
     .then((response) => {
       this.setState({userData: response.data.results});
-      console.log(this.state.userData);
     })
     .catch((error) => {
       this.setState({userData: undefined});

@@ -3,7 +3,7 @@ import { View } from '@shoutem/ui';
 import { StackNavigator } from 'react-navigation';
 
 import { connect } from 'react-redux';
-import { searchDataChanged } from '../actions';
+import { movieSearchDataChanged } from '../actions';
 import MovieDetailsScreen from './MovieDetailsScreen';
 import { GenericSearch } from '../components';
 
@@ -30,13 +30,13 @@ class SearchScreen extends React.Component {
 }
 
 const mapStateToProps = ({ allReducers }) => {
-  const { searchData, searchSpinner } = allReducers;
-  return { searchData, searchSpinner };
+  const { movieSearchData, searchSpinner } = allReducers;
+  return { movieSearchData, searchSpinner };
 };
 
 const SearchStack = StackNavigator(
   {
-    Search: { screen: connect(mapStateToProps, { searchDataChanged })(SearchScreen)},
+    Search: { screen: connect(mapStateToProps, { movieSearchDataChanged })(SearchScreen)},
     MovieDetails: { screen: MovieDetailsScreen },
   },
   {

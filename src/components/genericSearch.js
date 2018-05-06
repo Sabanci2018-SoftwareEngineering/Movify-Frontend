@@ -34,8 +34,9 @@ export default class GenericSearch extends React.Component {
   }
 
   //If search response is received, it renders listview. Otherwise, spinner will be rendered.
-  renderListView(){
-    if (this.props.parentPageProps.searchSpinner.searchSpinner !== undefined && this.props.parentPageProps.searchSpinner.searchSpinner === true) {
+  renderListView(type){
+    const { profileSearchData, movieSearchData, searchSpinner } = this.props.parentPageProps;
+    if (searchSpinner.searchSpinner !== undefined && searchSpinner.searchSpinner === true) {
       return (
         <Row style={{alignItems: 'center', justifyContent: 'center'}}>
             <ActivityIndicator size="large" color="#0000ff" />
@@ -43,11 +44,19 @@ export default class GenericSearch extends React.Component {
       );
     }
     else{
-      /* marginBottom is for overlapping of bottom navigation bar and scrollview */
+      //User search page --> type = true. Movie search page --> type = false;
+      let listViewData = [];
+      if(type && profileSearchData.profileSearchData !== undefined){
+        listViewData = profileSearchData.profileSearchData;
+      }
+      else if( !type && movieSearchData.movieSearchData !== undefined){
+        listViewData = movieSearchData.movieSearchData;
+      }
       return(
+        /* marginBottom is for overlapping of bottom navigation bar and scrollview */
         <ScrollView style={{ marginBottom: window.height/11.5 }} >
           <ListView
-            data={ this.props.parentPageProps.searchData.searchData !== undefined ? this.props.parentPageProps.searchData.searchData : this.props.parentPageProps.searchData }
+            data={ listViewData }
             renderRow={(rowData) => this.renderRow(rowData)}
             //Don't remove.It is for this bug --> https://github.com/facebook/react-native/issues/1831
             removeClippedSubviews={false}
@@ -58,10 +67,13 @@ export default class GenericSearch extends React.Component {
   }
 
   render() {
+    const { type } = this.props;
     return (
     <View>
-        <SearchBar />
-        {this.renderListView()}
+        <SearchBar
+        type={this.props.type} //User search page --> type = true. Movie search page --> type = false;
+        />
+        {this.renderListView(type)}
     </View>
      );
   }
