@@ -7,7 +7,7 @@ export default class ProfileSettings extends React.Component{
         return(
         <View>
             <Text>
-                Profile settings page
+                Profile search page
             </Text>
         </View>
         );

@@ -105,7 +105,13 @@ const SearchStack = StackNavigator(
   {
     Search: { screen: connect(mapStateToProps, { searchDataChanged })(SearchScreen)},
     MovieDetails: { screen: MovieDetailsScreen },
-  }
+  },
+  {
+    headerMode: 'none',
+    navigationOptions: {
+      headerVisible: false,
+    }
+   }
 );
 
 export default SearchStack;
