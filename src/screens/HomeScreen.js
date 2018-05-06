@@ -1,6 +1,6 @@
 import React from 'react';
-import { AsyncStorage } from 'react-native';
-import { ListView, Text, Image, Title, Caption, View, Icon, Button } from '@shoutem/ui';
+import { AsyncStorage, ActivityIndicator } from 'react-native';
+import { ListView, Text, Image, Title, Caption, View, Icon, Button, Row } from '@shoutem/ui';
 import { connect } from 'react-redux';
 
 import { userChanged } from '../actions';
@@ -14,7 +14,8 @@ let user;
 const image_path = 'http://image.tmdb.org/t/p/original'
 class HomeScreen extends React.Component {
   state = {
-    titles: []
+    titles: null,
+    userLoggedIn: false,
   }
   static navigationOptions = {
     title: 'Home',
@@ -38,7 +39,7 @@ class HomeScreen extends React.Component {
           password: user.password,
           })
           .then((response) => {
-            //console.log(response);
+            this.setState({userLoggedIn: true})
           })
           .catch((error) => {
             console.log(error.response);
@@ -83,7 +84,14 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-    const titles = this.state.titles
+    const {titles, userLoggedIn } = this.state;
+    if(titles === null || userLoggedIn !== true){
+      return (
+        <Row style={{alignItems: 'center', justifyContent: 'center'}}>
+            <ActivityIndicator size="large" color="#0000ff" />
+        </Row>
+      );
+     }
     return (
         <ListView
           data={titles}
