@@ -1,48 +1,37 @@
 import React from 'react';
-import {  Text, ListView, Image, View, Button, Title, Icon } from '@shoutem/ui';
+import { ActivityIndicator } from 'react-native';
+import {  Text, ListView, Image, View, Button, Title, Icon, Row } from '@shoutem/ui';
+
 import axios from 'axios';
 import { StackNavigator } from 'react-navigation';
 
 import { connect } from 'react-redux';
 import { userChanged } from '../actions';
 import MovieDetailsScreen from './MovieDetailsScreen';
-//const testResults = [
-//  {title: 27205, release_date:"2015", original_title: "Inception", poster_path: "http://image.tmdb.org/t/p/original/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg"},
-//  {title: 27206, release_date:"2016", original_title: "Bald", poster_path: "http://image.tmdb.org/t/p/original/jUKFcsIL3WllT2AkWv4msOweJ42.jpg"},
-//  {title: 27207, release_date:"2017", original_title: "Bloodsucking Pharaohs in Pittsburgh", poster_path: "http://image.tmdb.org/t/p/original/2Hp0DHqObkKOuRweeTlJr7i9xaY.jpg"},
-//]
+
 const image_path = 'http://image.tmdb.org/t/p/original'
 
 class WatchedlistScreen extends React.Component {
+    static navigationOptions = {
+      title: 'Watched'
+    };
 
-  state= {movieList: []}
-
-  static navigationOptions = {
-    title: 'Watched'
-  };
-
-  componentDidMount(){
-     const { params } = this.props.navigation.state;
-     axios.get(`http://localhost:3000/profile/${this.props.user.user.key}/watched`)
-       .then(res => {
-         const movieList = res.data.results;
-         this.setState({movieList});
-       })
-  }
-
-    render() {
-
-      return(
-        <ListView
-          data={this.state.movieList}
-          renderRow={this.renderRow}
-        />
-      )
-
+    constructor(props){
+      super(props);
+      this.state = {
+        movieList: []
+      }
     }
 
-      renderRow(movieList){
-        const { headerTextStyle} = styles ;
+    componentDidMount(){
+      axios.get(`http://localhost:3000/profile/${this.props.user.user.key}/watched`)
+        .then(res => {
+          const movieList = res.data.results;
+          this.setState({movieList});
+        })
+    }
+
+    renderRow(movieList){
       return (
         <View style={styles.rowCard}>
           <Image
@@ -55,13 +44,29 @@ class WatchedlistScreen extends React.Component {
             </Title>
             <Text>{movieList.releaseDate}</Text>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
-
               <Button style={styles.smallButton}><Icon name="checkbox-on" /></Button>
             </View>
           </View>
         </View>
       );
-  }
+    }
+
+    render() {
+      const { movieList } = this.state;
+      if(movieList !== undefined && movieList.length === 0){
+        return (
+          <Row style={{alignItems: 'center', justifyContent: 'center'}}>
+              <ActivityIndicator size="large" color="#0000ff" />
+          </Row>
+        );
+      }
+      return(
+        <ListView
+          data={this.state.movieList}
+          renderRow={this.renderRow}
+        />
+      )
+    }
   }
 
   const styles = {

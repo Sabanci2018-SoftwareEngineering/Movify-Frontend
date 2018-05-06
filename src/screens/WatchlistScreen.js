@@ -17,7 +17,7 @@ class WatchlistScreen extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      movieList: null
+      movieList: []
     }
   }
 
@@ -51,7 +51,7 @@ class WatchlistScreen extends React.Component {
 
   render() {
     const { movieList } = this.state;
-    if(movieList === null){
+    if(movieList.length === 0){
       return (
         <Row style={{alignItems: 'center', justifyContent: 'center'}}>
             <ActivityIndicator size="large" color="#0000ff" />
