@@ -13,16 +13,15 @@ let user;
 // This hardcoded path will be fixed when we implement singleton network object.
 const image_path = 'http://image.tmdb.org/t/p/original'
 class HomeScreen extends React.Component {
-  state = {
-    titles: null,
-    userLoggedIn: false,
-  }
   static navigationOptions = {
     title: 'Home',
   };
 
   constructor(props){
     super(props);
+    this.state = {
+        titles: [],
+    }
     this.renderRow = this.renderRow.bind(this);
   }
 
@@ -39,7 +38,7 @@ class HomeScreen extends React.Component {
           password: user.password,
           })
           .then((response) => {
-            this.setState({userLoggedIn: true})
+            //
           })
           .catch((error) => {
             console.log(error.response);
@@ -84,8 +83,8 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-    const {titles, userLoggedIn } = this.state;
-    if(titles === null || userLoggedIn !== true){
+    const { titles } = this.state;
+    if(titles !== undefined && titles.length === 0){
       return (
         <Row style={{alignItems: 'center', justifyContent: 'center'}}>
             <ActivityIndicator size="large" color="#0000ff" />

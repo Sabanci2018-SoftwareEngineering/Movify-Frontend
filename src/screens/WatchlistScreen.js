@@ -20,7 +20,7 @@ class WatchlistScreen extends React.Component {
       movieList: null
     }
   }
-  
+
   componentDidMount(){
      axios.get(`http://localhost:3000/profile/${this.props.user.user.key}/watchlist`)
        .then(res => {
@@ -60,12 +60,11 @@ class WatchlistScreen extends React.Component {
     }
     return(
       <ListView
-        data={this.state.movieList}
+        data={movieList}
         renderRow={this.renderRow}
       />
     )
   }
-
 }
 
 const styles = {
