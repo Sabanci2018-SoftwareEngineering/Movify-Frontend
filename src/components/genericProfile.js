@@ -121,13 +121,13 @@ export default class GenericProfile extends React.Component {
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('FollowList', {pageType: 'Followers', username: this.props.username})}>
                     <View style={styles.followersView}>
                       <Title style={styles.followText}> Followers </Title>
-                      <Subtitle style={styles.followText}> {this.state.userData.followers} </Subtitle>
+                      <Subtitle style={styles.followText}> {userData.followers} </Subtitle>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('FollowList', {pageType: 'Following', username: this.props.username})}>
                     <View style={styles.followingView}>
                       <Title style={styles.followText}> Following </Title>
-                      <Subtitle style={styles.followText}> {this.state.userData.follows} </Subtitle>
+                      <Subtitle style={styles.followText}> {userData.follows} </Subtitle>
                     </View>
                   </TouchableOpacity>
                 </View>
