@@ -5,3 +5,4 @@ export { default as RedirectHere } from './redirectHere';
 export { default as SearchBar } from './searchBar';
 export { default as FollowButton } from './followButton';
 export { default as GenericProfile } from './genericProfile';
+export { default as GenericSearch } from './genericSearch';
