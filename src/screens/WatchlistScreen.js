@@ -3,7 +3,8 @@ import {  Text, ListView, Image, View, Button, Title, Icon } from '@shoutem/ui';
 import { StackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
 import { userChanged } from '../actions';
-import axios from 'axios';
+
+import NetworkAccess from '../common/NetworkAccess';
 import MovieDetailsScreen from './MovieDetailsScreen';
 
 
@@ -24,12 +25,9 @@ class WatchlistScreen extends React.Component {
   };
 
   componentDidMount(){
-     const { params } = this.props.navigation.state;
-     axios.get(`http://localhost:3000/profile/${this.props.user.user.key}/watchlist`)
-       .then(res => {
-         const movieList = res.data.results;
-         this.setState({movieList});
-       })
+    NetworkAccess.getUserWatchlist(this.props.user.user.key, (list) => {
+      this.setState({movieList: list});
+    });
   }
 
     render() {
