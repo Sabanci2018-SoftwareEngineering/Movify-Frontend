@@ -84,7 +84,7 @@ class HomeScreen extends React.Component {
 
   render() {
     const { titles } = this.state;
-    if(titles !== undefined && titles.length === 0){
+    if(titles === undefined || titles.length === 0){
       return (
         <Row style={{alignItems: 'center', justifyContent: 'center'}}>
             <ActivityIndicator size="large" color="#0000ff" />
