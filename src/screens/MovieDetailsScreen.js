@@ -1,14 +1,21 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
-import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView } from '@shoutem/ui';
+import { Dimensions, Platform } from 'react-native';
+import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView, NavigationBar, StatusBar } from '@shoutem/ui';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { userChanged } from '../actions';
 
-const image_path = 'http://image.tmdb.org/t/p/original'
+const image_path = 'http://image.tmdb.org/t/p/original';
+
+const height = Dimensions.get('window').height;
 
 class MovieDetailsScreen extends React.Component {
+  state = {
+    movie: {},
+    cast: []
+  }
+
 
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
@@ -16,14 +23,6 @@ class MovieDetailsScreen extends React.Component {
       title: params ? params.movieName : 'Details',
     }
   };
-
-  constructor(props){
-    super(props);
-    this.state = {
-      movie: {},
-      cast: []
-    }
-  }
 
   componentDidMount(){
     const { params } = this.props.navigation.state;
@@ -38,6 +37,28 @@ class MovieDetailsScreen extends React.Component {
         const cast = res.data.results;
         this.setState({...cast});
       })
+  }
+
+  returnLeftComponent(){
+      return(
+          <Button
+          onPress={()=> this.props.navigation.pop()}
+          >
+            <Icon name="back" />
+          </Button>
+        );
+  }
+
+  returnNavigationBar(movie){
+    return(
+      <View style={styles.navigationBarView}>
+        <NavigationBar
+              title={(movie.original_title)} styleName="inline"
+              style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) }}}
+              leftComponent={this.returnLeftComponent()}
+        />
+      </View>
+    );
   }
 
   renderRow(person){
@@ -59,27 +80,21 @@ class MovieDetailsScreen extends React.Component {
   }
 
   render() {
-      const { movie, cast } = this.state;
-      if(cast !== undefined && cast.length === 0){
-        return (
-          <Row style={{alignItems: 'center', justifyContent: 'center'}}>
-              <ActivityIndicator size="large" color="#0000ff" />
-          </Row>
-        );
-      }
-      return (
+     return (
+      <View>
+        {this.returnNavigationBar(this.state.movie)}
         <ScrollView style={{ marginVertical: 10, marginHorizontal: 10 }}>
           <View style={{flexDirection: 'row'}}>
           <Image
             styleName="medium-square"
-            source={{uri: image_path + movie.poster_path}}
+            source={{uri: image_path + this.state.movie.poster_path}}
             style={{ marginRight: 10, marginBottom: 10 }}
           />
             <View>
-              <Title style={styles.textStyle}>{movie.original_title}</Title>
-              <Text style={styles.textStyle}>Rate: {movie.vote_average}</Text>
-              <Text style={styles.textStyle}>Duration: {movie.runtime} min.</Text>
-              <Text style={styles.textStyle}>Release: {movie.release_date}</Text>
+              <Title style={styles.textStyle}>{this.state.movie.original_title}</Title>
+              <Text style={styles.textStyle}>Rate: {this.state.movie.vote_average}</Text>
+              <Text style={styles.textStyle}>Duration: {this.state.movie.runtime} min.</Text>
+              <Text style={styles.textStyle}>Release: {this.state.movie.release_date}</Text>
               <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 10 }}>
                 <Button style={styles.smallButton}><Icon name="share" /></Button>
                 <Button onPress={() => axios.post('http://localhost:3000/profile/watchlist', {titleID: this.props.navigation.state.params.movieId})} style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
@@ -87,15 +102,17 @@ class MovieDetailsScreen extends React.Component {
               </View>
             </View>
           </View>
-          <Text style={{marginVertical: 15, marginHorizontal: 10}}>{movie.overview}</Text>
+
+          <Text style={{marginVertical: 15, marginHorizontal: 10}}>{this.state.movie.overview}</Text>
           <Title style={{marginBottom: 15}}>Actors</Title>
           <ListView
-            data={cast}
+            data={this.state.cast}
             renderRow={this.renderRow}
             initialNumToRender={5}
             />
         </ScrollView>
-      );
+      </View>
+    );
   }
 }
 
@@ -105,7 +122,10 @@ const styles = {
   },
   smallButton: {
     paddingHorizontal: 5
-  }
+  },
+  navigationBarView: {
+    paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0)
+  },
 }
 const mapStateToProps = ({ allReducers }) => {
   const { user } = allReducers;

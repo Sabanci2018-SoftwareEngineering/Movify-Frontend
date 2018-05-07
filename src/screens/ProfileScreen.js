@@ -5,7 +5,11 @@ import { GenericProfile } from '../components';
 import { connect } from 'react-redux';
 import { userChanged } from '../actions';
 
-class ProfilePage extends React.Component {
+import { StackNavigator } from 'react-navigation';
+
+import MovieDetailsScreen from './MovieDetailsScreen';
+
+class ProfileScreen extends React.Component {
   static navigationOptions = {
     title: 'Profile',
   };
@@ -15,7 +19,7 @@ class ProfilePage extends React.Component {
       <GenericProfile
       navigation={this.props.navigation}
       username={this.props.user.user.key}
-      type={true} // false own profile, true other profile
+      type={false} // false own profile, true other profile
       />
     );
   }
@@ -26,4 +30,16 @@ const mapStateToProps = ({ allReducers }) => {
   return { user };
 };
 
-export default connect(mapStateToProps, { userChanged })(ProfilePage);
+const ProfileScreenStack = StackNavigator({
+  ProfileScreen: { screen: connect(mapStateToProps, { userChanged })(ProfileScreen)},
+  MovieDetails: { screen: MovieDetailsScreen },
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+    headerVisible: false,
+  }
+ }
+);
+
+export default ProfileScreenStack;
