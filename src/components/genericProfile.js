@@ -4,12 +4,15 @@ import { View, ScrollView, ListView, NavigationBar, Screen, Title, Subtitle, Row
 
 import axios from 'axios';
 
+import { connect } from 'react-redux';
+import { profileSearchDataChanged } from '../actions';
+
 import FollowButton from './followButton';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default class GenericProfile extends React.Component {
+class GenericProfile extends React.Component {
   static navigationOptions = {
     title: 'Profile',
   };
@@ -78,7 +81,8 @@ export default class GenericProfile extends React.Component {
       }
   }
 
-  returnRightComponent(){
+  returnRightComponent(type){
+        if(!type){
           return(
             <Button
             onPress={()=> this.props.navigation.navigate('ProfileSearch', {profileScreenNavigation: this.props.navigation})}
@@ -86,16 +90,17 @@ export default class GenericProfile extends React.Component {
               <Icon name="search" />
             </Button>
           );
+        }
   }
 
-  returnNavigationBar(userData){
+  returnNavigationBar(){
     return(
       <View style={styles.navigationBarView}>
         <NavigationBar
-              title={(userData.username).toUpperCase()} styleName="inline"
+              title={(this.props.username).toUpperCase()} styleName="inline"
               style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) }}}
               leftComponent={this.returnLeftComponent(this.props.type)}
-              rightComponent={this.returnRightComponent()}
+              rightComponent={this.returnRightComponent(this.props.type)}
         />
       </View>
     );
@@ -130,7 +135,7 @@ export default class GenericProfile extends React.Component {
                     </View>
                   </TouchableOpacity>
                 </View>
-                {this.props.type ? <FollowButton selected={false} /> : null}
+                {this.props.type && this.props.username !== this.props.user.user.key ? <FollowButton username={this.props.username} /> : null}
               </Tile>
       </ImageBackground>
     );
@@ -168,7 +173,7 @@ export default class GenericProfile extends React.Component {
      }
      return (
        <Screen style={styles.container}>
-          {this.returnNavigationBar(userData)}
+          {this.returnNavigationBar()}
           <ScrollView>
             {this.returnUserInfo(userData)}
             <ListView
@@ -242,3 +247,10 @@ const styles = {
     fontFamily: 'Rubik-Regular'
   }
 };
+
+const mapStateToProps = ({ allReducers }) => {
+  const { user } = allReducers;
+  return { user };
+};
+
+export default connect(mapStateToProps, { profileSearchDataChanged })(GenericProfile);

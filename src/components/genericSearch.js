@@ -23,7 +23,7 @@ export default class GenericSearch extends React.Component {
   renderUserRow(rowData){
     return (
       <TouchableOpacity onPress={() => this.props.parentPageProps.navigation
-        .navigate('MovieDetails', {movieName: rowData.title, movieId: rowData.id})}>
+        .navigate('OtherProfile', {navigation: this.props.profileScreenNavigation, username: rowData.username})}>
         <Row styleName="small">
             <Image
               style={styles.movieImage}

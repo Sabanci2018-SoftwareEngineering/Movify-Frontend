@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Header, Item, Input, Icon } from 'native-base';
 import { Button, Icon as IconShoutem } from '@shoutem/ui';
-//redux stuff
-import { connect } from 'react-redux';
 
+import { connect } from 'react-redux';
 import { profileSearchDataChanged, movieSearchDataChanged, searchSpinnerChanged } from '../actions';
 
 //axios
@@ -19,6 +18,12 @@ class SearchBar extends Component {
   }
 
   handleMovieSearch(input) {
+    //If user writes something then delete all of it, it was showing first character's search result
+    //This if statement is for fixing it
+    if(input === ''){
+      this.props.movieSearchDataChanged({ movieSearchData: []});
+      return;
+    }
     //if input isn't blank and the last elements isn't space
     //(if the last element is space, search result will not change. So, request isn't needed )
     if(input !== '' && input.charAt(input.length-1) !== ' '){
@@ -37,6 +42,12 @@ class SearchBar extends Component {
   }
 
   handleUserSearch(input) {
+    //If user writes something then delete all of it, it was showing first character's search result
+    //This if statement is for fixing it
+    if(input === ''){
+      this.props.profileSearchDataChanged({ profileSearchData: []});
+      return;
+    }
     //if input isn't blank and the last elements isn't space
     //(if the last element is space, search result will not change. So, request isn't needed )
     if(input !== '' && input.charAt(input.length-1) !== ' '){
@@ -68,7 +79,7 @@ class SearchBar extends Component {
   render() {
     const { type } = this.props; //User search page --> type = true. Movie search page --> type = false;
     return (
-        <Header searchBar rounded>
+        <Header searchBar rounded style={{ backgroundColor: 'white'}} >
           {this.returnButton(type)}
           <Item>
             <Icon name="ios-search" />

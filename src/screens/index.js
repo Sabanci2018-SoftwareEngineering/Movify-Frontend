@@ -12,3 +12,4 @@ export { default as ProfileSettings } from './ProfileSettings';
 export { default as ProfileSearch } from './ProfileSearch';
 export { default as MovieDetailsScreen } from './MovieDetailsScreen';
 export { default as FollowList } from './FollowList';
+export { default as OtherProfile } from './OtherProfile';
