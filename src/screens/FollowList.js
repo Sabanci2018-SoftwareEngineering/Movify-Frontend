@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Platform, StatusBar, TouchableOpacity, Image } from 'react-native';
+import { Dimensions, Platform, StatusBar, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 
 import { View, NavigationBar, Icon, Button, Screen, ScrollView, ListView, Row, Subtitle, Divider} from '@shoutem/ui';
 
@@ -12,7 +12,7 @@ export default class FollowList extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            users: []
+            users: null
         }
     }
 
@@ -79,6 +79,13 @@ export default class FollowList extends React.Component{
       }
 
     render(){
+        if (this.state.users === null) {
+            return (
+              <Row style={styles.spinnerContainer}>
+                  <ActivityIndicator size="large" color="#0000ff" />
+              </Row>
+            );
+        }
         return(
             <Screen style={styles.container}>
                 {this.returnNavigationBar()}
@@ -100,6 +107,12 @@ const styles = {
         flex: 1,
         backgroundColor: '#fff',
     },
+    spinnerContainer: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
     navigationBarView: {
         paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0)
     },

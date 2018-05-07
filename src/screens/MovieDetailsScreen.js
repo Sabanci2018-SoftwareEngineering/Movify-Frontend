@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Platform } from 'react-native';
+import { Dimensions, Platform, ActivityIndicator} from 'react-native';
 import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView, NavigationBar, StatusBar } from '@shoutem/ui';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -12,8 +12,8 @@ const height = Dimensions.get('window').height;
 
 class MovieDetailsScreen extends React.Component {
   state = {
-    movie: {},
-    cast: []
+    movie: null,
+    cast: null
   }
 
 
@@ -80,6 +80,13 @@ class MovieDetailsScreen extends React.Component {
   }
 
   render() {
+      if (this.state.movie === null || this.state.cast === null) {
+          return (
+            <Row style={styles.container}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </Row>
+          );
+      }
      return (
       <View>
         {this.returnNavigationBar(this.state.movie)}
@@ -117,6 +124,12 @@ class MovieDetailsScreen extends React.Component {
 }
 
 const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   textStyle: {
     marginVertical: 3
   },
