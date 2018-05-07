@@ -1,15 +1,32 @@
 import React from 'react';
-import { View, Text } from '@shoutem/ui';
+import { View } from '@shoutem/ui';
 
-export default class ProfileSettings extends React.Component{
+import { connect } from 'react-redux';
+import { profileSearchDataChanged } from '../actions';
+import { GenericSearch } from '../components';
 
-    render(){
-        return(
-        <View>
-            <Text>
-                Profile search page
-            </Text>
-        </View>
-        );
-    }
+class ProfileSearch extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+    <View>
+        <GenericSearch
+        parentPageProps={this.props}
+        profileScreenNavigation={this.props.navigation} //for back button on profile search
+        type={true} //User search page --> type = true. Movie search page --> type = false;
+        />
+    </View>
+     );
+  }
 }
+
+const mapStateToProps = ({ allReducers }) => {
+  const { profileSearchData, searchSpinner } = allReducers;
+  return { profileSearchData, searchSpinner };
+};
+
+export default connect(mapStateToProps, { profileSearchDataChanged })(ProfileSearch)

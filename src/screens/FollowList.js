@@ -60,7 +60,8 @@ export default class FollowList extends React.Component{
     renderRow(user){
         return(
           <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('MovieDetails', {movieName: user.original_title, movieId: user.titleID})}
+          onPress={() => this.props.navigation
+            .navigate('OtherProfile', {navigation: this.props.navigation, username: user.username})}
           >
             <Row>
                 <Image

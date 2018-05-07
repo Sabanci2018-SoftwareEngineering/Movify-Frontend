@@ -2,29 +2,66 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements'
 
-//Example call <FollowButton selected={true} />
-export default class FollowButton extends React.Component {
+import axios from 'axios';
+
+import { connect } from 'react-redux';
+import { profileSearchDataChanged } from '../actions';
+
+//Example call <FollowButton username={user1} />
+class FollowButton extends React.Component {
     constructor() {
       super();
       this.state = {
-        selected: false
+        following: false
       };
     }
-  
+
     componentDidMount() {
-      const { selected } = this.props;
-      this.setState({ selected: selected });
+      axios.get(`http://localhost:3000/profile/${this.props.user.user.key}/follows`)
+            .then(res => {
+              res.data.results.forEach((element) => {
+                if(element.username === this.props.username){
+                  this.setState({ following: true });
+                }
+              })
+        });
     }
-  
+
+    followUser(){
+      this.setState({ following: true });
+      axios.post('http://localhost:3000/follow', {
+        username: this.props.username,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+      });
+    }
+
+    unfollowUser(){
+      this.setState({ following: false });
+      axios.post('http://localhost:3000/unfollow', {
+        username: this.props.username,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+      });
+    }
+
     render() {
-      const { selected } = this.state;
+      const { following } = this.state;
       return (
         <Button
-          title={selected ? 'Following' : 'Follow'}
-          titleStyle={selected ? styles.selectedTitle : styles.title}
-          buttonStyle={selected ?  styles.selected : styles.notSelected}
+          title={following ? 'Following' : 'Follow'}
+          titleStyle={following ? styles.selectedTitle : styles.title}
+          buttonStyle={following ?  styles.selected : styles.notSelected}
           containerStyle={{ marginRight: 10 }}
-          onPress={() => this.setState({ selected: !selected })}
+          onPress={() => following ? this.unfollowUser() : this.followUser()}
         />
       );
     }
@@ -58,3 +95,10 @@ const styles = StyleSheet.create({
       backgroundColor: 'transparent'
   },
 });
+
+const mapStateToProps = ({ allReducers }) => {
+  const { user } = allReducers;
+  return { user };
+};
+
+export default connect(mapStateToProps, { profileSearchDataChanged })(FollowButton);
