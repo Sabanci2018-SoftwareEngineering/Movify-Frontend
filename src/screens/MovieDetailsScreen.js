@@ -1,18 +1,15 @@
 import React from 'react';
 import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView } from '@shoutem/ui';
 import { connect } from 'react-redux';
-import axios from 'axios';
 
+import NetworkAccess from '../common/NetworkAccess';
 import { userChanged } from '../actions';
-
-const image_path = 'http://image.tmdb.org/t/p/original'
 
 class MovieDetailsScreen extends React.Component {
   state = {
     movie: {},
     cast: []
   }
-
 
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
@@ -23,17 +20,13 @@ class MovieDetailsScreen extends React.Component {
 
   componentDidMount(){
     const { params } = this.props.navigation.state;
-    axios.get(`http://localhost:3000/title/${params.movieId}`)
-      .then(res => {
-        const movie = res.data.results;
-        this.setState({movie});
-      })
+    NetworkAccess.getMovieDetails(params.movieId, (movie) => {
+      this.setState({movie});
+    });
 
-    axios.get(`http://localhost:3000/title/${params.movieId}/credits`)
-      .then(res => {
-        const cast = res.data.results;
-        this.setState({...cast});
-      })
+    NetworkAccess.getMovieCast(params.movieId, (castArray) => {
+      this.setState({...castArray});
+    });
   }
 
   renderRow(person){
@@ -42,7 +35,7 @@ class MovieDetailsScreen extends React.Component {
       <Row>
         <Image
           styleName="small-avatar"
-          source={{ uri: image_path + person.profile_path }}
+          source={{ uri: NetworkAccess.IMAGE_PATH + person.profile_path }}
         />
         <View style={{ flexDirection: 'row' }}>
           <Subtitle>{person.name}</Subtitle>
@@ -60,7 +53,7 @@ class MovieDetailsScreen extends React.Component {
         <View style={{flexDirection: 'row'}}>
         <Image
           styleName="medium-square"
-          source={{uri: image_path + this.state.movie.poster_path}}
+          source={{uri: NetworkAccess.IMAGE_PATH + this.state.movie.poster_path}}
           style={{ marginRight: 10, marginBottom: 10 }}
         />
           <View>
@@ -70,8 +63,10 @@ class MovieDetailsScreen extends React.Component {
             <Text style={styles.textStyle}>Release: {this.state.movie.release_date}</Text>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 10 }}>
               <Button style={styles.smallButton}><Icon name="share" /></Button>
-              <Button onPress={() => axios.post('http://localhost:3000/profile/watchlist', {titleID: this.props.navigation.state.params.movieId})} style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
-              <Button onPress={() => axios.post('http://localhost:3000/profile/watched', {titleID: this.props.navigation.state.params.movieId})} style={styles.smallButton}><Icon name="checkbox-on" /></Button>
+              <Button onPress={NetworkAccess.addMovieToWatchlist(this.props.navigation.state.params.movieId)}
+                style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
+              <Button onPress={NetworkAccess.addMovieToWatched(this.props.navigation.state.params.movieId)}
+                style={styles.smallButton}><Icon name="checkbox-on" /></Button>
             </View>
           </View>
         </View>
