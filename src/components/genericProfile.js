@@ -62,7 +62,7 @@ export default class GenericProfile extends React.Component {
       if(type){
         return(
             <Button
-            onPress={()=> this.props.navigation.goBack()}
+            onPress={()=> this.props.navigation.pop()}
             >
               <Icon name="back" />
             </Button>
@@ -118,14 +118,18 @@ export default class GenericProfile extends React.Component {
                 source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png' }}
                 />
                 <View style={{ flexDirection: 'row' }}>
-                  <View style={styles.followersView}>
-                    <Title style={styles.followText}> Followers </Title>
-                    <Subtitle style={styles.followText}> {this.state.userData.followers} </Subtitle>
-                  </View>
-                  <View style={styles.followingView}>
-                    <Title style={styles.followText}> Following </Title>
-                    <Subtitle style={styles.followText}> {this.state.userData.follows} </Subtitle>
-                  </View>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('FollowList', {pageType: 'Followers', username: this.props.username})}>
+                    <View style={styles.followersView}>
+                      <Title style={styles.followText}> Followers </Title>
+                      <Subtitle style={styles.followText}> {userData.followers} </Subtitle>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('FollowList', {pageType: 'Following', username: this.props.username})}>
+                    <View style={styles.followingView}>
+                      <Title style={styles.followText}> Following </Title>
+                      <Subtitle style={styles.followText}> {userData.follows} </Subtitle>
+                    </View>
+                  </TouchableOpacity>
                 </View>
                 {this.props.type ? <FollowButton selected={false} /> : null}
               </Tile>

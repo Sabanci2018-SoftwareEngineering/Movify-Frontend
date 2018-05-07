@@ -8,6 +8,7 @@ import { userChanged } from '../actions';
 import { StackNavigator } from 'react-navigation';
 
 import MovieDetailsScreen from './MovieDetailsScreen';
+import FollowList from './FollowList';
 
 class ProfileScreen extends React.Component {
   static navigationOptions = {
@@ -33,6 +34,7 @@ const mapStateToProps = ({ allReducers }) => {
 const ProfileScreenStack = StackNavigator({
   ProfileScreen: { screen: connect(mapStateToProps, { userChanged })(ProfileScreen)},
   MovieDetails: { screen: MovieDetailsScreen },
+  FollowList: { screen: FollowList }
 },
 {
   headerMode: 'none',

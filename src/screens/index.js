@@ -10,3 +10,5 @@ export { default as ResetPassword } from './authScreens/resetPassword';
 export { default as Signup } from './authScreens/signup';
 export { default as ProfileSettings } from './ProfileSettings';
 export { default as ProfileSearch } from './ProfileSearch';
+export { default as MovieDetailsScreen } from './MovieDetailsScreen';
+export { default as FollowList } from './FollowList';
