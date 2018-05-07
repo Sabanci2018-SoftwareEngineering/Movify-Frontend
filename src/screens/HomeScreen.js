@@ -37,13 +37,6 @@ class HomeScreen extends React.Component {
           key: user.key,
           password: user.password,
           })
-          .then((response) => {
-            //console.log(response);
-          })
-          .catch((error) => {
-            console.log(error.response);
-          });
-
       });
     } catch(error){
       console.log(error);
@@ -69,7 +62,9 @@ class HomeScreen extends React.Component {
             source={{uri: image_path + oneTitle.poster_path}}
           />
           <View style={{ flex: 1, marginHorizontal: 8}}>
-            <Title style={{marginVertical: 4}}>{oneTitle.original_title}</Title>
+            <Title onPress={() => this.props.navigation
+              .navigate('MovieDetails', {movieName: oneTitle.title, movieId: oneTitle.titleID})}
+              style={{marginVertical: 4}}>{oneTitle.original_title}</Title>
             <Text numberOfLines={3}>{oneTitle.overview}</Text>
             <Caption style={{marginVertical: 4}}>{oneTitle.release_date}</Caption>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>

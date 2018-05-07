@@ -3,10 +3,12 @@
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "rules": {
     "react/prop-types": "off",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "no-console": "off"
     },
   "globals": {
         "require": true,
-        "setTimeout": true
+        "setTimeout": true,
+        "console": true
     }
 }
