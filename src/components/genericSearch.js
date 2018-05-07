@@ -1,8 +1,10 @@
 import React from 'react';
 import { Dimensions, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { View, ListView, Image, Row, Text, ScrollView, Icon } from '@shoutem/ui';
+import { View, ListView, Image, Row, Text, ScrollView, Icon, Button, NavigationBar, StatusBar } from '@shoutem/ui';
 
 import SearchBar from './searchBar';
+
+const height = Dimensions.get('window').height;
 
 export default class GenericSearch extends React.Component {
   static navigationOptions = {
@@ -12,11 +14,29 @@ export default class GenericSearch extends React.Component {
 
   constructor(props) {
     super(props);
-    this.renderRow = this.renderRow.bind(this);
+
+    this.renderUserRow = this.renderUserRow.bind(this);
+    this.renderMovieRow = this.renderMovieRow.bind(this);
     this.renderListView = this.renderListView.bind(this);
   }
 
-  renderRow(rowData) {
+  renderUserRow(rowData){
+    return (
+      <TouchableOpacity onPress={() => this.props.parentPageProps.navigation
+        .navigate('MovieDetails', {movieName: rowData.title, movieId: rowData.id})}>
+        <Row styleName="small">
+            <Image
+              style={styles.movieImage}
+              source={{ uri: rowData.picture }}
+            />
+            <Text>{rowData.username}</Text>
+            <Icon styleName="disclosure" name="right-arrow" />
+        </Row>
+      </TouchableOpacity>
+      );
+  }
+
+  renderMovieRow(rowData) {
     // to check available poster sizes --> https://www.themoviedb.org/talk/53c11d4ec3a3684cf4006400
     return (
     <TouchableOpacity onPress={() => this.props.parentPageProps.navigation
@@ -38,7 +58,7 @@ export default class GenericSearch extends React.Component {
     const { profileSearchData, movieSearchData, searchSpinner } = this.props.parentPageProps;
     if (searchSpinner.searchSpinner !== undefined && searchSpinner.searchSpinner === true) {
       return (
-        <Row style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Row style={{alignItems: 'center', justifyContent: 'center', backgroundColor: '#efeff4'}}>
             <ActivityIndicator size="large" color="#0000ff" />
         </Row>
       );
@@ -57,7 +77,7 @@ export default class GenericSearch extends React.Component {
         <ScrollView style={{ marginBottom: window.height/11.5 }} >
           <ListView
             data={ listViewData }
-            renderRow={(rowData) => this.renderRow(rowData)}
+            renderRow={(rowData) => type ? this.renderUserRow(rowData) : this.renderMovieRow(rowData)}
             //Don't remove.It is for this bug --> https://github.com/facebook/react-native/issues/1831
             removeClippedSubviews={false}
           />
@@ -66,12 +86,24 @@ export default class GenericSearch extends React.Component {
     }
   }
 
+returnNavigationBar(){
+    return(
+      <View style={styles.navigationBarView}>
+        <NavigationBar
+              style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) }}}
+              leftComponent={this.returnLeftComponent()}
+        />
+      </View>
+    );
+  }
+
   render() {
-    const { type } = this.props;
+    const { type, profileScreenNavigation } = this.props; //User search page --> type = true. Movie search page --> type = false;
     return (
     <View>
         <SearchBar
-        type={this.props.type} //User search page --> type = true. Movie search page --> type = false;
+        type={this.props.type}
+        navigation={profileScreenNavigation}
         />
         {this.renderListView(type)}
     </View>
@@ -102,5 +134,8 @@ const styles = {
     height: dimensionRelativeToIphone(45),
     borderRadius: Platform.OS === 'ios' ? dimensionRelativeToIphone(45) / 2 : 50,
     borderWidth: 0,
-  }
+  },
+  navigationBarView: {
+    paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0)
+  },
 };

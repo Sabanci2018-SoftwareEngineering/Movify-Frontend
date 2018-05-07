@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, StatusBar } from 'react-native';
-import { Header, Item, Input, Icon, } from 'native-base';
-
+import { Header, Item, Input, Icon } from 'native-base';
+import { Button, Icon as IconShoutem } from '@shoutem/ui';
 //redux stuff
 import { connect } from 'react-redux';
 
@@ -16,6 +15,7 @@ class SearchBar extends Component {
     super(props);
     this.handleMovieSearch = this.handleMovieSearch.bind(this);
     this.handleUserSearch = this.handleUserSearch.bind(this);
+    this.returnButton = this.returnButton.bind(this);
   }
 
   handleMovieSearch(input) {
@@ -46,18 +46,30 @@ class SearchBar extends Component {
         })
         .then((response) => {
           this.props.searchSpinnerChanged({ searchSpinner: false });
-          this.props.profileSearchDataChanged({ profileSearchData: response.data.results.results});
+          this.props.profileSearchDataChanged({ profileSearchData: response.data.results.users});
         })
         .catch((error) => {
           console.log(error);
       });
     }
   }
-  
+
+  returnButton(type){
+      if(type){
+        return(
+        <Button
+        onPress={()=> this.props.navigation.goBack()}
+        >
+          <IconShoutem name="back" />
+        </Button>
+        )
+      }
+  }
   render() {
     const { type } = this.props; //User search page --> type = true. Movie search page --> type = false;
     return (
         <Header searchBar rounded>
+          {this.returnButton(type)}
           <Item>
             <Icon name="ios-search" />
             <Input placeholder="Search" onChangeText={(input) => type ? this.handleUserSearch(input) : this.handleMovieSearch(input)} />

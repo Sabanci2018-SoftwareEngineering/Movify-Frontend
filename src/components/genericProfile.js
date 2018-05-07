@@ -81,7 +81,7 @@ export default class GenericProfile extends React.Component {
   returnRightComponent(){
           return(
             <Button
-            onPress={()=> console.log("Navigate to user search page")}
+            onPress={()=> this.props.navigation.navigate('ProfileSearch', {profileScreenNavigation: this.props.navigation})}
             >
               <Icon name="search" />
             </Button>
