@@ -5,6 +5,7 @@ import {  Text, ListView, Image, View, Button, Title, Icon, Row } from '@shoutem
 import axios from 'axios';
 import { StackNavigator } from 'react-navigation';
 
+import NetworkAccess from '../common/NetworkAccess';
 import { connect } from 'react-redux';
 import { userChanged } from '../actions';
 import MovieDetailsScreen from './MovieDetailsScreen';
@@ -16,73 +17,75 @@ class WatchedlistScreen extends React.Component {
       title: 'Watched'
     };
 
-    constructor(props){
-      super(props);
-      this.state = {
-        movieList: undefined
-      }
+  constructor(props){
+    super(props);
+    this.state = {
+      movieList: undefined
     }
+  }
 
-    componentDidMount(){
-      axios.get(`http://localhost:3000/profile/${this.props.user.user.key}/watched`)
-        .then(res => {
-          const movieList = res.data.results;
-          this.setState({movieList});
-        })
-    }
+  static navigationOptions = {
+    title: 'Watched'
+  };
 
-    renderRow(movieList){
-      return (
-        <View style={styles.rowCard}>
-          <Image
-            styleName="medium-square"
-            source={{uri: image_path + movieList.poster_path}}
-          />
-          <View style={{ flex: 1, marginHorizontal: 8}}>
-            <Title
-            style={{marginVertical: 4}}>{movieList.original_title}
-            </Title>
-            <Text>{movieList.releaseDate}</Text>
-            <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
-              <Button style={styles.smallButton}><Icon name="checkbox-on" /></Button>
-            </View>
+  componentDidMount(){
+    NetworkAccess.getUserWatched(this.props.user.user.key, (list) =>{
+      this.setState({movieList: list});
+    });
+  }
+
+  renderRow(movieList){
+    return (
+      <View style={styles.rowCard}>
+        <Image
+          styleName="medium-square"
+          source={{uri: image_path + movieList.poster_path}}
+        />
+        <View style={{ flex: 1, marginHorizontal: 8}}>
+          <Title
+          style={{marginVertical: 4}}>{movieList.original_title}
+          </Title>
+          <Text>{movieList.releaseDate}</Text>
+          <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
+            <Button style={styles.smallButton}><Icon name="checkbox-on" /></Button>
           </View>
         </View>
+      </View>
+    );
+  }
+
+  render() {
+    const { movieList } = this.state;
+    if(movieList === undefined){
+      return (
+        <Row style={{alignItems: 'center', justifyContent: 'center'}}>
+            <ActivityIndicator size="large" color="#0000ff" />
+        </Row>
       );
     }
-
-    render() {
-      const { movieList } = this.state;
-      if(movieList === undefined){
-        return (
-          <Row style={{alignItems: 'center', justifyContent: 'center'}}>
-              <ActivityIndicator size="large" color="#0000ff" />
-          </Row>
-        );
-      }
-      return(
-        <ListView
-          data={this.state.movieList}
-          renderRow={this.renderRow}
-        />
-      )
-    }
+    return(
+      <ListView
+        data={this.state.movieList}
+        renderRow={this.renderRow}
+      />
+    )
   }
+}
 
-  const styles = {
-    rowCard: {
-      flexDirection: 'row',
-      marginVertical: 8,
-      backgroundColor: 'white',
-      alignItems: 'center'
-    },
-    headerTextStyle: {
-      fontSize: 18
-    },
-    smallButton: {
-      paddingHorizontal: 5
-    }
+const styles = {
+  rowCard: {
+    flexDirection: 'row',
+    marginVertical: 8,
+    backgroundColor: 'white',
+    alignItems: 'center'
+  },
+  headerTextStyle: {
+    fontSize: 18
+  },
+  smallButton: {
+    paddingHorizontal: 5
   }
+}
 
 
 const mapStateToProps = ({ allReducers }) => {

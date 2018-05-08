@@ -63,14 +63,14 @@ class HomeScreen extends React.Component {
           />
           <View style={{ flex: 1, marginHorizontal: 8}}>
             <Title onPress={() => this.props.navigation
-              .navigate('MovieDetails', {movieName: oneTitle.title, movieId: oneTitle.titleID})}
+              .navigate('MovieDetails', {movieName: oneTitle.original_title, movieId: oneTitle.id})}
               style={{marginVertical: 4}}>{oneTitle.original_title}</Title>
             <Text numberOfLines={3}>{oneTitle.overview}</Text>
             <Caption style={{marginVertical: 4}}>{oneTitle.release_date}</Caption>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
               <Button style={styles.smallButton}><Icon name="share" /></Button>
-              <Button onPress={() => axios.post('http://localhost:3000/profile/watchlist', {titleID: oneTitle.titleID})} style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
-              <Button onPress={() => axios.post('http://localhost:3000/profile/watched', {titleID: oneTitle.titleID})} style={styles.smallButton}><Icon name="checkbox-on" /></Button>
+              <Button onPress={() => axios.post('http://localhost:3000/profile/watchlist', {titleID: oneTitle.id})} style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
+              <Button onPress={() => axios.post('http://localhost:3000/profile/watched', {titleID: oneTitle.id})} style={styles.smallButton}><Icon name="checkbox-on" /></Button>
             </View>
           </View>
         </View>
@@ -86,6 +86,8 @@ class HomeScreen extends React.Component {
         </Row>
       );
      }
+     console.log("titles");
+     console.log(titles);
     return (
         <ListView
           data={titles}

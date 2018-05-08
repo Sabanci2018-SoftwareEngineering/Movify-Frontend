@@ -4,7 +4,8 @@ import {  Text, ListView, Image, View, Button, Title, Icon, Row } from '@shoutem
 import { StackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
 import { userChanged } from '../actions';
-import axios from 'axios';
+
+import NetworkAccess from '../common/NetworkAccess';
 import MovieDetailsScreen from './MovieDetailsScreen';
 
 const image_path = 'http://image.tmdb.org/t/p/original'
@@ -22,11 +23,9 @@ class WatchlistScreen extends React.Component {
   }
 
   componentDidMount(){
-     axios.get(`http://localhost:3000/profile/${this.props.user.user.key}/watchlist`)
-       .then(res => {
-         const movieList = res.data.results;
-         this.setState({movieList});
-       })
+    NetworkAccess.getUserWatchlist(this.props.user.user.key, (list) => {
+      this.setState({movieList: list});
+    });
   }
 
   renderRow(movieList){
