@@ -20,7 +20,7 @@ class HomeScreen extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-        titles: [],
+        titles: undefined,
     }
     this.renderRow = this.renderRow.bind(this);
   }
@@ -79,7 +79,7 @@ class HomeScreen extends React.Component {
 
   render() {
     const { titles } = this.state;
-    if(titles !== undefined && titles.length === 0){
+    if(titles === undefined){
       return (
         <Row style={{alignItems: 'center', justifyContent: 'center'}}>
             <ActivityIndicator size="large" color="#0000ff" />

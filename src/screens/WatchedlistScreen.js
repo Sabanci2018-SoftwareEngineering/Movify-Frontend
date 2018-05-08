@@ -19,7 +19,7 @@ class WatchedlistScreen extends React.Component {
     constructor(props){
       super(props);
       this.state = {
-        movieList: []
+        movieList: undefined
       }
     }
 
@@ -53,7 +53,7 @@ class WatchedlistScreen extends React.Component {
 
     render() {
       const { movieList } = this.state;
-      if(movieList !== undefined && movieList.length === 0){
+      if(movieList === undefined){
         return (
           <Row style={{alignItems: 'center', justifyContent: 'center'}}>
               <ActivityIndicator size="large" color="#0000ff" />
