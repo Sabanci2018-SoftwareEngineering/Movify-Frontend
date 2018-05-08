@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { View, ListView, Image, Row, Text, ScrollView, Icon, Button, NavigationBar, StatusBar } from '@shoutem/ui';
+import { View, ListView, Image, Row, Text, ScrollView, Icon, StatusBar } from '@shoutem/ui';
 
 import SearchBar from './searchBar';
 
@@ -86,17 +86,6 @@ export default class GenericSearch extends React.Component {
     }
   }
 
-returnNavigationBar(){
-    return(
-      <View style={styles.navigationBarView}>
-        <NavigationBar
-              style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) }}}
-              leftComponent={this.returnLeftComponent()}
-        />
-      </View>
-    );
-  }
-
   render() {
     const { type, profileScreenNavigation } = this.props; //User search page --> type = true. Movie search page --> type = false;
     return (
@@ -134,8 +123,5 @@ const styles = {
     height: dimensionRelativeToIphone(45),
     borderRadius: Platform.OS === 'ios' ? dimensionRelativeToIphone(45) / 2 : 50,
     borderWidth: 0,
-  },
-  navigationBarView: {
-    paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0)
   },
 };

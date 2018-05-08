@@ -28,7 +28,6 @@ class GenericProfile extends React.Component {
     this.renderRow = this.renderRow.bind(this);
     this.getResponse = this.getResponse.bind(this);
     this.returnUserInfo = this.returnUserInfo.bind(this);
-    this.returnNavigationBar = this.returnNavigationBar.bind(this);
   }
 
   getResponse(){
@@ -59,52 +58,6 @@ class GenericProfile extends React.Component {
 
   componentDidMount(){
     this.getResponse();
-  }
-
-  returnLeftComponent(type){
-      if(type){
-        return(
-            <Button
-            onPress={()=> this.props.navigation.pop()}
-            >
-              <Icon name="back" />
-            </Button>
-          );
-      }
-      else{
-        return(
-          <Button
-          onPress={()=> this.props.navigation.goBack()}
-          >
-            <Icon name="settings" />
-          </Button>
-        );
-      }
-  }
-
-  returnRightComponent(type){
-        if(!type){
-          return(
-            <Button
-            onPress={()=> this.props.navigation.navigate('ProfileSearch', {profileScreenNavigation: this.props.navigation})}
-            >
-              <Icon name="search" />
-            </Button>
-          );
-        }
-  }
-
-  returnNavigationBar(){
-    return(
-      <View style={styles.navigationBarView}>
-        <NavigationBar
-              title={(this.props.username).toUpperCase()} styleName="inline"
-              style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) }}}
-              leftComponent={this.returnLeftComponent(this.props.type)}
-              rightComponent={this.returnRightComponent(this.props.type)}
-        />
-      </View>
-    );
   }
 
   returnUserInfo(userData){
@@ -217,9 +170,6 @@ const styles = {
     height: dimensionRelativeToIphone(45),
     borderRadius: Platform.OS === 'ios' ? 20 : 50,
     borderWidth: 0,
-  },
-  navigationBarView: {
-    paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0)
   },
   moviePoster: {
     borderRadius: 30,
