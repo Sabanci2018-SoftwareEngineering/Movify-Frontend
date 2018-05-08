@@ -12,7 +12,7 @@ export default class FollowList extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            users: null
+            users: undefined
         }
     }
 
@@ -79,7 +79,7 @@ export default class FollowList extends React.Component{
       }
 
     render(){
-        if (this.state.users === null) {
+        if (this.state.users === undefined) {
             return (
               <Row style={styles.spinnerContainer}>
                   <ActivityIndicator size="large" color="#0000ff" />

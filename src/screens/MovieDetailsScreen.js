@@ -12,8 +12,8 @@ const height = Dimensions.get('window').height;
 
 class MovieDetailsScreen extends React.Component {
   state = {
-    movie: null,
-    cast: null
+    movie: undefined,
+    cast: undefined
   }
 
 
@@ -80,7 +80,7 @@ class MovieDetailsScreen extends React.Component {
   }
 
   render() {
-      if (this.state.movie === null || this.state.cast === null) {
+      if (this.state.movie === undefined || this.state.cast === undefined) {
           return (
             <Row style={styles.container}>
                 <ActivityIndicator size="large" color="#0000ff" />
