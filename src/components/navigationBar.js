@@ -54,7 +54,7 @@ export default class NavBar extends React.Component {
     <View style={styles.navigationBarView}>
       <NavigationBar
             title={title} styleName="inline"
-            style={styles.container}
+            style={styles.navigationBarStyle}
             leftComponent={this.returnLeftComponent(type)}
             rightComponent={this.returnRightComponent(type)}
       />
@@ -64,9 +64,10 @@ export default class NavBar extends React.Component {
 }
 
 const styles = {
-  container: {
+  navigationBarStyle: {
+    container: {
     height: (Platform.OS === 'ios' ? height / 12 : height / 15)
-  },
+  }},
   navigationBarView: {
     paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0)
   },
