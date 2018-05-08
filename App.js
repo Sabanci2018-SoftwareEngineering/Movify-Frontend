@@ -111,7 +111,7 @@ export default class App extends React.Component {
       user = JSON.parse(result);
     });
     } catch(error){
-      //console.log(error);
+      console.log(error);
     }
 
     this.setState({ fontsAreLoaded: true, asyncGetFinished: true});

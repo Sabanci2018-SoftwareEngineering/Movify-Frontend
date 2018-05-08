@@ -16,24 +16,11 @@ export default class NetworkAccess {
       });
   }
 
-  static getMovieCast(id,
-    success = (res) => {return res},
-    failure = (err) => {console.log(err)}){
-    axios.get(`${this.MAIN_URL}title/${id}/credits`)
-      .then(res => {
-        success(res.data.results);
-      })
-      .catch(err => {
-        failure(err);
-      });
-  }
-
   static getUserWatchlist(id,
     success = (res) => {return res},
     failure = (err) => {console.log(err)}){
       axios.get(`${this.MAIN_URL}profile/${id}/watchlist`)
         .then(res => {
-          console.log(res.data.results)
           success(res.data.results);
         })
         .catch((err) => {
@@ -46,7 +33,6 @@ export default class NetworkAccess {
     failure = (err) => {console.log(err)}){
       axios.get(`${this.MAIN_URL}profile/${id}/watched`)
         .then(res => {
-          console.log(res.data.results)
           success(res.data.results);
         })
         .catch((err) => {

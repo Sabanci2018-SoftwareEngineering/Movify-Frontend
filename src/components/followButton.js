@@ -32,9 +32,6 @@ class FollowButton extends React.Component {
       axios.post('http://localhost:3000/follow', {
         username: this.props.username,
         })
-        .then((response) => {
-          console.log(response);
-        })
         .catch((error) => {
           console.log(error);
       });
@@ -44,9 +41,6 @@ class FollowButton extends React.Component {
       this.setState({ following: false });
       axios.post('http://localhost:3000/unfollow', {
         username: this.props.username,
-        })
-        .then((response) => {
-          console.log(response);
         })
         .catch((error) => {
           console.log(error);
@@ -68,30 +62,30 @@ class FollowButton extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  title: { 
+  title: {
     fontSize: 15,
     color: 'white',
-    fontFamily: 'Rubik-Regular' 
+    fontFamily: 'Rubik-Regular'
   },
-  selectedTitle: { 
+  selectedTitle: {
     fontSize: 15,
     color: 'black',
-    fontFamily: 'Rubik-Regular' 
+    fontFamily: 'Rubik-Regular'
   },
-  selected: { 
+  selected: {
       borderWidth: 1,
-      borderColor: 'transparent', //Border width and border color is added because  
+      borderColor: 'transparent', //Border width and border color is added because
       //size of button changes after selection and other elements in same view changes postion (moves below)
       //if other elements move, it looks like a bug
-      backgroundColor: 'rgba(255, 255, 255, 1)', 
-      borderRadius: 100, 
+      backgroundColor: 'rgba(255, 255, 255, 1)',
+      borderRadius: 100,
       width: 127
   },
-  notSelected: { 
-      borderWidth: 1, 
-      borderColor: 'white', 
-      borderRadius: 30, 
-      width: 127, 
+  notSelected: {
+      borderWidth: 1,
+      borderColor: 'white',
+      borderRadius: 30,
+      width: 127,
       backgroundColor: 'transparent'
   },
 });

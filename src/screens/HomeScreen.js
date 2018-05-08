@@ -85,9 +85,7 @@ class HomeScreen extends React.Component {
             <ActivityIndicator size="large" color="#0000ff" />
         </Row>
       );
-     }
-     console.log("titles");
-     console.log(titles);
+    }
     return (
         <ListView
           data={titles}
