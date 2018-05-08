@@ -37,11 +37,14 @@ class HomeScreen extends React.Component {
           key: user.key,
           password: user.password,
           })
+          .then(() => {
+            this.onRefresh();
+          });
       });
     } catch(error){
       console.log(error);
     }
-    this.onRefresh()
+
   }
 
   onRefresh(){
