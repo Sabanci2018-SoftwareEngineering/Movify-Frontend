@@ -75,7 +75,7 @@ class LoginScreen extends Component {
             } catch (error) {
               Alert.alert('An error occurred😔', error.result);
             }
-            Expo.Util.reload();
+            Expo.Updates.reload();
           })
           .catch((error) => {
             const errorMessage = error.response.headers['www-authenticate'];
