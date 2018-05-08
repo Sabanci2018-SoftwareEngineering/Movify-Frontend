@@ -1,10 +1,12 @@
 import React from 'react';
 import { Dimensions, Platform, ActivityIndicator} from 'react-native';
-import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView, NavigationBar, StatusBar } from '@shoutem/ui';
+import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView, StatusBar } from '@shoutem/ui';
 import { connect } from 'react-redux';
 
 import NetworkAccess from '../common/NetworkAccess';
 import { userChanged } from '../actions';
+
+import NavigationBar from '../components/navigationBar';
 
 const height = Dimensions.get('window').height;
 
@@ -77,7 +79,11 @@ class MovieDetailsScreen extends React.Component {
       }
      return (
       <View>
-        {this.returnNavigationBar(this.state.movie)}
+        <NavigationBar
+        navigation={this.props.navigation}
+        title={this.state.movie.original_title}
+        type={'TitleAndLeftBack'}
+        />
         <ScrollView style={{ marginVertical: 10, marginHorizontal: 10 }}>
           <View style={{flexDirection: 'row'}}>
           <Image

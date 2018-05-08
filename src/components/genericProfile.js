@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions, Platform, StatusBar, ActivityIndicator, Image, TouchableOpacity} from 'react-native';
-import { View, ScrollView, ListView, NavigationBar, Screen, Title, Subtitle, Row, Tile, ImageBackground, Icon, Divider, Button} from '@shoutem/ui';
+import { View, ScrollView, ListView, Screen, Title, Subtitle, Row, Tile, ImageBackground, Icon, Divider, Button} from '@shoutem/ui';
 
 import axios from 'axios';
 
@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { profileSearchDataChanged } from '../actions';
 
 import FollowButton from './followButton';
+import NavigationBar from './navigationBar';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -173,7 +174,11 @@ class GenericProfile extends React.Component {
      }
      return (
        <Screen style={styles.container}>
-          {this.returnNavigationBar()}
+          <NavigationBar
+          navigation={this.props.navigation}
+          title={(this.props.username).toUpperCase()}
+          type={this.props.type ? 'OtherProfile' : 'OwnProfile'}
+          />
           <ScrollView>
             {this.returnUserInfo(userData)}
             <ListView

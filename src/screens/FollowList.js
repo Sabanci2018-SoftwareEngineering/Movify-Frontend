@@ -1,9 +1,11 @@
 import React from 'react';
 import { Dimensions, Platform, StatusBar, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 
-import { View, NavigationBar, Icon, Button, Screen, ScrollView, ListView, Row, Subtitle, Divider} from '@shoutem/ui';
+import { View, Icon, Button, Screen, ScrollView, ListView, Row, Subtitle, Divider} from '@shoutem/ui';
 
 import axios from 'axios';
+
+import NavigationBar from '../components/navigationBar';
 
 const height = Dimensions.get('window').height;
 
@@ -88,7 +90,11 @@ export default class FollowList extends React.Component{
         }
         return(
             <Screen style={styles.container}>
-                {this.returnNavigationBar()}
+                <NavigationBar
+                navigation={this.props.navigation}
+                title={this.props.navigation.state.params.pageType}
+                type={'TitleAndLeftBack'}
+                />
                 <ScrollView>
                     <ListView
                     data={this.state.users}
