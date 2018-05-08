@@ -28,7 +28,7 @@ class SearchBar extends Component {
     //(if the last element is space, search result will not change. So, request isn't needed )
     if(input !== '' && input.charAt(input.length-1) !== ' '){
       this.props.searchSpinnerChanged({ searchSpinner: true });
-      axios.post('http://localhost:3000/search', {
+      axios.post('http://localhost:3000/title/search', {
         keyword: input,
         })
         .then((response) => {
@@ -94,5 +94,5 @@ const mapStateToProps = ({ allReducers }) => {
     const { movieSearchData, profileSearchData } = allReducers;
     return { movieSearchData, profileSearchData };
   };
-  
+
 export default connect(mapStateToProps, { profileSearchDataChanged, movieSearchDataChanged, searchSpinnerChanged })(SearchBar);
