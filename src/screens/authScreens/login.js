@@ -65,17 +65,26 @@ class LoginScreen extends Component {
           password: this.state.password,
           })
           .then((response) => {
-            this.setState({ isLoading: false });
-            let userObject = {
-              key: this.state.key,
-              password: this.state.password
-            }
-            try {
-              AsyncStorage.setItem('user', JSON.stringify(userObject));
-            } catch (error) {
-              Alert.alert('An error occurred😔', error.result);
-            }
-            Expo.Util.reload();
+            axios.get('http://localhost:3000/profile', {
+              withCredentials: true,
+            })
+            .then((responseProfile) => {
+                this.setState({ isLoading: false });
+                let userObject = {
+                  key: responseProfile.data.results.username,
+                  password: this.state.password
+                }
+                try {
+                  AsyncStorage.setItem('user', JSON.stringify(userObject));
+                } catch (error) {
+                  Alert.alert('An error occurred😔', error.result);
+                }
+                Expo.Util.reload();
+            })
+            .catch((error) => {
+              console.log(error);
+              this.setState({isLoading: false});
+            });
           })
           .catch((error) => {
             const errorMessage = error.response.headers['www-authenticate'];
