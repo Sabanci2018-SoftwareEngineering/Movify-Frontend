@@ -113,13 +113,13 @@ class GenericProfile extends React.Component {
             styleName="large-banner"
             style={{ height: this.props.type ? height/3 : height/3.3 }}
             blurRadius={10}
-            source={{ uri: "https://shoutem.github.io/img/ui-toolkit/examples/image-3.png"}}
+            source={require('../../assets/image-3.png')}
             //We will show last watched movie poster as background image --> source={{ uri: this.state.data[0] !== undefined ? this.state.data[0].poster_path : "" }}
             >
               <Tile>
                 <Image
                 style={styles.userAvatar}
-                source={{ uri: 'https://shoutem.github.io/img/ui-toolkit/examples/image-3.png' }}
+                source={require('../../assets/image-3.png')}
                 />
                 <View style={{ flexDirection: 'row' }}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('FollowList', {pageType: 'Followers', username: this.props.username})}>
