@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { userChanged } from '../actions';
 import { StackNavigator } from 'react-navigation';
 import MovieDetailsScreen from './MovieDetailsScreen';
+import NavigationBar from '../components/navigationBar';
 
 import axios from 'axios';
 
@@ -87,10 +88,17 @@ class HomeScreen extends React.Component {
       );
     }
     return (
+      <View>
+        <NavigationBar
+        navigation={this.props.navigation}
+        title={'Home'}
+        type={'JustTitle'}
+        />
         <ListView
           data={titles}
           renderRow={this.renderRow.bind(this)}
         />
+      </View>
     );
   }
 }
@@ -119,6 +127,14 @@ const mapStateToProps = ({ allReducers }) => {
 const HomeStack = StackNavigator({
   Home: { screen: connect(mapStateToProps, { userChanged })(HomeScreen)},
   MovieDetails: { screen: MovieDetailsScreen },
-});
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+    headerVisible: false,
+  }
+ }
+
+);
 
 export default HomeStack;
