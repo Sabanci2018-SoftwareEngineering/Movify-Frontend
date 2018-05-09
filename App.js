@@ -129,7 +129,6 @@ export default class App extends React.Component {
         );
     }
     const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
-    console.log(user)
     if(user !== null && user.key !== null){
       return (
         <Provider store={store}>
