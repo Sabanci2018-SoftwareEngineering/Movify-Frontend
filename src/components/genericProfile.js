@@ -98,7 +98,7 @@ class GenericProfile extends React.Component {
   renderRow(movie){
     return(
       <TouchableOpacity
-      onPress={() => this.props.navigation.navigate('MovieDetails', {movieName: movie.original_title, movieId: movie.titleID})}
+      onPress={() => this.props.navigation.navigate('MovieDetails', {movieName: movie.original_title, movieId: movie.id})}
       >
       <Row>
         <Image
@@ -117,7 +117,6 @@ class GenericProfile extends React.Component {
 
   render() {
      const { userData, userWatchlist } = this.state;
-
      if(userData === undefined || userWatchlist === undefined){
       return (
         <Row style={{alignItems: 'center', justifyContent: 'center'}}>
