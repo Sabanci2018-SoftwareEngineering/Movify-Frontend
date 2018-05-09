@@ -3,15 +3,12 @@ import { AsyncStorage, ActivityIndicator } from 'react-native';
 import { ListView, Text, Image, Title, Caption, View, Icon, Button, Row } from '@shoutem/ui';
 import { connect } from 'react-redux';
 
+import NetworkAccess from '../common/NetworkAccess';
 import { userChanged } from '../actions';
 import { StackNavigator } from 'react-navigation';
 import MovieDetailsScreen from './MovieDetailsScreen';
 
-import axios from 'axios';
-
 let user;
-// This hardcoded path will be fixed when we implement singleton network object.
-const image_path = 'http://image.tmdb.org/t/p/original'
 class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'Home',
@@ -29,32 +26,23 @@ class HomeScreen extends React.Component {
     try{
       AsyncStorage.getItem('user', (err, result) => {
         user = JSON.parse(result);
-        this.props.userChanged({ user: user });
-
         //user logins again when app is opened because
         //it loses cookies when app is closed
-        axios.post('http://localhost:3000/login', {
-          key: user.key,
-          password: user.password,
-          })
-          .then(() => {
-            this.onRefresh();
-          });
+        NetworkAccess.loginUser(user, () => {
+          this.props.userChanged({ user: user });
+          this.onRefresh();
+        });
       });
     } catch(error){
       console.log(error);
     }
-
   }
 
   onRefresh(){
-    axios.get('http://localhost:3000/feed/100')
-      .then((response) => {
-        this.setState({titles: response.data.results})
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
+    NetworkAccess.getHomeFeed((movieList) => {
+        this.setState({titles: movieList})
+      }
+    );
   }
 
   renderRow(oneTitle){
@@ -62,7 +50,7 @@ class HomeScreen extends React.Component {
         <View style={styles.rowCard}>
           <Image
             styleName="medium-square"
-            source={{uri: image_path + oneTitle.poster_path}}
+            source={{uri: NetworkAccess.IMAGE_PATH + oneTitle.poster_path}}
           />
           <View style={{ flex: 1, marginHorizontal: 8}}>
             <Title onPress={() => this.props.navigation
@@ -72,8 +60,8 @@ class HomeScreen extends React.Component {
             <Caption style={{marginVertical: 4}}>{oneTitle.release_date}</Caption>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
               <Button style={styles.smallButton}><Icon name="share" /></Button>
-              <Button onPress={() => axios.post('http://localhost:3000/profile/watchlist', {titleID: oneTitle.id})} style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
-              <Button onPress={() => axios.post('http://localhost:3000/profile/watched', {titleID: oneTitle.id})} style={styles.smallButton}><Icon name="checkbox-on" /></Button>
+              <Button onPress={NetworkAccess.addMovieToWatchlist(oneTitle.id)} style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
+              <Button onPress={NetworkAccess.addMovieToWatched(oneTitle.id)} style={styles.smallButton}><Icon name="checkbox-on" /></Button>
             </View>
           </View>
         </View>
