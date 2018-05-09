@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import { View } from 'react-native';
+import React from 'react';
+import { Platform, StatusBar, Dimensions} from 'react-native';
+import { View, NavigationBar, Button, Icon } from '@shoutem/ui';
 
-import Tabbar from 'react-native-tabbar-bottom';
+const height = Dimensions.get('window').height;
 
-export default class NavigationBar extends Component {
+export default class NavBar extends React.Component {
 
   constructor(props) {
     super(props);
@@ -12,50 +13,62 @@ export default class NavigationBar extends Component {
     };
   }
 
+  returnLeftComponent(type){
+    if(type === 'TitleAndLeftBack' || type === 'OtherProfile'){
+      return(
+          <Button
+          onPress={()=> this.props.navigation.pop()}
+          >
+            <Icon name="back" />
+          </Button>
+        );
+    }
+    else if (type === 'OwnProfile'){
+      console.log(this.props.navigation);
+      return(
+        <Button
+        onPress={()=> this.props.navigation.navigate('ProfileSettings')}
+        >
+          <Icon name="settings" />
+        </Button>
+      );
+    }
+  }
+
+  returnRightComponent(type){
+    if(type === 'OwnProfile' || type === 'OtherProfile'){
+      return(
+        <Button
+        onPress={()=> this.props.navigation.navigate('ProfileSearch', {profileScreenNavigation: this.props.navigation})}
+        >
+          <Icon name="search" />
+        </Button>
+      );
+    }
+  }
+
   render() {
-    return (
-      <View>
-        <Tabbar
-          //           {
-          //   // if you are using react-navigation just pass the navigation object in your components like this:
-          //   // {this.state.page === "HomeScreen" && <MyComp navigation={this.props.navigation}>Screen1</MyComp>}
-          // }
-          // {this.state.page === "HomeScreen" && <Text>Screen1</Text>}
-          // {this.state.page === "NotificationScreen" && <Text>Screen2</Text>}
-          // {this.state.page === "ProfileScreen" && <Text>Screen3</Text>}
-          // {this.state.page === "ChatScreen" && <Text>Screen4</Text>}
-          // {this.state.page === "SearchScreen" && <Text>Screen5</Text>}
-          stateFunc={(tab) => {
-            this.setState({ page: tab.page });
-            this.props.navigation.setParams({tabTitle: tab.title})
-          }}
-          activePage={this.state.page}
-          tabs={[
-            {
-              page: 'NewPage',
-              icon: 'home',
-            },
-            {
-              page: 'NewPage2',
-              icon: 'notifications',
-              badgeNumber: 11,
-            },
-            {
-              page: 'ProfilePage',
-              icon: 'person',
-            },
-            {
-              page: 'ChatScreen',
-              icon: 'chatbubbles',
-              //badgeNumber: 7,
-            },
-            {
-              page: 'SearchPage',
-              icon: 'search',
-            },
-          ]}
-        />
-      </View>
+    //type options --> 'OtherProfile', 'OwnProfile', 'TitleAndLeftBack', 'JustTitle', 
+    const { title, type } = this.props;
+    return(
+    <View style={styles.navigationBarView}>
+      <NavigationBar
+            title={title} styleName="inline"
+            style={styles.navigationBarStyle}
+            leftComponent={this.returnLeftComponent(type)}
+            rightComponent={this.returnRightComponent(type)}
+      />
+    </View>
     );
   }
+}
+
+const styles = {
+  navigationBarStyle: {
+    container: {
+    height: (Platform.OS === 'ios' ? height / 12 : height / 15)
+  }},
+  navigationBarView: {
+    paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0)
+  },
 }

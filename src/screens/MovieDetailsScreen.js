@@ -1,12 +1,12 @@
 import React from 'react';
-import { Dimensions, Platform, ActivityIndicator} from 'react-native';
-import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView, NavigationBar, StatusBar } from '@shoutem/ui';
+import { ActivityIndicator} from 'react-native';
+import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView, StatusBar } from '@shoutem/ui';
 import { connect } from 'react-redux';
 
 import NetworkAccess from '../common/NetworkAccess';
 import { userChanged } from '../actions';
 
-const height = Dimensions.get('window').height;
+import NavigationBar from '../components/navigationBar';
 
 class MovieDetailsScreen extends React.Component {
   state = {
@@ -25,28 +25,6 @@ class MovieDetailsScreen extends React.Component {
     NetworkAccess.getMovieDetails(params.movieId, (movie) => {
       this.setState({movie});
     });
-  }
-
-  returnLeftComponent(){
-      return(
-          <Button
-          onPress={()=> this.props.navigation.pop()}
-          >
-            <Icon name="back" />
-          </Button>
-        );
-  }
-
-  returnNavigationBar(movie){
-    return(
-      <View style={styles.navigationBarView}>
-        <NavigationBar
-              title={(movie.original_title)} styleName="inline"
-              style={{ container: { height: (Platform.OS === 'ios' ? height / 12 : height / 15) }}}
-              leftComponent={this.returnLeftComponent()}
-        />
-      </View>
-    );
   }
 
   renderRow(person){
@@ -77,7 +55,11 @@ class MovieDetailsScreen extends React.Component {
       }
      return (
       <View>
-        {this.returnNavigationBar(this.state.movie)}
+        <NavigationBar
+        navigation={this.props.navigation}
+        title={this.state.movie.original_title}
+        type={'TitleAndLeftBack'}
+        />
         <ScrollView style={{ marginVertical: 10, marginHorizontal: 10 }}>
           <View style={{flexDirection: 'row'}}>
           <Image
@@ -125,9 +107,6 @@ const styles = {
   },
   smallButton: {
     paddingHorizontal: 5
-  },
-  navigationBarView: {
-    paddingTop: Platform.OS === 'ios' ? 0 : (StatusBar.currentHeight || 0)
   },
 }
 const mapStateToProps = ({ allReducers }) => {

@@ -7,6 +7,7 @@ import NetworkAccess from '../common/NetworkAccess';
 import { userChanged } from '../actions';
 import { StackNavigator } from 'react-navigation';
 import MovieDetailsScreen from './MovieDetailsScreen';
+import NavigationBar from '../components/navigationBar';
 
 let user;
 class HomeScreen extends React.Component {
@@ -80,12 +81,19 @@ class HomeScreen extends React.Component {
       );
     }
     return (
+      <View>
+        <NavigationBar
+        navigation={this.props.navigation}
+        title={'Home'}
+        type={'JustTitle'}
+        />
         <ListView
           data={titles}
           renderRow={this.renderRow.bind(this)}
           loading={this.state.refreshing}
           onRefresh={this._onRefresh.bind(this)}
         />
+      </View>
     );
   }
 }
@@ -114,6 +122,13 @@ const mapStateToProps = ({ allReducers }) => {
 const HomeStack = StackNavigator({
   Home: { screen: connect(mapStateToProps, { userChanged })(HomeScreen)},
   MovieDetails: { screen: MovieDetailsScreen },
-});
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+    headerVisible: false,
+  }
+ }
+);
 
 export default HomeStack;

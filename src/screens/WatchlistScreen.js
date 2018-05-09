@@ -7,6 +7,7 @@ import { userChanged } from '../actions';
 
 import NetworkAccess from '../common/NetworkAccess';
 import MovieDetailsScreen from './MovieDetailsScreen';
+import NavigationBar from '../components/navigationBar';
 
 const image_path = 'http://image.tmdb.org/t/p/original'
 
@@ -64,12 +65,17 @@ class WatchlistScreen extends React.Component {
       );
     }
     return(
-      <ListView
-        data={movieList}
-        renderRow={this.renderRow}
-        onRefresh={this._onRefresh.bind(this)}
-        loading={this.state.refreshing}
-      />
+      <View>
+        <NavigationBar
+        navigation={this.props.navigation}
+        title={'Watch List'}
+        type={'JustTitle'}
+        />
+        <ListView
+          data={movieList}
+          renderRow={this.renderRow}
+        />
+      </View>
     )
   }
 }
@@ -97,6 +103,13 @@ const mapStateToProps = ({ allReducers }) => {
 const WatchlistStack = StackNavigator({
   Watchlist: { screen: connect(mapStateToProps, { userChanged })(WatchlistScreen)},
   MovieDetails: { screen: MovieDetailsScreen },
-});
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+    headerVisible: false,
+  }
+ }
+);
 
 export default WatchlistStack;

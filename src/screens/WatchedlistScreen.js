@@ -7,6 +7,7 @@ import NetworkAccess from '../common/NetworkAccess';
 import { connect } from 'react-redux';
 import { userChanged } from '../actions';
 import MovieDetailsScreen from './MovieDetailsScreen';
+import NavigationBar from '../components/navigationBar';
 
 class WatchedlistScreen extends React.Component {
     static navigationOptions = {
@@ -66,12 +67,17 @@ class WatchedlistScreen extends React.Component {
       );
     }
     return(
-      <ListView
-        data={this.state.movieList}
-        renderRow={this.renderRow}
-        loading={this.state.refreshing}
-        onRefresh={this._onRefresh.bind(this)}
-      />
+      <View>
+         <NavigationBar
+        navigation={this.props.navigation}
+        title={'Watched'}
+        type={'JustTitle'}
+        />
+        <ListView
+          data={this.state.movieList}
+          renderRow={this.renderRow}
+        />
+      </View>
     )
   }
 }
@@ -100,6 +106,13 @@ const mapStateToProps = ({ allReducers }) => {
 const WatchedlistStack = StackNavigator({
   Watched: { screen: connect(mapStateToProps, { userChanged })(WatchedlistScreen)},
   MovieDetails: { screen: MovieDetailsScreen },
-});
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+    headerVisible: false,
+  }
+ }
+);
 
 export default WatchedlistStack;
