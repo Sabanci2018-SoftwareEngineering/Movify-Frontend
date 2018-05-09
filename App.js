@@ -11,7 +11,10 @@ import reducers from './src/reducers';
 import { HomeScreen, ProfileScreen, WatchlistScreen, SearchScreen, WatchedlistScreen,
          ActivateUser, Login, LoginOrSignup, ResetPassword, Signup } from './src/screens';
 
-let user = null;
+let user = {
+  key: null,
+  password: null
+}
 
 console.disableYellowBox = true;
 
@@ -126,7 +129,7 @@ export default class App extends React.Component {
         );
     }
     const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
-    if(user !== null){
+    if(user !== null && user.key !== null){
       return (
         <Provider store={store}>
          <RootNavigator />

@@ -1,6 +1,9 @@
 import React from 'react';
-import { Platform, StatusBar, Dimensions} from 'react-native';
+import { Platform, StatusBar, Dimensions, AsyncStorage } from 'react-native';
+import Expo from 'expo';
 import { View, NavigationBar, Button, Icon } from '@shoutem/ui';
+
+import axios from 'axios';
 
 const height = Dimensions.get('window').height;
 
@@ -11,6 +14,28 @@ export default class NavBar extends React.Component {
     this.state = { 
       page: 'NewPage'
     };
+    this.logout = this.logout.bind(this);
+  }
+
+  logout(){
+    axios.get('http://localhost:3000/logout', {
+        withCredentials: true
+      })
+      .then(() => {
+        let userObject = {
+          key: null,
+          password: null
+        }
+        try {
+          AsyncStorage.setItem('user', JSON.stringify(userObject));
+          Expo.Util.reload();
+        } catch (error) {
+          console.log(error);
+        }
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
   }
 
   returnLeftComponent(type){
@@ -27,9 +52,9 @@ export default class NavBar extends React.Component {
       console.log(this.props.navigation);
       return(
         <Button
-        onPress={()=> this.props.navigation.navigate('ProfileSettings')}
+        onPress={()=> this.logout()}
         >
-          <Icon name="settings" />
+          <Icon name="turn-off" />
         </Button>
       );
     }

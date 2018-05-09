@@ -11,7 +11,6 @@ import MovieDetailsScreen from './MovieDetailsScreen';
 import FollowList from './FollowList';
 import ProfileSearch  from './ProfileSearch';
 import OtherProfile from './OtherProfile';
-import ProfileSettings from './ProfileSettings';
 
 class ProfileScreen extends React.Component {
   static navigationOptions = {
@@ -40,7 +39,6 @@ const ProfileScreenStack = StackNavigator({
   FollowList: { screen: FollowList },
   ProfileSearch: { screen: ProfileSearch },
   OtherProfile: { screen: OtherProfile },
-  ProfileSettings: { screen: ProfileSettings }
 },
 {
   headerMode: 'none',
