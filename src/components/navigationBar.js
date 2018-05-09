@@ -28,7 +28,7 @@ export default class NavBar extends React.Component {
         }
         try {
           AsyncStorage.setItem('user', JSON.stringify(userObject));
-          Expo.Updates.reload();
+          Expo.Util.reload();
         } catch (error) {
           console.log(error);
         }
