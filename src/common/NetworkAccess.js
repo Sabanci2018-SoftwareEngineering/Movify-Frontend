@@ -4,6 +4,19 @@ export default class NetworkAccess {
   static MAIN_URL = 'http://localhost:3000/';
   static IMAGE_PATH = 'http://image.tmdb.org/t/p/original';
 
+  static loginUser(user,
+    success = (res) => {return res},
+    failure = (err) => {console.log(err)}){
+    axios.post(`${this.MAIN_URL}login`, {
+      key: user.key,
+      password: user.password,
+      })
+      .then(() => success())
+      .catch(err => {
+        failure(err);
+      });
+  }
+
   static getMovieDetails(id,
     success = (res) => {return res},
     failure = (err) => {console.log(err)}){
@@ -26,6 +39,18 @@ export default class NetworkAccess {
         .catch((err) => {
           failure(err);
         })
+  }
+
+  static getHomeFeed(
+    success = (res) => {return res},
+    failure = (err) => {console.log(err)}){
+      axios.get(`${this.MAIN_URL}feed/100`)
+        .then((res) => {
+          success(res.data.results);
+        })
+        .catch((err) => {
+          failure(err);
+        });
   }
 
   static getUserWatched(id,

@@ -1,16 +1,12 @@
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import {  Text, ListView, Image, View, Button, Title, Icon, Row } from '@shoutem/ui';
-
-import axios from 'axios';
 import { StackNavigator } from 'react-navigation';
 
 import NetworkAccess from '../common/NetworkAccess';
 import { connect } from 'react-redux';
 import { userChanged } from '../actions';
 import MovieDetailsScreen from './MovieDetailsScreen';
-
-const image_path = 'http://image.tmdb.org/t/p/original'
 
 class WatchedlistScreen extends React.Component {
     static navigationOptions = {
@@ -20,7 +16,8 @@ class WatchedlistScreen extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      movieList: undefined
+      movieList: undefined,
+      refreshing: false
     }
   }
 
@@ -29,8 +26,13 @@ class WatchedlistScreen extends React.Component {
   };
 
   componentDidMount(){
+    this._onRefresh();
+  }
+
+  _onRefresh(){
+    this.setState({...this.state, refreshing: true})
     NetworkAccess.getUserWatched(this.props.user.user.key, (list) =>{
-      this.setState({movieList: list});
+      this.setState({movieList: list, refreshing: false});
     });
   }
 
@@ -39,7 +41,7 @@ class WatchedlistScreen extends React.Component {
       <View style={styles.rowCard}>
         <Image
           styleName="medium-square"
-          source={{uri: image_path + movieList.poster_path}}
+          source={{uri: NetworkAccess.IMAGE_PATH + movieList.poster_path}}
         />
         <View style={{ flex: 1, marginHorizontal: 8}}>
           <Title
@@ -67,6 +69,8 @@ class WatchedlistScreen extends React.Component {
       <ListView
         data={this.state.movieList}
         renderRow={this.renderRow}
+        loading={this.state.refreshing}
+        onRefresh={this._onRefresh.bind(this)}
       />
     )
   }

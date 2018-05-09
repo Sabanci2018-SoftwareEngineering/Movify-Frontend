@@ -18,13 +18,19 @@ class WatchlistScreen extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      movieList: undefined
+      movieList: undefined,
+      refreshing: false
     }
   }
 
   componentDidMount(){
+    this._onRefresh();
+  }
+
+  _onRefresh(){
+    this.setState({...this.state, refreshing: true});
     NetworkAccess.getUserWatchlist(this.props.user.user.key, (list) => {
-      this.setState({movieList: list});
+      this.setState({movieList: list, refreshing: false});
     });
   }
 
@@ -61,6 +67,8 @@ class WatchlistScreen extends React.Component {
       <ListView
         data={movieList}
         renderRow={this.renderRow}
+        onRefresh={this._onRefresh.bind(this)}
+        loading={this.state.refreshing}
       />
     )
   }
