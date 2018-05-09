@@ -134,7 +134,6 @@ const HomeStack = StackNavigator({
     headerVisible: false,
   }
  }
-
 );
 
 export default HomeStack;
