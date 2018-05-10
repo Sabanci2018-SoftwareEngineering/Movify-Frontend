@@ -1,5 +1,5 @@
 import React from 'react';
-import { AsyncStorage, ActivityIndicator } from 'react-native';
+import { AsyncStorage, ActivityIndicator, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { ListView, Text, Image, Title, Caption, View, Icon, Button, Row } from '@shoutem/ui';
 import { connect } from 'react-redux';
 
@@ -13,7 +13,7 @@ let user;
 class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'Home',
-    refreshing: true
+    refreshing: false
   };
 
   constructor(props){
@@ -51,15 +51,19 @@ class HomeScreen extends React.Component {
   renderRow(oneTitle){
     return (
         <View style={styles.rowCard}>
+          <TouchableHighlight onPress={() => this.props.navigation
+            .navigate('MovieDetails', {movieName: oneTitle.original_title, movieId: oneTitle.id})}>
           <Image
             styleName="medium-square"
             source={{uri: NetworkAccess.IMAGE_PATH + oneTitle.poster_path}}
           />
+          </TouchableHighlight>
           <View style={{ flex: 1, marginHorizontal: 8}}>
-            <Title onPress={() => this.props.navigation
-              .navigate('MovieDetails', {movieName: oneTitle.original_title, movieId: oneTitle.id})}
-              style={{marginVertical: 4}}>{oneTitle.original_title}</Title>
-            <Text numberOfLines={3}>{oneTitle.overview}</Text>
+            <TouchableOpacity onPress={() => this.props.navigation
+              .navigate('MovieDetails', {movieName: oneTitle.original_title, movieId: oneTitle.id})}>
+              <Title style={{marginVertical: 4}}>{oneTitle.original_title}</Title>
+              <Text numberOfLines={3}>{oneTitle.overview}</Text>
+            </TouchableOpacity>
             <Caption style={{marginVertical: 4}}>{oneTitle.release_date}</Caption>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
               <Button style={styles.smallButton}><Icon name="share" /></Button>
