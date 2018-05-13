@@ -74,8 +74,10 @@ class WatchedlistScreen extends React.Component {
         type={'JustTitle'}
         />
         <ListView
-          data={this.state.movieList}
-          renderRow={this.renderRow}
+        data={this.state.movieList}
+        renderRow={this.renderRow}
+        loading={this.state.refreshing}
+        onRefresh={this._onRefresh.bind(this)}
         />
       </View>
     )
