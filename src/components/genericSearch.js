@@ -27,7 +27,7 @@ export default class GenericSearch extends React.Component {
         <Row styleName="small">
             <Image
               style={styles.movieImage}
-              source={{ uri: rowData.picture }}
+              source={require('../../assets/image-3.png')}
             />
             <Text>{rowData.username}</Text>
             <Icon styleName="disclosure" name="right-arrow" />
