@@ -1,8 +1,7 @@
 import React from 'react';
 import { ActivityIndicator} from 'react-native';
-import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView, StatusBar } from '@shoutem/ui';
+import { View, Image, Text, Button, Row, ListView, Caption, Subtitle, Divider, Title, Icon, ScrollView, TouchableOpacity } from '@shoutem/ui';
 import { connect } from 'react-redux';
-
 import NetworkAccess from '../common/NetworkAccess';
 import { userChanged } from '../actions';
 
@@ -20,6 +19,12 @@ class MovieDetailsScreen extends React.Component {
     }
   };
 
+  constructor(props){
+    super(props);
+
+    this.renderRow = this.renderRow.bind(this);
+  }
+
   componentDidMount(){
     const { params } = this.props.navigation.state;
     NetworkAccess.getMovieDetails(params.movieId, (movie) => {
@@ -29,19 +34,20 @@ class MovieDetailsScreen extends React.Component {
 
   renderRow(person){
     return(
-      <View>
-      <Row>
-        <Image
-          styleName="small-avatar"
-          source={{ uri: NetworkAccess.IMAGE_PATH + person.profile_path }}
-        />
-        <View style={{ flexDirection: 'row' }}>
-          <Subtitle>{person.name}</Subtitle>
-          <Caption style={{marginLeft: 'auto'}}>{person.character}</Caption>
-        </View>
-      </Row>
-      <Divider styleName="line" />
-      </View>
+      <TouchableOpacity onPress={() =>
+        this.props.navigation.navigate('ArtistDetails', {artistName: person.name, artistId: person.id})}>
+        <Row>
+          <Image
+            styleName="small-avatar"
+            source={{ uri: NetworkAccess.IMAGE_PATH + person.profile_path }}
+          />
+          <View style={{ flexDirection: 'row' }}>
+            <Subtitle>{person.name}</Subtitle>
+            <Caption style={{marginLeft: 'auto'}}>{person.character}</Caption>
+          </View>
+        </Row>
+        <Divider styleName="line" />
+      </TouchableOpacity>
     )
   }
 
@@ -74,9 +80,9 @@ class MovieDetailsScreen extends React.Component {
               <Text style={styles.textStyle}>Release: {this.state.movie.release_date}</Text>
               <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 10 }}>
               <Button style={styles.smallButton}><Icon name="share" /></Button>
-              <Button onPress={NetworkAccess.addMovieToWatchlist(this.props.navigation.state.params.movieId)}
+              <Button onPress={() => NetworkAccess.addMovieToWatchlist(this.props.navigation.state.params.movieId)}
                 style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
-              <Button onPress={NetworkAccess.addMovieToWatched(this.props.navigation.state.params.movieId)}
+              <Button onPress={() => NetworkAccess.addMovieToWatched(this.props.navigation.state.params.movieId)}
                 style={styles.smallButton}><Icon name="checkbox-on" /></Button>
               </View>
             </View>
@@ -109,9 +115,11 @@ const styles = {
     paddingHorizontal: 5
   },
 }
+
 const mapStateToProps = ({ allReducers }) => {
   const { user } = allReducers;
   return { user };
 };
+
 
 export default connect(mapStateToProps, { userChanged })(MovieDetailsScreen);

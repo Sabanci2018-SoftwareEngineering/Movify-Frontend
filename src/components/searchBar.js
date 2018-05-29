@@ -28,7 +28,7 @@ class SearchBar extends Component {
     //(if the last element is space, search result will not change. So, request isn't needed )
     if(input !== '' && input.charAt(input.length-1) !== ' '){
       this.props.searchSpinnerChanged({ searchSpinner: true });
-      axios.post('http://localhost:3000/title/search', {
+      axios.post('http://localhost:3000/search/title', {
         keyword: input,
         })
         .then((response) => {
@@ -52,12 +52,12 @@ class SearchBar extends Component {
     //(if the last element is space, search result will not change. So, request isn't needed )
     if(input !== '' && input.charAt(input.length-1) !== ' '){
       this.props.searchSpinnerChanged({ searchSpinner: true });
-      axios.post('http://localhost:3000/profile/search', {
+      axios.post('http://localhost:3000/search/profile', {
         keyword: input,
         })
         .then((response) => {
           this.props.searchSpinnerChanged({ searchSpinner: false });
-          this.props.profileSearchDataChanged({ profileSearchData: response.data.results.users});
+          this.props.profileSearchDataChanged({ profileSearchData: response.data.results});
         })
         .catch((error) => {
           console.log(error);

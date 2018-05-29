@@ -105,7 +105,7 @@ class LoginScreen extends Component {
 
   validatePassword() {
     const { password } = this.state;
-    const passwordValid = password.length >= 8;
+    const passwordValid = password.length >= 0;
     LayoutAnimation.easeInEaseOut();
     this.setState({ passwordValid });
     passwordValid || this.passwordInput.shake();

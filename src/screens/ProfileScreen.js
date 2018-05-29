@@ -8,6 +8,7 @@ import { userChanged } from '../actions';
 import { StackNavigator } from 'react-navigation';
 
 import MovieDetailsScreen from './MovieDetailsScreen';
+import ArtistDetailsScreen from './ArtistDetailsScreen';
 import FollowList from './FollowList';
 import ProfileSearch  from './ProfileSearch';
 import OtherProfile from './OtherProfile';
@@ -39,6 +40,7 @@ const ProfileScreenStack = StackNavigator({
   FollowList: { screen: FollowList },
   ProfileSearch: { screen: ProfileSearch },
   OtherProfile: { screen: OtherProfile },
+  ArtistDetails: {screen: ArtistDetailsScreen }
 },
 {
   headerMode: 'none',

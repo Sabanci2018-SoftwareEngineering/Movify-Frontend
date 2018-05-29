@@ -44,7 +44,7 @@ export default class NetworkAccess {
   static getHomeFeed(
     success = (res) => {return res},
     failure = (err) => {console.log(err)}){
-      axios.get(`${this.MAIN_URL}feed/100`)
+      axios.get(`${this.MAIN_URL}feed/0`)
         .then((res) => {
           success(res.data.results);
         })
@@ -68,7 +68,7 @@ export default class NetworkAccess {
   static addMovieToWatchlist(id,
     success = (res) => {return res},
     failure = (err) => {console.log(err)}){
-    axios.post(`${this.MAIN_URL}profile/watchlist`, {titleID: id})
+    axios.post(`${this.MAIN_URL}watchlist`, {titleID: id})
       .then(res => {
         success(res.data.results);
       })
@@ -80,7 +80,7 @@ export default class NetworkAccess {
   static addMovieToWatched(id,
     success = (res) => {return res},
     failure = (err) => {console.log(err)}){
-    axios.post(`${this.MAIN_URL}profile/watched`, {titleID: id})
+    axios.post(`${this.MAIN_URL}watched`, {titleID: id})
       .then(res => {
         success(res.data.results);
       })
@@ -88,4 +88,27 @@ export default class NetworkAccess {
         failure(err);
       });
   }
+
+  static getArtistDetails(id,
+    success = (res) => {return res},
+    failure = (err) => {console.log(err)}){
+      axios.get(`${this.MAIN_URL}artist/${id}`)
+        .then(res => {
+          success(res.data.results);
+        })
+        .catch(err => {
+          failure(err);
+        });
+    }
+  static getRecommendations(
+    success = (res) => {return res},
+    failure = (err) => {console.log(err)}){
+      axios.get(`${this.MAIN_URL}recommended`)
+        .then(res => {
+          success(res.data.results);
+        })
+        .catch(err => {
+          failure(err);
+        });
+    }
 }

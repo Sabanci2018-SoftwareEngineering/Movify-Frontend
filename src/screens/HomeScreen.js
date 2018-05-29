@@ -7,6 +7,7 @@ import NetworkAccess from '../common/NetworkAccess';
 import { userChanged } from '../actions';
 import { StackNavigator } from 'react-navigation';
 import MovieDetailsScreen from './MovieDetailsScreen';
+import ArtistDetailsScreen from './ArtistDetailsScreen';
 import NavigationBar from '../components/navigationBar';
 
 let user;
@@ -22,6 +23,7 @@ class HomeScreen extends React.Component {
         titles: undefined,
     }
     this.renderRow = this.renderRow.bind(this);
+    this.amountOfRecommendations = 3;
   }
 
   componentDidMount(){
@@ -43,12 +45,16 @@ class HomeScreen extends React.Component {
   _onRefresh(){
     this.setState({...this.state, refreshing: true});
     NetworkAccess.getHomeFeed((movieList) => {
-        this.setState({titles: movieList, refreshing: false})
-      }
+      NetworkAccess.getRecommendations((recommendationList) => {
+        const merged = recommendationList.concat(movieList);
+        this.setState({titles: merged, refreshing: false});
+      });
+    }
     );
   }
 
-  renderRow(oneTitle){
+  renderRow(oneTitle, sectionId, rowId){
+    const recommendationComponent = rowId < this.amountOfRecommendations ? <Text>Recommended</Text> : undefined;
     return (
         <View style={styles.rowCard}>
           <TouchableHighlight onPress={() => this.props.navigation
@@ -65,10 +71,11 @@ class HomeScreen extends React.Component {
               <Text numberOfLines={3}>{oneTitle.overview}</Text>
             </TouchableOpacity>
             <Caption style={{marginVertical: 4}}>{oneTitle.release_date}</Caption>
+            {recommendationComponent}
             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginVertical: 5 }}>
               <Button style={styles.smallButton}><Icon name="share" /></Button>
-              <Button onPress={NetworkAccess.addMovieToWatchlist(oneTitle.id)} style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
-              <Button onPress={NetworkAccess.addMovieToWatched(oneTitle.id)} style={styles.smallButton}><Icon name="checkbox-on" /></Button>
+              <Button onPress={() => NetworkAccess.addMovieToWatchlist(oneTitle.id)} style={styles.smallButton}><Icon name="add-to-favorites-off" /></Button>
+              <Button onPress={() => NetworkAccess.addMovieToWatched(oneTitle.id)} style={styles.smallButton}><Icon name="checkbox-on" /></Button>
             </View>
           </View>
         </View>
@@ -126,6 +133,7 @@ const mapStateToProps = ({ allReducers }) => {
 const HomeStack = StackNavigator({
   Home: { screen: connect(mapStateToProps, { userChanged })(HomeScreen)},
   MovieDetails: { screen: MovieDetailsScreen },
+  ArtistDetails: {screen: ArtistDetailsScreen }
 },
 {
   headerMode: 'none',
