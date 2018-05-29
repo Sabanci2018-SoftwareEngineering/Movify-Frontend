@@ -18,7 +18,7 @@ export default class NavBar extends React.Component {
   }
 
   logout(){
-    axios.get('http://localhost:3000/logout', {
+    axios.get('http://52.58.179.173/logout', {
         withCredentials: true
       })
       .then(() => {

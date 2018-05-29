@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default class NetworkAccess {
-  static MAIN_URL = 'http://localhost:3000/';
+  static MAIN_URL = 'http://52.58.179.173/';
   static IMAGE_PATH = 'http://image.tmdb.org/t/p/original';
 
   static loginUser(user,

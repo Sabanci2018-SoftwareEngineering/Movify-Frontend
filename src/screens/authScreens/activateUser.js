@@ -54,7 +54,7 @@ class ActivateUser extends Component {
         this.setState({ isLoading: true });
         setTimeout(() => {
           LayoutAnimation.easeInEaseOut();
-          axios.post(`http://localhost:3000/activate/${this.state.username}`, {
+          axios.post(`http://52.58.179.173/activate/${this.state.username}`, {
             key: this.state.verificationCode
             })
             .then((response) => {

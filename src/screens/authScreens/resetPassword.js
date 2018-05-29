@@ -57,7 +57,7 @@ class ResetPassword extends Component {
         this.setState({ isLoading: true });
         setTimeout(() => {
           LayoutAnimation.easeInEaseOut();
-          axios.post('http://localhost:3000/forgot', {
+          axios.post('http://52.58.179.173/forgot', {
             email: this.state.email,
             })
             .then((response) => {
@@ -83,7 +83,7 @@ class ResetPassword extends Component {
       this.setState({ isLoading: true });
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        axios.post(`http://localhost:3000/forgot/${this.state.resetCode}`, {
+        axios.post(`http://52.58.179.173/forgot/${this.state.resetCode}`, {
           email: this.state.email,
           password: this.state.password,
           })

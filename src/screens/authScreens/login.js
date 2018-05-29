@@ -47,7 +47,7 @@ class LoginScreen extends Component {
     this.validatePassword = this.validatePassword.bind(this);
     this.login = this.login.bind(this);
   }
- 
+
   login() {
     LayoutAnimation.easeInEaseOut();
 
@@ -60,12 +60,12 @@ class LoginScreen extends Component {
       this.setState({ isLoading: true });
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        axios.post('http://localhost:3000/login', {
+        axios.post('http://52.58.179.173/login', {
           key: this.state.key,
           password: this.state.password,
           })
           .then((response) => {
-            axios.get('http://localhost:3000/profile', {
+            axios.get('http://52.58.179.173/profile', {
               withCredentials: true,
             })
             .then((responseProfile) => {
@@ -181,24 +181,24 @@ class LoginScreen extends Component {
                 onPress={this.login}
                 disabled={isLoading}
                 disabledStyle={styles.signUpButton}
-                />    
-                <RedirectHere 
+                />
+                <RedirectHere
                   message="Don't have an account?"
                   title="Sign Up"
                   redirect="Signup"
                 />
-                <RedirectHere 
+                <RedirectHere
                   message="Forgot Password?"
                   title="Reset Password"
                   redirect="ResetPassword"
                 />
-                <RedirectHere 
+                <RedirectHere
                   message="Not activated account?"
                   title="Activate Account"
                   redirect="ActivateUser"
                 />
               </View>
-            </KeyboardAvoidingView> 
+            </KeyboardAvoidingView>
           </ScrollView>
       </ImageBackground>
         );

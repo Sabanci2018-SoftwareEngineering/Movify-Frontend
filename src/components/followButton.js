@@ -17,7 +17,7 @@ class FollowButton extends React.Component {
     }
 
     componentDidMount() {
-      axios.get(`http://localhost:3000/profile/${this.props.user.user.key}/follows`)
+      axios.get(`http://52.58.179.173/profile/${this.props.user.user.key}/follows`)
             .then(res => {
               res.data.results.forEach((element) => {
                 if(element.username === this.props.username){
@@ -29,7 +29,7 @@ class FollowButton extends React.Component {
 
     followUser(){
       this.setState({ following: true });
-      axios.post('http://localhost:3000/follow', {
+      axios.post('http://52.58.179.173/follow', {
         username: this.props.username,
         })
         .catch((error) => {
@@ -39,7 +39,7 @@ class FollowButton extends React.Component {
 
     unfollowUser(){
       this.setState({ following: false });
-      axios.post('http://localhost:3000/unfollow', {
+      axios.post('http://52.58.179.173/unfollow', {
         username: this.props.username,
         })
         .catch((error) => {

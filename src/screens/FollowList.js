@@ -17,14 +17,14 @@ export default class FollowList extends React.Component{
     }
 
     setFollowing(username){
-        axios.get(`http://localhost:3000/profile/${username}/follows`)
+        axios.get(`http://52.58.179.173/profile/${username}/follows`)
             .then(res => {
             this.setState({users: res.data.results});
             });
     }
 
     setFollowers(username){
-        axios.get(`http://localhost:3000/profile/${username}/followers`)
+        axios.get(`http://52.58.179.173/profile/${username}/followers`)
             .then(res => {
             this.setState({users: res.data.results});
             });

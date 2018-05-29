@@ -89,7 +89,7 @@ class SignupScreen extends Component {
       this.setState({ isLoading: true });
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        axios.post('http://localhost:3000/register', {
+        axios.post('http://52.58.179.173/register', {
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
@@ -115,7 +115,7 @@ class SignupScreen extends Component {
       this.setState({ isLoading: true });
       setTimeout(() => {
         LayoutAnimation.easeInEaseOut();
-        axios.post(`http://localhost:3000/activate/${this.state.username}`, {
+        axios.post(`http://52.58.179.173/activate/${this.state.username}`, {
           activation_key: this.state.verificationCode
           })
           .then((response) => {

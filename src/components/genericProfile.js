@@ -33,7 +33,7 @@ class GenericProfile extends React.Component {
   getResponse(){
     const username = this.props.username;
 
-    axios.get('http://localhost:3000/profile', {
+    axios.get('http://52.58.179.173/profile', {
       target_username: username,
       withCredentials: true,
     })
@@ -44,7 +44,7 @@ class GenericProfile extends React.Component {
       this.setState({userData: undefined});
     });
 
-    axios.get(`http://localhost:3000/profile/${username}/watchlist`, {
+    axios.get(`http://52.58.179.173/profile/${username}/watchlist`, {
       withCredentials: true
     })
     .then((response) => {
